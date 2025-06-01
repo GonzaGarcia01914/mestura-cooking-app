@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/recipe.dart';
 import '../../core/services/openai_service.dart';
+import '../../core/services/storage_service.dart';
 
 class RecipeScreen extends StatefulWidget {
   final RecipeModel recipe;
@@ -15,17 +17,25 @@ class RecipeScreen extends StatefulWidget {
 class _RecipeScreenState extends State<RecipeScreen> {
   late List<bool> _checked;
   bool _loading = false;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
     _checked = List.generate(widget.recipe.ingredients.length, (_) => true);
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final languageCode = prefs.getString('languageCode') ?? 'es';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   void _rewriteRecipe() async {
-    final s = AppLocalizations.of(context)!;
     final List<String> excluded = [];
-
     for (int i = 0; i < _checked.length; i++) {
       if (!_checked[i]) excluded.add(widget.recipe.ingredients[i]);
     }
@@ -37,6 +47,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
       final newRecipe = await openai.generateRecipe(
         widget.recipe.title,
         restrictions: excluded,
+        language: _locale.languageCode,
       );
 
       if (!mounted) return;
@@ -45,12 +56,21 @@ class _RecipeScreenState extends State<RecipeScreen> {
         MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  Future<void> _saveRecipe() async {
+    final storage = StorageService();
+    await storage.saveRecipe(widget.recipe);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context)!.savedConfirmation)),
+    );
   }
 
   @override
@@ -65,7 +85,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Imagen (si existe)
             if (widget.recipe.image != null)
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -77,15 +96,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
                 ),
               ),
             if (widget.recipe.image != null) const SizedBox(height: 24),
-
-            // Título
             Text(
               widget.recipe.title,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
-
-            // Ingredientes
             Text(
               s.ingredientsTitle,
               style: Theme.of(context).textTheme.titleMedium,
@@ -105,8 +120,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
               ),
             ),
             const SizedBox(height: 24),
-
-            // Pasos
             Text(s.stepsTitle, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Column(
@@ -120,14 +133,17 @@ class _RecipeScreenState extends State<RecipeScreen> {
               ),
             ),
             const SizedBox(height: 24),
-
-            // Botón Reescribir
             ElevatedButton(
               onPressed: _loading ? null : _rewriteRecipe,
-              child:
-                  _loading
-                      ? const CircularProgressIndicator()
-                      : Text(s.rewriteButton),
+              child: _loading
+                  ? const CircularProgressIndicator()
+                  : Text(s.rewriteButton),
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: _saveRecipe,
+              icon: const Icon(Icons.bookmark_add),
+              label: Text(s.saveButton),
             ),
           ],
         ),

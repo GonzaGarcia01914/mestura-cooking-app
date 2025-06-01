@@ -1,35 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'ui/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'app.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+  final savedLocale = prefs.getString('locale'); // 'es' o 'en'
+
+  runApp(MyApp(savedLocale: savedLocale));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  final String? savedLocale;
+
+  const MyApp({super.key, this.savedLocale});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    final _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.changeLocale(newLocale);
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _locale = _getInitialLocale();
+  }
+
+  Locale _getInitialLocale() {
+    if (widget.savedLocale != null) {
+      return Locale(widget.savedLocale!);
+    }
+    final systemLocale =
+        WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    return (systemLocale == 'es') ? const Locale('es') : const Locale('en');
+  }
+
+  void changeLocale(Locale newLocale) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('locale', newLocale.languageCode);
+    setState(() {
+      _locale = newLocale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mestura',
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        AppLocalizations.delegate, // <-- generado
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('es'),
-        // puedes añadir más idiomas aquí
-      ],
-      locale: const Locale(
-        'es',
-      ), // O manejarlo dinámicamente con provider o shared prefs
-      home: const HomeScreen(), // o donde comience tu app
-    );
+    return App(locale: _locale);
   }
 }

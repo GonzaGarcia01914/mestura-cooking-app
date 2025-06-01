@@ -1,17 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../main.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => _LanguageSelectorState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool isVegan = false;
-  bool isGlutenFree = false;
-  ThemeMode themeMode = ThemeMode.light;
+class _LanguageSelectorState extends State<SettingsScreen> {
+  String _selected = 'en'; // valor por defecto
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _selected = prefs.getString('locale') ??
+          (Localizations.localeOf(context).languageCode == 'es' ? 'es' : 'en');
+    });
+  }
+
+  Future<void> _changeLanguage(String langCode) async {
+    setState(() => _selected = langCode);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('locale', langCode);
+    MyApp.setLocale(context, Locale(langCode));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,72 +42,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(title: Text(s.settingsTitle)),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              s.settingsTitle,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-
-            // Preferencias alimenticias
-            Text(
-              s.preferenceVegan,
+              s.languageSettingLabel,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            CheckboxListTile(
-              title: Text(s.preferenceVegan),
-              value: isVegan,
-              onChanged: (value) => setState(() => isVegan = value ?? false),
-            ),
-            CheckboxListTile(
-              title: Text(s.preferenceGlutenFree),
-              value: isGlutenFree,
-              onChanged:
-                  (value) => setState(() => isGlutenFree = value ?? false),
-            ),
-            const Divider(height: 32),
-
-            // Idioma
-            ListTile(
-              title: Text(s.language),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                // Aquí podrías abrir un modal o pantalla para cambiar idioma
+            const SizedBox(height: 16),
+            RadioListTile<String>(
+              value: 'es',
+              groupValue: _selected,
+              onChanged: (lang) {
+                if (lang != null) _changeLanguage(lang);
               },
+              title: const Text('Español'),
             ),
-
-            // Cuenta
-            ListTile(
-              title: Text(s.subscription),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                // Aquí se abriría gestión de cuenta / subscripción
+            RadioListTile<String>(
+              value: 'en',
+              groupValue: _selected,
+              onChanged: (lang) {
+                if (lang != null) _changeLanguage(lang);
               },
-            ),
-
-            // Tema claro/oscuro
-            const Divider(height: 32),
-            Text(s.theme),
-            Row(
-              children: [
-                Expanded(
-                  child: RadioListTile<ThemeMode>(
-                    title: Text(s.themeLight),
-                    value: ThemeMode.light,
-                    groupValue: themeMode,
-                    onChanged: (mode) => setState(() => themeMode = mode!),
-                  ),
-                ),
-                Expanded(
-                  child: RadioListTile<ThemeMode>(
-                    title: Text(s.themeDark),
-                    value: ThemeMode.dark,
-                    groupValue: themeMode,
-                    onChanged: (mode) => setState(() => themeMode = mode!),
-                  ),
-                ),
-              ],
+              title: const Text('English'),
             ),
           ],
         ),

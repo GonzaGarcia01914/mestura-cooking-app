@@ -9,8 +9,9 @@ import 'ui/screens/saved_screen.dart';
 import 'ui/screens/settings_screen.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final Locale locale;
 
+  const App({super.key, required this.locale});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,15 +22,17 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         fontFamily: 'Roboto',
       ),
+      locale: locale, // ✅ usamos el locale pasado desde main.dart
+      supportedLocales: const [Locale('en'), Locale('es')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('es')],
-      home: const HomeScreen(),
+      initialRoute: '/',
       routes: {
+        '/': (_) => const HomeScreen(),
         '/rewrite': (_) => const RewriteScreen(),
         '/saved': (_) => const SavedScreen(),
         '/settings': (_) => const SettingsScreen(),

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart'; // Para kDebugMode
 import '../../models/recipe.dart';
 
 class OpenAIService {
@@ -12,6 +11,7 @@ class OpenAIService {
   Future<RecipeModel> generateRecipe(
     String query, {
     List<String>? restrictions,
+    required String language, // ← El idioma se requiere explícitamente
   }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
@@ -28,7 +28,9 @@ Do not include any explanations or markdown. Only output a pure JSON object like
   "steps": ["...", "..."],
   "image": "https://..."
 }
+The content must be written entirely in ${language == 'es' ? 'Spanish' : 'English'}.
 ''';
+
     final userPrompt = _buildPrompt(query, restrictions);
 
     final response = await http.post(
@@ -53,14 +55,13 @@ Do not include any explanations or markdown. Only output a pure JSON object like
       final jsonStart = content.indexOf('{');
       final jsonEnd = content.lastIndexOf('}');
       final jsonString = content.substring(jsonStart, jsonEnd + 1);
-      final parsed = jsonDecode(content);
+      final parsed = jsonDecode(jsonString);
       return RecipeModel.fromJson(parsed);
     } else {
       throw Exception('OpenAI error: ${response.body}');
     }
   }
 
-  // ✅ ESTA FUNCIÓN DEBE ESTAR DENTRO DE LA CLASE
   String _buildPrompt(String query, List<String>? restrictions) {
     final base = 'Create a detailed recipe for: $query.';
     if (restrictions != null && restrictions.isNotEmpty) {
