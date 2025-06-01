@@ -30,7 +30,6 @@ class App extends StatelessWidget {
       supportedLocales: const [Locale('en'), Locale('es')],
       home: const HomeScreen(),
       routes: {
-        '/recipe': (_) => const RecipeScreen(),
         '/rewrite': (_) => const RewriteScreen(),
         '/saved': (_) => const SavedScreen(),
         '/settings': (_) => const SettingsScreen(),

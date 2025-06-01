@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../core/services/openai_service.dart';
+import 'recipe_screen.dart'; // o usá Navigator con ruta
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _controller = TextEditingController();
+  final _openAI = OpenAIService();
+  bool _loading = false;
+
+  Future<void> _generateRecipe() async {
+    final query = _controller.text.trim();
+    if (query.isEmpty) return;
+
+    setState(() => _loading = true);
+    try {
+      final result = await _openAI.generateRecipe(query);
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => RecipeScreen(recipe: result)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +53,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextField(
+              controller: _controller,
               decoration: InputDecoration(
                 hintText: s.homePrompt,
                 border: const OutlineInputBorder(),
@@ -28,12 +61,19 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/recipe');
-              },
-              child: Text(s.searchButton),
+              onPressed: _loading ? null : _generateRecipe,
+              child:
+                  _loading
+                      ? const CircularProgressIndicator()
+                      : Text(s.searchButton),
             ),
-            TextButton(onPressed: () {}, child: Text(s.surpriseButton)),
+            TextButton(
+              onPressed: () {
+                _controller.text = "Surprise me!";
+                _generateRecipe();
+              },
+              child: Text(s.surpriseButton),
+            ),
           ],
         ),
       ),

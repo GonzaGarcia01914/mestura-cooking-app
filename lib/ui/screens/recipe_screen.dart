@@ -1,12 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../models/recipe.dart';
+import '../../core/services/openai_service.dart';
 
-class RecipeScreen extends StatelessWidget {
-  const RecipeScreen({super.key});
+class RecipeScreen extends StatefulWidget {
+  final RecipeModel recipe;
+
+  const RecipeScreen({super.key, required this.recipe});
+
+  @override
+  State<RecipeScreen> createState() => _RecipeScreenState();
+}
+
+class _RecipeScreenState extends State<RecipeScreen> {
+  late List<bool> _checked;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checked = List.generate(widget.recipe.ingredients.length, (_) => true);
+  }
+
+  void _rewriteRecipe() async {
+    final s = AppLocalizations.of(context)!;
+    final List<String> excluded = [];
+
+    for (int i = 0; i < _checked.length; i++) {
+      if (!_checked[i]) excluded.add(widget.recipe.ingredients[i]);
+    }
+
+    setState(() => _loading = true);
+
+    try {
+      final openai = OpenAIService();
+      final newRecipe = await openai.generateRecipe(
+        widget.recipe.title,
+        restrictions: excluded,
+      );
+
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final s = AppLocalizations.of(context)!;
+    final ingredients = widget.recipe.ingredients;
 
     return Scaffold(
       appBar: AppBar(leading: const BackButton()),
@@ -15,20 +65,22 @@ class RecipeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Imagen
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'assets/images/bruschetta.jpg',
-                fit: BoxFit.cover,
-                height: 180,
+            // Imagen (si existe)
+            if (widget.recipe.image != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  widget.recipe.image!,
+                  fit: BoxFit.cover,
+                  height: 180,
+                  errorBuilder: (_, __, ___) => const SizedBox(),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
+            if (widget.recipe.image != null) const SizedBox(height: 24),
 
             // Título
             Text(
-              'Bruschetta',
+              widget.recipe.title,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
@@ -39,71 +91,45 @@ class RecipeScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            const IngredientChecklist(),
-
+            Column(
+              children: List.generate(
+                ingredients.length,
+                (index) => CheckboxListTile(
+                  value: _checked[index],
+                  onChanged: (val) {
+                    setState(() => _checked[index] = val ?? true);
+                  },
+                  title: Text(ingredients[index]),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ),
             const SizedBox(height: 24),
 
             // Pasos
             Text(s.stepsTitle, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
-            const StepList(),
-
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                widget.recipe.steps.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text('${index + 1}. ${widget.recipe.steps[index]}'),
+                ),
+              ),
+            ),
             const SizedBox(height: 24),
 
             // Botón Reescribir
             ElevatedButton(
-              onPressed: () {
-                // TODO: lógica para reescribir receta
-              },
-              child: Text(s.rewriteButton),
+              onPressed: _loading ? null : _rewriteRecipe,
+              child:
+                  _loading
+                      ? const CircularProgressIndicator()
+                      : Text(s.rewriteButton),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class IngredientChecklist extends StatelessWidget {
-  const IngredientChecklist({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ingredients = ['Baguette', 'Tomatoes', 'Garlic', 'Olive oil'];
-    return Column(
-      children:
-          ingredients
-              .map(
-                (ingredient) => CheckboxListTile(
-                  value: true, // TODO: usar estado real
-                  onChanged: (_) {},
-                  title: Text(ingredient),
-                  contentPadding: EdgeInsets.zero,
-                ),
-              )
-              .toList(),
-    );
-  }
-}
-
-class StepList extends StatelessWidget {
-  const StepList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final steps = [
-      'Preheat the oven to 400T (200°C).',
-      'Slice the baguette and toast the dices in the oven until golden brown.',
-      'Rub garlic on toasted bread, basil on top.',
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(
-        steps.length,
-        (index) => Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text('${index + 1}. ${steps[index]}'),
         ),
       ),
     );
