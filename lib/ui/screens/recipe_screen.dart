@@ -56,9 +56,9 @@ class _RecipeScreenState extends State<RecipeScreen> {
         MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -98,7 +98,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             if (widget.recipe.image != null) const SizedBox(height: 24),
             Text(
               widget.recipe.title,
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 16),
             Text(
@@ -135,9 +135,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _loading ? null : _rewriteRecipe,
-              child: _loading
-                  ? const CircularProgressIndicator()
-                  : Text(s.rewriteButton),
+              child:
+                  _loading
+                      ? const CircularProgressIndicator()
+                      : Text(s.rewriteButton),
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(

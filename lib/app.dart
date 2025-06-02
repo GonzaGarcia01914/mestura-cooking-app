@@ -7,6 +7,7 @@ import 'ui/screens/recipe_screen.dart';
 import 'ui/screens/rewrite_screen.dart';
 import 'ui/screens/saved_screen.dart';
 import 'ui/screens/settings_screen.dart';
+import 'core/theme/app_theme.dart';
 
 class App extends StatelessWidget {
   final Locale locale;
@@ -17,11 +18,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Mestura',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-        fontFamily: 'Roboto',
-      ),
+      theme: lightTheme,
       locale: locale, // ✅ usamos el locale pasado desde main.dart
       supportedLocales: const [Locale('en'), Locale('es')],
       localizationsDelegates: const [

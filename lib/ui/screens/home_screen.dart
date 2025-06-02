@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/services/openai_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'recipe_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -48,70 +47,153 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final s = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final orangeLight = colorScheme.primary;
+    final orangeDark = colorScheme.primaryContainer;
 
     return Scaffold(
       appBar: AppBar(title: Text(s.appTitle)),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-              child: Text(
-                'Mestura',
-                style: const TextStyle(color: Colors.white, fontSize: 24),
+            // Header con más espacio arriba
+            Container(
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                80,
+                16,
+                24,
+              ), // 👈 más padding arriba
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Image.asset('assets/images/logo_sin_fondo.png', height: 52),
+                  const SizedBox(width: 14),
+                  const Text(
+                    'Mestura',
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
+
+            // Línea divisoria
+            const Divider(height: 1, thickness: 1),
+
+            // Ítems
             ListTile(
-              leading: const Icon(Icons.bookmark),
-              title: Text(s.savedTitle),
+              leading: Icon(Icons.bookmark, color: orangeLight),
+              title: Text(s.savedTitle, style: const TextStyle(fontSize: 16)),
               onTap: () {
-                Navigator.pop(context); // Cierra el drawer
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/saved');
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
-              title: Text(s.settingsTitle),
+              leading: Icon(Icons.settings, color: orangeLight),
+              title: Text(
+                s.settingsTitle,
+                style: const TextStyle(fontSize: 16),
+              ),
               onTap: () {
-                Navigator.pop(context); // Cierra el drawer
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/settings');
               },
+            ),
+
+            const Spacer(),
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                'v1.0.0',
+                style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+              ),
             ),
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 32),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
+            Image.asset('assets/images/logo_sin_fondo.png', height: 260),
+            const SizedBox(height: 12),
             Text(
               s.homePrompt,
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                height: 1.2,
+              ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             TextField(
               controller: _controller,
               decoration: InputDecoration(
                 hintText: s.homePrompt,
-                border: const OutlineInputBorder(),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.surface,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: orangeDark, width: 2),
+                ),
               ),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _loading ? null : _generateRecipe,
-              child:
-                  _loading
-                      ? const CircularProgressIndicator()
-                      : Text(s.searchButton),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _loading ? null : _generateRecipe,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ).copyWith(
+                  backgroundColor: WidgetStateProperty.resolveWith<Color>((
+                    states,
+                  ) {
+                    if (states.contains(WidgetState.pressed)) {
+                      return orangeDark;
+                    }
+                    return orangeLight;
+                  }),
+                ),
+                child:
+                    _loading
+                        ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                        : Text(
+                          s.searchButton,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+              ),
             ),
+            const SizedBox(height: 8),
             TextButton(
               onPressed: () {
                 _controller.text = "Surprise me!";
                 _generateRecipe();
               },
-              child: Text(s.surpriseButton),
+              child: Text(
+                s.surpriseButton,
+                style: const TextStyle(fontSize: 14),
+              ),
             ),
           ],
         ),
