@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'ui/screens/home_screen.dart';
-import 'ui/screens/recipe_screen.dart';
 import 'ui/screens/rewrite_screen.dart';
 import 'ui/screens/saved_screen.dart';
 import 'ui/screens/settings_screen.dart';

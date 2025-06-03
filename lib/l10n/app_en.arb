@@ -23,5 +23,7 @@
   "subscription": "Account / Subscription",
   "theme": "Theme",
   "themeLight": "Light",
-  "themeDark": "Dark"
+  "themeDark": "Dark",
+  "inappropriateInput": "Your input is not appropriate for a recipe. Please try a different idea."
+
 }

@@ -34,11 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
         MaterialPageRoute(builder: (_) => RecipeScreen(recipe: result)),
       );
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
-      }
+      if (!mounted) return;
+
+      final message =
+          e.toString().contains('Prompt rejected')
+              ? (languageCode == 'es'
+                  ? 'Este contenido no está permitido.'
+                  : 'This content is not allowed.')
+              : 'Error: ${e.toString()}';
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -56,14 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: Drawer(
         child: Column(
           children: [
-            // Header con más espacio arriba
             Container(
-              padding: const EdgeInsets.fromLTRB(
-                16,
-                80,
-                16,
-                24,
-              ), // 👈 más padding arriba
+              padding: const EdgeInsets.fromLTRB(16, 80, 16, 24),
               alignment: Alignment.centerLeft,
               child: Row(
                 children: [
@@ -76,11 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
-            // Línea divisoria
             const Divider(height: 1, thickness: 1),
-
-            // Ítems
             ListTile(
               leading: Icon(Icons.bookmark, color: orangeLight),
               title: Text(s.savedTitle, style: const TextStyle(fontSize: 16)),
@@ -100,9 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pushNamed(context, '/settings');
               },
             ),
-
             const Spacer(),
-
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
@@ -113,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 32),
         child: Column(

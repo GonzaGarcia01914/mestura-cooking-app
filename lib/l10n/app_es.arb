@@ -23,5 +23,6 @@
   "subscription": "Cuenta / Suscripción",
   "theme": "Tema",
   "themeLight": "Claro",
-  "themeDark": "Oscuro"
+  "themeDark": "Oscuro",
+  "inappropriateInput": "Tu consulta no es apropiada para una receta. Intenta con otra idea."
 }
