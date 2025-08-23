@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/services/storage_service.dart';
 import '../../models/recipe.dart';
 import 'recipe_screen.dart';
@@ -32,27 +32,30 @@ class _SavedScreenState extends State<SavedScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(s.savedTitle)),
-      body: _recipes.isEmpty
-          ? Center(child: Text(s.noSavedRecipes))
-          : ListView.builder(
-              itemCount: _recipes.length,
-              itemBuilder: (_, i) {
-                final recipe = _recipes[i];
-                return ListTile(
-                  title: Text(recipe.title),
-                  subtitle: Text('${recipe.ingredients.length} ${s.filterIngredients}'),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => RecipeScreen(recipe: recipe),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+      body:
+          _recipes.isEmpty
+              ? Center(child: Text(s.noSavedRecipes))
+              : ListView.builder(
+                itemCount: _recipes.length,
+                itemBuilder: (_, i) {
+                  final recipe = _recipes[i];
+                  return ListTile(
+                    title: Text(recipe.title),
+                    subtitle: Text(
+                      '${recipe.ingredients.length} ${s.filterIngredients}',
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RecipeScreen(recipe: recipe),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -22,7 +22,8 @@ class _LanguageSelectorState extends State<SettingsScreen> {
   Future<void> _loadLanguage() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _selected = prefs.getString('locale') ??
+      _selected =
+          prefs.getString('locale') ??
           (Localizations.localeOf(context).languageCode == 'es' ? 'es' : 'en');
     });
   }
