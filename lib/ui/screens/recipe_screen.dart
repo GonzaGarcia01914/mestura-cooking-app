@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../ui/screens/loading_screen.dart';
 import '../../models/recipe.dart';
 import '../../core/services/openai_service.dart';
 import '../../core/services/storage_service.dart';
@@ -40,7 +41,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
       if (!_checked[i]) excluded.add(widget.recipe.ingredients[i]);
     }
 
-    setState(() => _loading = true);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const LoadingScreen()),
+    );
 
     try {
       final openai = OpenAIService();
@@ -51,16 +55,19 @@ class _RecipeScreenState extends State<RecipeScreen> {
       );
 
       if (!mounted) return;
+
+      Navigator.pop(context); // Cierra LoadingScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
-    } finally {
-      if (mounted) setState(() => _loading = false);
+      if (mounted) {
+        Navigator.pop(context); // Cierra LoadingScreen si hubo error
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      }
     }
   }
 
@@ -135,10 +142,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _loading ? null : _rewriteRecipe,
-              child:
-                  _loading
-                      ? const CircularProgressIndicator()
-                      : Text(s.rewriteButton),
+              child: Text(s.rewriteButton),
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
