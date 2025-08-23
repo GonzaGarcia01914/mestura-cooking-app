@@ -25,5 +25,15 @@
   "themeLight": "Light",
   "themeDark": "Dark",
   "inappropriateInput": "Your input is not appropriate for a recipe. Please try a different idea.",
-  "loadingMessage": "Cooking the recipe..."
+  "loadingMessage": "Cooking the recipe...",
+  "loadingTip1": "Tip: Try smoked spices for deeper flavor.",
+  "loadingTip2": "Tip: Toast spices for 30s to unlock aromas.",
+  "loadingTip3": "Tip: Save cooking water to adjust texture.",
+  "loadingTip4": "Tip: A splash of acid (lemon/vinegar) brightens any dish.",
+  "loadingTip5": "Tip: Salt in layers, not all at the end.",
+  "loadingStagePreparing": "Preparing",
+  "loadingStageMixing": "Mixing",
+  "loadingStageSeasoning": "Seasoning",
+  "loadingStageCooking": "Cooking",
+  "loadingStagePlating": "Plating"
 }

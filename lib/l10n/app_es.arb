@@ -25,5 +25,15 @@
   "themeLight": "Claro",
   "themeDark": "Oscuro",
   "inappropriateInput": "Tu consulta no es apropiada para una receta. Intenta con otra idea.",
-  "loadingMessage": "Cocinando la receta..."
+  "loadingMessage": "Cocinando la receta...",
+  "loadingTip1": "Consejo: prueba con especias ahumadas para más sabor.",
+  "loadingTip2": "Consejo: tuesta las especias 30s para despertar aromas.",
+  "loadingTip3": "Consejo: guarda el agua de cocción para ajustar la textura.",
+  "loadingTip4": "Consejo: un toque de ácido (limón/vinagre) realza cualquier plato.",
+  "loadingTip5": "Consejo: sala en capas, no toda al final.",
+  "loadingStagePreparing": "Preparando",
+  "loadingStageMixing": "Mezclando",
+  "loadingStageSeasoning": "Sazonando",
+  "loadingStageCooking": "Cocinando",
+  "loadingStagePlating": "Emplatando"
 }

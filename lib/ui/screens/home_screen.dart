@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/openai_service.dart';
 import '../../ui/screens/loading_screen.dart';
+import '../widgets/app_scaffold.dart';
+import '../widgets/app_title.dart';
+import '../widgets/app_text_field.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/app_primary_button.dart';
+import '../widgets/app_top_bar.dart';
+import '../style/app_style.dart';
 import 'recipe_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,179 +24,133 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _loading = false;
 
   Future<void> _generateRecipe() async {
-    final query = _controller.text;
+    final query = _controller.text.trim();
     if (query.isEmpty) return;
+
+    setState(() => _loading = true); // spinner SOLO para isFood
 
     final languageCode = Localizations.localeOf(context).languageCode;
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const LoadingScreen()),
-    );
-
     try {
+      final isFood = await _openAI.isFood(query);
+      if (!isFood) {
+        throw Exception(
+          languageCode == 'es'
+              ? 'Vamos a limitarnos a cosas comestibles.'
+              : 'Let’s stick to edible things.',
+        );
+      }
+
+      if (!mounted) return;
+      setState(() => _loading = false);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const LoadingScreen()),
+      );
+
       final result = await _openAI.generateRecipe(
         query,
         language: languageCode,
       );
 
       if (!mounted) return;
-
-      Navigator.pop(context); // Cierra pantalla de carga
+      Navigator.pop(context);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => RecipeScreen(recipe: result)),
       );
     } catch (e) {
       if (!mounted) return;
-      Navigator.pop(context); // Cierra pantalla de carga en caso de error
-
-      final message =
-          e.toString().contains('not allowed')
-              ? (languageCode == 'es'
-                  ? 'Este contenido no está permitido.'
-                  : 'This content is not allowed.')
-              : 'Error: ${e.toString()}';
-
+      setState(() => _loading = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final s = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
-    final orangeLight = colorScheme.primary;
-    final orangeDark = colorScheme.primaryContainer;
+    final style = AppStyle.of(context);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(s.appTitle)),
-      drawer: Drawer(
-        child: Column(
+    return AppScaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppTopBar(title: Text(s.appTitle), blurSigma: 0, tintOpacity: 0),
+
+      drawer: AppSideDrawer(
+        header: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(16, 80, 16, 24),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  Image.asset('assets/images/logo_sin_fondo.png', height: 52),
-                  const SizedBox(width: 14),
-                  const Text(
-                    'Mestura',
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1, thickness: 1),
-            ListTile(
-              leading: Icon(Icons.bookmark, color: orangeLight),
-              title: Text(s.savedTitle, style: const TextStyle(fontSize: 16)),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/saved');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings, color: orangeLight),
-              title: Text(
-                s.settingsTitle,
-                style: const TextStyle(fontSize: 16),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                'v1.0.0',
-                style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
-              ),
+            Image.asset('assets/images/logo_sin_fondo.png', height: 52),
+            const SizedBox(width: 12),
+            Text(
+              'Mestura',
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
             ),
           ],
         ),
+        items: [
+          ListTile(
+            leading: const Icon(Icons.bookmark),
+            title: Text(s.savedTitle),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/saved');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: Text(s.settingsTitle),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+        ],
+        footer: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(
+            'v1.0.0',
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 32),
+        padding: EdgeInsets.symmetric(
+          horizontal: 25,
+          vertical: style.padding.vertical * 1.5,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/images/logo_sin_fondo.png', height: 260),
-            const SizedBox(height: 12),
-            Text(
-              s.homePrompt,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                height: 1.2,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            const SizedBox(height: 50),
+
+            //Image.asset('assets/images/logo_sin_fondo.png', height: 220),
+            Image.asset('assets/images/logo_sin_fondo.png', height: 300),
+            //const SizedBox(height: 16),
+            AppTitle(s.homePrompt),
             const SizedBox(height: 24),
-            TextField(
+            AppTextField(
               controller: _controller,
-              decoration: InputDecoration(
-                hintText: s.homePrompt,
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.surface,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: orangeDark, width: 2),
-                ),
-              ),
+              hintText: s.homePrompt,
+              onSubmitted: (_) => _generateRecipe(),
             ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _loading ? null : _generateRecipe,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ).copyWith(
-                  backgroundColor: WidgetStateProperty.resolveWith<Color>((
-                    states,
-                  ) {
-                    if (states.contains(WidgetState.pressed)) {
-                      return orangeDark;
-                    }
-                    return orangeLight;
-                  }),
-                ),
-                child:
-                    _loading
-                        ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                          ),
-                        )
-                        : Text(
-                          s.searchButton,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-              ),
+            const SizedBox(height: 16),
+            AppPrimaryButton(
+              loading: _loading,
+              onPressed: _generateRecipe,
+              child: Text(s.searchButton, style: const TextStyle(fontSize: 16)),
             ),
             const SizedBox(height: 8),
             TextButton(
-              onPressed: () {
-                _controller.text = "Surprise me!";
-                _generateRecipe();
-              },
+              onPressed:
+                  _loading
+                      ? null
+                      : () {
+                        _controller.text = "Surprise me!";
+                        _generateRecipe();
+                      },
               child: Text(
                 s.surpriseButton,
                 style: const TextStyle(fontSize: 14),

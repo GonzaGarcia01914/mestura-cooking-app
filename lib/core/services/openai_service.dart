@@ -8,26 +8,32 @@ class OpenAIService {
   static const _apiUrl = 'https://api.openai.com/v1/chat/completions';
   static const _moderationUrl = 'https://api.openai.com/v1/moderations';
   static const _model = 'gpt-3.5-turbo';
+  Future<bool> isFood(String query) => _isFood(query);
 
   Future<RecipeModel> generateRecipe(
     String query, {
     List<String>? restrictions,
     required String language,
+    bool requireFoodCheck = false, // ⬅️ Nueva bandera
   }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
         'Missing OpenAI API key. Set it using --dart-define=OPENAI_API_KEY=your_key',
       );
     }
-    final isActuallyFood = await _isFood(query);
-    if (!isActuallyFood) {
-      throw Exception(
-        language == 'es'
-            ? 'Vamos a limitarnos a cosas comestibles.'
-            : 'Let’s stick to edible things.',
-      );
+
+    if (requireFoodCheck) {
+      final isActuallyFood = await _isFood(query);
+      if (!isActuallyFood) {
+        throw Exception(
+          language == 'es'
+              ? 'Vamos a limitarnos a cosas comestibles.'
+              : 'Let’s stick to edible things.',
+        );
+      }
     }
-    // 👮 Moderation check ONLY on user input
+
+    // 👮 Moderation check SOLO en el input
     final isBlocked = await _isQueryFlagged(query);
     if (isBlocked) {
       throw Exception('Your input was flagged as inappropriate.');
@@ -67,7 +73,7 @@ The content must be written entirely in ${language == 'es' ? 'Spanish' : 'Englis
       final data = jsonDecode(response.body);
       final content = data['choices'][0]['message']['content'];
 
-      // ⚠️ Moderation check on the response content
+      // ⚠️ Moderation en la respuesta
       final isOutputBlocked = await _isQueryFlagged(content);
       if (isOutputBlocked) {
         throw Exception('Generated content was flagged as inappropriate.');
@@ -79,13 +85,12 @@ The content must be written entirely in ${language == 'es' ? 'Spanish' : 'Englis
       final parsed = jsonDecode(jsonString);
       final recipe = RecipeModel.fromJson(parsed);
 
-      // 🖼️ Generar imagen realista con DALL·E
-      final imagePrompt =
-          'High-quality photorealistic image of a dish called "${recipe.title}", made with: ${recipe.ingredients.join(', ')}. Shot on a proffesional kitchen counter, natural lightning, the foucs is the food';
-      final imageUrl = await generateImage(imagePrompt);
+      // 🖼️ Generación de imagen
+      // final imagePrompt =
+      //     'High-quality photorealistic image of a dish called "${recipe.title}", made with: ${recipe.ingredients.join(', ')}. Shot on a professional kitchen counter, natural lighting, focus on the food';
+      // final imageUrl = await generateImage(imagePrompt);
 
-      recipe.image =
-          imageUrl; // Sobrescribe la imagen generada por GPT (si había)
+      // recipe.image = imageUrl;
 
       return recipe;
     } else {

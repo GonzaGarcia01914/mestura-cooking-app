@@ -2,13 +2,13 @@ class RecipeModel {
   final String title;
   final List<String> ingredients;
   final List<String> steps;
-  String image;
+  String? image;
 
   RecipeModel({
     required this.title,
     required this.ingredients,
     required this.steps,
-    required this.image,
+    this.image,
   });
 
   factory RecipeModel.fromJson(Map<String, dynamic> json) {

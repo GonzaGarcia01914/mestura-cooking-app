@@ -85,4 +85,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingMessage => 'Cooking the recipe...';
+
+  @override
+  String get loadingTip1 => 'Tip: Try smoked spices for deeper flavor.';
+
+  @override
+  String get loadingTip2 => 'Tip: Toast spices for 30s to unlock aromas.';
+
+  @override
+  String get loadingTip3 => 'Tip: Save cooking water to adjust texture.';
+
+  @override
+  String get loadingTip4 => 'Tip: A splash of acid (lemon/vinegar) brightens any dish.';
+
+  @override
+  String get loadingTip5 => 'Tip: Salt in layers, not all at the end.';
+
+  @override
+  String get loadingStagePreparing => 'Preparing';
+
+  @override
+  String get loadingStageMixing => 'Mixing';
+
+  @override
+  String get loadingStageSeasoning => 'Seasoning';
+
+  @override
+  String get loadingStageCooking => 'Cooking';
+
+  @override
+  String get loadingStagePlating => 'Plating';
 }

@@ -250,6 +250,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cooking the recipe...'**
   String get loadingMessage;
+
+  /// No description provided for @loadingTip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Try smoked spices for deeper flavor.'**
+  String get loadingTip1;
+
+  /// No description provided for @loadingTip2.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Toast spices for 30s to unlock aromas.'**
+  String get loadingTip2;
+
+  /// No description provided for @loadingTip3.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Save cooking water to adjust texture.'**
+  String get loadingTip3;
+
+  /// No description provided for @loadingTip4.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: A splash of acid (lemon/vinegar) brightens any dish.'**
+  String get loadingTip4;
+
+  /// No description provided for @loadingTip5.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Salt in layers, not all at the end.'**
+  String get loadingTip5;
+
+  /// No description provided for @loadingStagePreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing'**
+  String get loadingStagePreparing;
+
+  /// No description provided for @loadingStageMixing.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixing'**
+  String get loadingStageMixing;
+
+  /// No description provided for @loadingStageSeasoning.
+  ///
+  /// In en, this message translates to:
+  /// **'Seasoning'**
+  String get loadingStageSeasoning;
+
+  /// No description provided for @loadingStageCooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get loadingStageCooking;
+
+  /// No description provided for @loadingStagePlating.
+  ///
+  /// In en, this message translates to:
+  /// **'Plating'**
+  String get loadingStagePlating;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
