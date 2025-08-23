@@ -82,4 +82,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get inappropriateInput => 'Tu consulta no es apropiada para una receta. Intenta con otra idea.';
+
+  @override
+  String get loadingMessage => 'Cocinando la receta...';
 }

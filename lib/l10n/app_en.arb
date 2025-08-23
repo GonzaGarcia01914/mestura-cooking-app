@@ -24,6 +24,6 @@
   "theme": "Theme",
   "themeLight": "Light",
   "themeDark": "Dark",
-  "inappropriateInput": "Your input is not appropriate for a recipe. Please try a different idea."
-
+  "inappropriateInput": "Your input is not appropriate for a recipe. Please try a different idea.",
+  "loadingMessage": "Cooking the recipe..."
 }

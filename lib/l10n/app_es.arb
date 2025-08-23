@@ -24,5 +24,6 @@
   "theme": "Tema",
   "themeLight": "Claro",
   "themeDark": "Oscuro",
-  "inappropriateInput": "Tu consulta no es apropiada para una receta. Intenta con otra idea."
+  "inappropriateInput": "Tu consulta no es apropiada para una receta. Intenta con otra idea.",
+  "loadingMessage": "Cocinando la receta..."
 }

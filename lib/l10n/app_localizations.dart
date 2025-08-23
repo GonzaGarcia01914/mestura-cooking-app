@@ -244,6 +244,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your input is not appropriate for a recipe. Please try a different idea.'**
   String get inappropriateInput;
+
+  /// No description provided for @loadingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking the recipe...'**
+  String get loadingMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

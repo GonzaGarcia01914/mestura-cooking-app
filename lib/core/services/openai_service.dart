@@ -19,7 +19,14 @@ class OpenAIService {
         'Missing OpenAI API key. Set it using --dart-define=OPENAI_API_KEY=your_key',
       );
     }
-
+    final isActuallyFood = await _isFood(query);
+    if (!isActuallyFood) {
+      throw Exception(
+        language == 'es'
+            ? 'Vamos a limitarnos a cosas comestibles.'
+            : 'Let’s stick to edible things.',
+      );
+    }
     // 👮 Moderation check ONLY on user input
     final isBlocked = await _isQueryFlagged(query);
     if (isBlocked) {
@@ -70,7 +77,17 @@ The content must be written entirely in ${language == 'es' ? 'Spanish' : 'Englis
       final jsonEnd = content.lastIndexOf('}');
       final jsonString = content.substring(jsonStart, jsonEnd + 1);
       final parsed = jsonDecode(jsonString);
-      return RecipeModel.fromJson(parsed);
+      final recipe = RecipeModel.fromJson(parsed);
+
+      // 🖼️ Generar imagen realista con DALL·E
+      final imagePrompt =
+          'High-quality photorealistic image of a dish called "${recipe.title}", made with: ${recipe.ingredients.join(', ')}. Shot on a proffesional kitchen counter, natural lightning, the foucs is the food';
+      final imageUrl = await generateImage(imagePrompt);
+
+      recipe.image =
+          imageUrl; // Sobrescribe la imagen generada por GPT (si había)
+
+      return recipe;
     } else {
       throw Exception('OpenAI error: ${response.body}');
     }
@@ -83,6 +100,61 @@ The content must be written entirely in ${language == 'es' ? 'Spanish' : 'Englis
       return '$base Do not include: $banned.';
     }
     return base;
+  }
+
+  Future<String> generateImage(String prompt) async {
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/images/generations'),
+      headers: {
+        'Authorization': 'Bearer $_apiKey',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'model': 'dall-e-3',
+        'prompt': prompt,
+        'n': 1,
+        'size': '1024x1024', // o 512x512 para carga más rápida
+        'quality': 'standard',
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Image generation failed: ${response.body}');
+    }
+
+    final data = jsonDecode(response.body);
+    return data['data'][0]['url'];
+  }
+
+  Future<bool> _isFood(String query) async {
+    final response = await http.post(
+      Uri.parse(_apiUrl),
+      headers: {
+        'Authorization': 'Bearer $_apiKey',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'model': _model,
+        'messages': [
+          {
+            'role': 'system',
+            'content':
+                'You are a food filter. Reply with "yes" if the input is food or edible. Reply with "no" if it is not. Only respond with "yes" or "no", nothing else.',
+          },
+          {'role': 'user', 'content': 'Is this food? "$query"'},
+        ],
+        'temperature': 0.2,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Food check failed: ${response.body}');
+    }
+
+    final data = jsonDecode(response.body);
+    final content =
+        data['choices'][0]['message']['content'].toLowerCase().trim();
+    return content == 'yes';
   }
 
   // 🧠 Moderation helper

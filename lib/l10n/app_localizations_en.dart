@@ -82,4 +82,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inappropriateInput => 'Your input is not appropriate for a recipe. Please try a different idea.';
+
+  @override
+  String get loadingMessage => 'Cooking the recipe...';
 }

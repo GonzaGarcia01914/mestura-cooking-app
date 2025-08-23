@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/openai_service.dart';
+import '../../ui/screens/loading_screen.dart';
 import 'recipe_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +22,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final languageCode = Localizations.localeOf(context).languageCode;
 
-    setState(() => _loading = true);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const LoadingScreen()),
+    );
+
     try {
       final result = await _openAI.generateRecipe(
         query,
@@ -29,15 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
       if (!mounted) return;
+
+      Navigator.pop(context); // Cierra pantalla de carga
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => RecipeScreen(recipe: result)),
       );
     } catch (e) {
       if (!mounted) return;
+      Navigator.pop(context); // Cierra pantalla de carga en caso de error
 
       final message =
-          e.toString().contains('Prompt rejected')
+          e.toString().contains('not allowed')
               ? (languageCode == 'es'
                   ? 'Este contenido no está permitido.'
                   : 'This content is not allowed.')
@@ -46,8 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
-    } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 
