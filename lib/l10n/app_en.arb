@@ -2,6 +2,8 @@
   "@@locale": "en",
   "appTitle": "Mestura",
   "homePrompt": "What would you like?",
+  "advancedOptions": "Advanced options",
+  "numberOfGuests": "Number of Guests",
   "searchButton": "Search recipe",
   "surpriseButton": "Surprise me",
   "ingredientsTitle": "Ingredients",

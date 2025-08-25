@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:mestura/ui/widgets/glass_alert.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/openai_service.dart';
 //import '../../core/navigation/run_with_loading.dart';
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _controller = TextEditingController();
   final _openAI = OpenAIService();
   bool _loading = false;
+  int _servings = 2;
 
   Future<void> _showErrorDialog(String rawMessage) async {
     if (!mounted) return;
@@ -52,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Opacity(
           opacity: curved.value,
           child: Center(
-            child: _GlassAlert(
+            child: GlassAlert(
               title: title,
               message: message,
               okLabel: ok,
@@ -104,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final recipeFuture = _openAI.generateRecipe(
         query,
         language: languageCode,
-        generateImage: false, // tu flag
+        generateImage: false,
+        servings: _servings,
       );
 
       // 5) Si toca anuncio, lo mostramos SOBRE la Loading y esperamos a su cierre en paralelo
@@ -227,112 +230,80 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             AppTitle(s.homePrompt),
             const SizedBox(height: 24),
+
             AppTextField(
               controller: _controller,
               hintText: s.homePrompt,
               onSubmitted: (_) => _generateRecipe(),
             ),
             const SizedBox(height: 16),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outlineVariant.withOpacity(0.3),
+                ),
+              ),
+              child: Theme(
+                data: Theme.of(
+                  context,
+                ).copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  title: Text(
+                    s.advancedOptions, // si tienes l10n cambia por s.advancedOptions
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          s.numberOfGuests,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _servings = (_servings - 1);
+                              if (_servings < 1) _servings = 1;
+                            });
+                          },
+                          icon: const Icon(Icons.remove_circle_outline),
+                        ),
+                        Text(
+                          '$_servings',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _servings = (_servings + 1);
+                              if (_servings > 12) _servings = 12;
+                            });
+                          },
+                          icon: const Icon(Icons.add_circle_outline),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 12),
             AppPrimaryButton(
               loading: _loading,
               onPressed: _generateRecipe,
               child: Text(s.searchButton, style: const TextStyle(fontSize: 16)),
             ),
             const SizedBox(height: 8),
-            TextButton(
-              onPressed:
-                  _loading
-                      ? null
-                      : () {
-                        _controller.text = "Surprise me!";
-                        _generateRecipe();
-                      },
-              child: Text(
-                s.surpriseButton,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _GlassAlert extends StatelessWidget {
-  const _GlassAlert({
-    required this.title,
-    required this.message,
-    required this.okLabel,
-    required this.onOk,
-  });
-
-  final String title;
-  final String message;
-  final String okLabel;
-  final VoidCallback onOk;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.86,
-          constraints: const BoxConstraints(maxWidth: 420),
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
-          decoration: BoxDecoration(
-            color: cs.surface.withOpacity(0.70),
-            border: Border.all(color: cs.outlineVariant.withOpacity(0.35)),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 32,
-                spreadRadius: -8,
-                color: Colors.black.withOpacity(0.28),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Icono dentro de círculo sutil
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: cs.error.withOpacity(0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.error_outline, size: 28, color: cs.error),
-              ),
-              const SizedBox(height: 12),
-
-              const SizedBox(height: 8),
-              Text(
-                message,
-                style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: onOk,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(okLabel),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

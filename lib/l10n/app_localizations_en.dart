@@ -15,6 +15,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homePrompt => 'What would you like?';
 
   @override
+  String get advancedOptions => 'Advanced options';
+
+  @override
+  String get numberOfGuests => 'Number of Guests';
+
+  @override
   String get searchButton => 'Search recipe';
 
   @override

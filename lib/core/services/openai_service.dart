@@ -16,10 +16,6 @@ class OpenAIService {
   static const _chatModel = 'gpt-4o-mini';
   static const _moderationModel = 'omni-moderation-latest';
 
-  // Placeholder si el modelo/no hay imagen
-  // static const _fallbackImage =
-  //     'https://picsum.photos/seed/food-plate/1024/768';
-
   Future<bool> isFood(String query) => _isFood(query);
 
   Future<RecipeModel> generateRecipe(
@@ -28,22 +24,14 @@ class OpenAIService {
     required String language,
     bool requireFoodCheck = false,
 
-    /// 🔽 Nuevo: controlas si generar imagen
+    /// Controla si generar imagen
     bool generateImage = false,
     String imageSize = '1024x1024',
+
+    /// 👇 NUEVO: porciones
+    int? servings,
   }) async {
     _ensureKey();
-
-    // if (requireFoodCheck) {
-    //   final ok = await _isFood(query);
-    //   if (!ok) {
-    //     throw Exception(
-    //       language == 'es'
-    //           ? 'Vamos a limitarnos a cosas comestibles.'
-    //           : 'Let’s stick to edible things.',
-    //     );
-    //   }
-    // }
 
     // Moderación SOLO del input
     if (await _isQueryFlagged(query)) {
@@ -54,32 +42,36 @@ class OpenAIService {
 You are a chef assistant. Return ONLY a single valid JSON object with this exact structure:
 {
   "title": "string, non-empty",
-  "ingredients": ["string", "..."],   // non-empty array of non-empty strings
-  "steps": ["string", "..."],         // non-empty array of non-empty strings
-  "image": "string URL or empty"      // optional; may be empty
+  "ingredients": ["string", "..."],
+  "steps": ["string", "..."],
+  "image": "string URL or empty"
 }
 Do NOT include any markdown, backticks, or explanations.
 Write ALL content in ${language == 'es' ? 'Spanish' : 'English'} and only about real food.
 ''';
 
-    final userPrompt = _buildPrompt(query, restrictions);
-
-    final body = jsonEncode({
-      'model': _chatModel,
-      'messages': [
-        {'role': 'system', 'content': systemPrompt},
-        {'role': 'user', 'content': userPrompt},
-      ],
-      'response_format': {'type': 'json_object'},
-      'temperature': 0.8,
-      'max_tokens': 900,
-    });
+    final userPrompt = _buildPrompt(
+      query,
+      restrictions,
+      servings: servings,
+      lang: language,
+    );
 
     final resp = await http.post(
       Uri.parse(_chatUrl),
       headers: _headers(),
-      body: body,
+      body: jsonEncode({
+        'model': _chatModel,
+        'messages': [
+          {'role': 'system', 'content': systemPrompt},
+          {'role': 'user', 'content': userPrompt},
+        ],
+        'response_format': {'type': 'json_object'},
+        'temperature': 0.8,
+        'max_tokens': 900,
+      }),
     );
+
     if (resp.statusCode != 200) {
       throw _httpError('OpenAI chat', resp);
     }
@@ -92,10 +84,9 @@ Write ALL content in ${language == 'es' ? 'Spanish' : 'English'} and only about 
       throw Exception('Generated content was flagged as inappropriate.');
     }
 
-    // Parse estricto (debería venir como JSON limpio)
+    // Parse estricto
     final Map<String, dynamic> parsed = _strictParseJson(raw);
 
-    // Validación mínima
     bool _validList(dynamic v) =>
         v is List &&
         v.isNotEmpty &&
@@ -104,53 +95,102 @@ Write ALL content in ${language == 'es' ? 'Spanish' : 'English'} and only about 
     final title = (parsed['title'] ?? '').toString().trim();
     final ingredients = parsed['ingredients'];
     final steps = parsed['steps'];
-    var image = (parsed['image'] ?? '').toString().trim();
+
+    // image puede venir vacía → la normalizamos a null para que tu UI no pinte nada
+    String? image = (parsed['image'] ?? '').toString().trim();
+    if (image.isEmpty) image = null;
 
     if (title.isEmpty || !_validList(ingredients) || !_validList(steps)) {
       throw Exception('Invalid recipe format from model. Please try again.');
     }
 
-    // 🖼️ Imagen opcional controlada por flag
+    // 🖼️ Imagen opcional
     if (generateImage) {
       try {
         final imgPrompt = _imagePromptFor(
           title: title,
-          ingredients: List<String>.from(ingredients),
+          ingredients: List<String>.from(ingredients as List),
           lang: language,
         );
-        final url = await this.generateImage(imgPrompt, size: imageSize);
-        image = url; // sobrescribimos con nuestra imagen generada
+        final url = await generateImageDalle(imgPrompt, size: imageSize);
+        image = url;
       } catch (e) {
         debugPrint('[Images] Generation failed: $e');
-        // if (image.isEmpty) image = _fallbackImage;
       }
-    } else {
-      // if (image.isEmpty) image = _fallbackImage;
     }
 
-    final recipe = RecipeModel.fromJson({
-      'title': title,
-      'ingredients': ingredients,
-      'steps': steps,
-      'image': image,
-    });
-
-    return recipe;
+    return RecipeModel(
+      title: title,
+      ingredients: List<String>.from(ingredients as List),
+      steps: List<String>.from(steps as List),
+      image: image, // 👈 null si venía vacío
+    );
   }
 
-  String _buildPrompt(String query, List<String>? restrictions) {
-    final base =
-        'Create a complete and practical recipe for: "$query". '
-        'Include concise ingredient amounts and clear numbered steps.';
-    if (restrictions != null && restrictions.isNotEmpty) {
-      final banned = restrictions.join(', ');
-      return '$base Avoid these ingredients: $banned.';
+  /// Prompt con soporte de porciones y listas de ingredientes
+  String _buildPrompt(
+    String query,
+    List<String>? restrictions, {
+    int? servings,
+    required String lang,
+  }) {
+    final isEs = lang == 'es';
+    final looksLikeIngs = _looksLikeIngredients(query);
+
+    final servingsPart =
+        (servings != null && servings > 0)
+            ? (isEs
+                ? ' Ajusta cantidades para exactamente $servings personas.'
+                : ' Scale quantities for exactly $servings servings.')
+            : '';
+
+    final avoidPart =
+        (restrictions != null && restrictions.isNotEmpty)
+            ? (isEs
+                ? ' Evita estos ingredientes: ${restrictions.join(', ')}.'
+                : ' Avoid these ingredients: ${restrictions.join(', ')}.')
+            : '';
+
+    if (looksLikeIngs) {
+      // Usuario pegó ingredientes → proponemos un plato real
+      return (isEs
+              ? 'Propón UNA receta real (con un nombre claro) que use principalmente estos ingredientes: "$query".'
+              : 'Propose ONE real dish (with a clear title) that primarily uses these ingredients: "$query".') +
+          (isEs
+              ? ' No te limites a mezclarlos; elige un plato conocido o verosímil donde encajen bien. '
+              : ' Do not just mix them; choose a well-known or plausible dish where they fit naturally. ') +
+          (isEs
+              ? 'Puedes asumir básicos de despensa (sal, agua, aceite). Usa cantidades concisas y pasos numerados.'
+              : 'You may assume pantry basics (salt, water, oil). Use concise quantities and numbered steps.') +
+          servingsPart +
+          avoidPart;
     }
-    return base;
+
+    // Búsqueda normal por nombre/idea de plato
+    return (isEs
+            ? 'Crea una receta completa y práctica para: "$query". '
+            : 'Create a complete and practical recipe for: "$query". ') +
+        (isEs
+            ? 'Incluye cantidades concretas y pasos numerados.'
+            : 'Include concise quantities and clear numbered steps.') +
+        servingsPart +
+        avoidPart;
+  }
+
+  /// Heurística ligera para detectar listas de ingredientes
+  bool _looksLikeIngredients(String q) {
+    final s = q.toLowerCase().trim();
+    if (s.contains(',') || s.contains('\n') || s.contains(';')) return true;
+    if (RegExp(r'\bingrediente[s]?\b').hasMatch(s)) return true;
+    if (RegExp(r'\bcon\b|\band\b|\by\b').hasMatch(s) && s.length < 80) {
+      // "pasta con tomate y ajo" → probable lista corta
+      return true;
+    }
+    return false;
   }
 
   // === Generación de imagen (DALL·E 3)
-  Future<String> generateImage(
+  Future<String> generateImageDalle(
     String prompt, {
     String size = '1024x1024',
   }) async {
@@ -184,8 +224,7 @@ Write ALL content in ${language == 'es' ? 'Spanish' : 'English'} and only about 
         (lang == 'es')
             ? 'Fotografía profesional realista de comida'
             : 'Realistic professional food photography';
-    return '$t of a dish called "$title". Ingredients: $ing. '
-        'Natural lighting, on a clean table, high detail, shallow depth of field.';
+    return '$t of a dish called "$title". Ingredients: $ing. Natural lighting, on a clean table, high detail, shallow depth of field.';
   }
 
   // === Food check robusto ===

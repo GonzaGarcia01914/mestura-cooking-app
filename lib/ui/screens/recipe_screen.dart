@@ -10,6 +10,7 @@ import '../../core/services/storage_service.dart';
 import 'loading_screen.dart';
 // Design system
 import '../widgets/app_scaffold.dart';
+import '../widgets/glass_alert.dart';
 import '../widgets/app_top_bar.dart';
 import '../widgets/app_primary_button.dart';
 import '../widgets/frosted_container.dart';
@@ -29,6 +30,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   Locale? _locale;
   String? _headerImageUrl;
   bool _showHeaderImage = false;
+  bool _isSaved = false;
 
   // AppBar tint con scroll
   final _scrollCtrl = ScrollController();
@@ -39,6 +41,9 @@ class _RecipeScreenState extends State<RecipeScreen> {
     super.initState();
     _checked = List.generate(widget.recipe.ingredients.length, (_) => true);
     _loadPreferences();
+
+    _checkIfAlreadySaved();
+    _prepareHeaderImage();
 
     _scrollCtrl.addListener(() {
       const maxTint = 0.08;
@@ -51,20 +56,24 @@ class _RecipeScreenState extends State<RecipeScreen> {
     });
   }
 
+  Future<void> _checkIfAlreadySaved() async {
+    final storage = StorageService();
+    final list = await storage.getSavedRecipes();
+    if (!mounted) return;
+
+    String _sig(RecipeModel r) =>
+        '${r.title}::${r.ingredients.join('|')}::${r.steps.join('|')}';
+
+    final already = list.any((r) => _sig(r) == _sig(widget.recipe));
+    setState(() => _isSaved = already);
+  }
+
   @override
   void didUpdateWidget(covariant RecipeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.recipe.image != widget.recipe.image) {
-      _deriveHeaderImage();
+      _prepareHeaderImage();
     }
-  }
-
-  void _deriveHeaderImage() {
-    final url = _normalizeImageUrl(widget.recipe.image);
-    setState(() {
-      _headerImageUrl = url;
-      _showHeaderImage = url != null;
-    });
   }
 
   String? _normalizeImageUrl(String? raw) {
@@ -80,6 +89,41 @@ class _RecipeScreenState extends State<RecipeScreen> {
     final scheme = uri.scheme.toLowerCase();
     if (scheme != 'http' && scheme != 'https') return null;
     return s;
+  }
+
+  Future<void> _prepareHeaderImage() async {
+    final url = _normalizeImageUrl(widget.recipe.image);
+    if (url == null) {
+      setState(() {
+        _headerImageUrl = null;
+        _showHeaderImage = false;
+      });
+      return;
+    }
+
+    // Precargamos: si va bien, recién entonces mostramos el bloque
+    final img = NetworkImage(url);
+    final stream = img.resolve(const ImageConfiguration());
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener(
+      (info, _) {
+        if (!mounted) return;
+        setState(() {
+          _headerImageUrl = url;
+          _showHeaderImage = true;
+        });
+        stream.removeListener(listener);
+      },
+      onError: (error, _) {
+        if (!mounted) return;
+        setState(() {
+          _headerImageUrl = null;
+          _showHeaderImage = false;
+        });
+        stream.removeListener(listener);
+      },
+    );
+    stream.addListener(listener);
   }
 
   @override
@@ -113,6 +157,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
       bool loadingShown = false;
       final pushedAt = DateTime.now();
       const minShowMs = 700; // anti-flicker
+      // ignore: use_build_context_synchronously
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => const LoadingScreen(),
@@ -187,11 +232,49 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   Future<void> _saveRecipe() async {
+    if (_isSaved) return;
+
     final storage = StorageService();
     await storage.saveRecipe(widget.recipe);
+
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context)!.savedConfirmation)),
+    setState(() => _isSaved = true); // 👈 oculta el botón
+
+    // 👇 Alert “bonito” en lugar de SnackBar
+    final lang = Localizations.localeOf(context).languageCode;
+    final title = lang == 'es' ? '¡Listo!' : 'Done!';
+    final ok = lang == 'es' ? 'Entendido' : 'OK';
+    final message = AppLocalizations.of(context)!.savedConfirmation;
+
+    // ignore: use_build_context_synchronously
+    await showGeneralDialog<void>(
+      context: context,
+      barrierLabel: 'saved',
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.35),
+      transitionDuration: const Duration(milliseconds: 220),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (ctx, anim, _, __) {
+        return Opacity(
+          opacity:
+              CurvedAnimation(
+                parent: anim,
+                curve: Curves.easeOutCubic,
+                reverseCurve: Curves.easeInCubic,
+              ).value,
+          child: Center(
+            child: GlassAlert(
+              icon: Icons.check_circle_outline_rounded,
+              iconColor: Colors.green,
+              accentColor: Colors.green,
+              title: title,
+              message: message,
+              okLabel: ok,
+              onOk: () => Navigator.of(ctx).pop(),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -201,8 +284,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
     final theme = Theme.of(context);
     final ingredients = widget.recipe.ingredients;
     final steps = widget.recipe.steps;
-
-    // ⬇️ Solo mostramos bloque de imagen si hay URL no vacía
 
     return AppScaffold(
       extendBodyBehindAppBar: true,
@@ -221,7 +302,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top + 72 + 8),
 
-            // 👇 Header image (opcional)
+            // Imagen opcional
             if (_showHeaderImage && _headerImageUrl != null) ...[
               FrostedContainer(
                 padding: EdgeInsets.zero,
@@ -233,7 +314,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     child: Image.network(
                       _headerImageUrl!,
                       fit: BoxFit.cover,
-                      // Si falla, ocultamos COMPLETAMENTE el bloque en el siguiente frame
                       errorBuilder: (_, __, ___) {
                         if (_showHeaderImage) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -323,11 +403,13 @@ class _RecipeScreenState extends State<RecipeScreen> {
               child: Text(s.rewriteButton),
             ),
             const SizedBox(height: 10),
-            OutlinedButton.icon(
-              onPressed: _saveRecipe,
-              icon: const Icon(Icons.bookmark_add),
-              label: Text(s.saveButton),
-            ),
+
+            if (!_isSaved)
+              OutlinedButton.icon(
+                onPressed: _saveRecipe,
+                icon: const Icon(Icons.bookmark_add),
+                label: Text(s.saveButton),
+              ),
 
             const SizedBox(height: 24),
           ],

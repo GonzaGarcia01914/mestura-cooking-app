@@ -107,6 +107,18 @@ abstract class AppLocalizations {
   /// **'What would you like?'**
   String get homePrompt;
 
+  /// No description provided for @advancedOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced options'**
+  String get advancedOptions;
+
+  /// No description provided for @numberOfGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Guests'**
+  String get numberOfGuests;
+
   /// No description provided for @searchButton.
   ///
   /// In en, this message translates to:

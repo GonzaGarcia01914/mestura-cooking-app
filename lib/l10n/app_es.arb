@@ -2,6 +2,8 @@
   "@@locale": "es",
   "appTitle": "Mestura",
   "homePrompt": "¿Qué te apetece?",
+  "advancedOptions": "Opciones Avanzadas",
+  "numberOfGuests": "Número de Invitados",
   "searchButton": "Buscar receta",
   "surpriseButton": "Sorpréndeme",
   "ingredientsTitle": "Ingredientes",
