@@ -24,16 +24,16 @@ class _LoadingScreenState extends State<LoadingScreen>
   // Indeterminate ring
   late final AnimationController _ringController;
 
-  // Typewriter text
-  late Ticker _textTicker;
-  late String _fullText;
+  // Typewriter text (anulable para no fallar si no llegó a crearse)
+  Ticker? _textTicker;
+  String _fullText = '';
   String _displayedText = '';
   int _charIndex = 0;
 
   // Tips carousel
-  late Timer _tipsTimer;
+  Timer? _tipsTimer;
   int _tipIndex = 0;
-  late final List<String> _tips;
+  List<String> _tips = const [];
 
   @override
   void initState() {
@@ -50,7 +50,6 @@ class _LoadingScreenState extends State<LoadingScreen>
     _iconRotation = Tween(begin: 0.0, end: 2 * math.pi).animate(
       CurvedAnimation(
         parent: _iconController,
-        // Rotation slower: every 2 pulses ~ 2.4s
         curve: const Interval(0, 1, curve: Curves.linear),
       ),
     );
@@ -70,19 +69,24 @@ class _LoadingScreenState extends State<LoadingScreen>
     // Init text & tips after context is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final l10n = AppLocalizations.of(context);
-      _fullText = l10n?.loadingMessage ?? 'Cocinando la receta...';
 
-      _tips = [
-        l10n?.loadingTip1 ??
-            'Consejo: prueba con especias ahumadas para más sabor.',
-        l10n?.loadingTip2 ??
-            'Consejo: tuesta las especias 30s para despertar aromas.',
-        l10n?.loadingTip3 ??
-            'Consejo: guarda el agua de cocción para ajustar textura.',
-        l10n?.loadingTip4 ??
-            'Consejo: ácido al final (limón/vinagre) realza todo.',
-        l10n?.loadingTip5 ?? 'Consejo: sal en capas, no toda al final.',
-      ];
+      setState(() {
+        _fullText = l10n?.loadingMessage ?? 'Cocinando la receta...';
+        _tips = [
+          l10n?.loadingTip1 ??
+              'Consejo: prueba con especias ahumadas para más sabor.',
+          l10n?.loadingTip2 ??
+              'Consejo: tuesta las especias 30s para despertar aromas.',
+          l10n?.loadingTip3 ??
+              'Consejo: guarda el agua de cocción para ajustar textura.',
+          l10n?.loadingTip4 ??
+              'Consejo: ácido al final (limón/vinagre) realza todo.',
+          l10n?.loadingTip5 ?? 'Consejo: sal en capas, no toda al final.',
+        ];
+        if (_tips.isNotEmpty) {
+          _tipIndex = DateTime.now().millisecond % _tips.length;
+        }
+      });
 
       // Typewriter ticker
       _textTicker = createTicker((_) {
@@ -92,15 +96,14 @@ class _LoadingScreenState extends State<LoadingScreen>
             _charIndex++;
           });
         } else {
-          _textTicker.stop();
+          _textTicker?.stop();
         }
       })..start();
 
       // Tips carousel cada 2.5s
       _tipsTimer = Timer.periodic(const Duration(milliseconds: 2500), (_) {
-        if (mounted) {
-          setState(() => _tipIndex = (_tipIndex + 1) % _tips.length);
-        }
+        if (!mounted || _tips.isEmpty) return;
+        setState(() => _tipIndex = (_tipIndex + 1) % _tips.length);
       });
     });
   }
@@ -110,8 +113,8 @@ class _LoadingScreenState extends State<LoadingScreen>
     _iconController.dispose();
     _bgController.dispose();
     _ringController.dispose();
-    _textTicker.dispose();
-    _tipsTimer.cancel();
+    _textTicker?.dispose();
+    _tipsTimer?.cancel();
     super.dispose();
   }
 
@@ -122,156 +125,164 @@ class _LoadingScreenState extends State<LoadingScreen>
     final onPrimary = theme.colorScheme.onPrimary;
     final surface = theme.colorScheme.surface;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Animated gradient background
-          AnimatedBuilder(
-            animation: _bgController,
-            builder: (context, _) {
-              final t = _bgController.value;
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(-1 + 2 * t, -1),
-                    end: Alignment(1 - 2 * t, 1),
-                    colors: [
-                      color.withValues(alpha: 0.12),
-                      surface,
-                      color.withValues(alpha: 0.08),
-                    ],
+    final tipText = _tips.isEmpty ? '' : _tips[_tipIndex % _tips.length];
+
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            // Animated gradient background
+            AnimatedBuilder(
+              animation: _bgController,
+              builder: (context, _) {
+                final t = _bgController.value;
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(-1 + 2 * t, -1),
+                      end: Alignment(1 - 2 * t, 1),
+                      colors: [
+                        color.withValues(alpha: 0.12),
+                        surface,
+                        color.withValues(alpha: 0.08),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-
-          // Soft floating blobs (subtle)
-          IgnorePointer(
-            child: CustomPaint(
-              painter: _BlobPainter(color.withValues(alpha: 0.06)),
-              size: Size.infinite,
+                );
+              },
             ),
-          ),
 
-          // Content
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Cooking ring + icon
-                SizedBox(
-                  width: 140,
-                  height: 140,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AnimatedBuilder(
-                        animation: _ringController,
-                        builder: (context, _) {
-                          return CustomPaint(
-                            size: const Size.square(140),
-                            painter: _IndeterminateRingPainter(
-                              progress: _ringController.value,
-                              color: color,
-                              trackColor: color.withValues(alpha: 0.15),
-                            ),
-                          );
-                        },
-                      ),
-                      AnimatedBuilder(
-                        animation: Listenable.merge([_iconController]),
-                        builder: (context, _) {
-                          return Transform.rotate(
-                            angle: _iconRotation.value / 12, // muy sutil
-                            child: Transform.scale(
-                              scale: _iconScale.value,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primaryContainer,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 24,
-                                      spreadRadius: 1,
-                                      color: color.withValues(alpha: 0.25),
+            // Soft floating blobs (subtle)
+            IgnorePointer(
+              child: CustomPaint(
+                painter: _BlobPainter(color.withValues(alpha: 0.06)),
+                size: Size.infinite,
+              ),
+            ),
+
+            // Content
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Cooking ring + icon
+                  SizedBox(
+                    width: 140,
+                    height: 140,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedBuilder(
+                          animation: _ringController,
+                          builder: (context, _) {
+                            return CustomPaint(
+                              size: const Size.square(140),
+                              painter: _IndeterminateRingPainter(
+                                progress: _ringController.value,
+                                color: color,
+                                trackColor: color.withValues(alpha: 0.15),
+                              ),
+                            );
+                          },
+                        ),
+                        AnimatedBuilder(
+                          animation: Listenable.merge([_iconController]),
+                          builder: (context, _) {
+                            return Transform.rotate(
+                              angle: _iconRotation.value / 12, // muy sutil
+                              child: Transform.scale(
+                                scale: _iconScale.value,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primaryContainer,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 24,
+                                        spreadRadius: 1,
+                                        color: color.withValues(alpha: 0.25),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(18),
+                                    child: Icon(
+                                      Icons.local_dining,
+                                      size: 48,
+                                      color: onPrimary,
                                     ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18),
-                                  child: Icon(
-                                    Icons.local_dining,
-                                    size: 48,
-                                    color: onPrimary,
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 28),
-
-                // Typewriter loading message
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Text(
-                    _displayedText,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // Pulsing dots under the message
-                const _PulsingDots(),
-
-                const SizedBox(height: 20),
-
-                // Stage chips
-                _StageChips(primary: color),
-
-                const SizedBox(height: 20),
-
-                // Rotating cooking tips
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 350),
-                  transitionBuilder:
-                      (child, anim) => SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0.0, 0.25),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(parent: anim, curve: Curves.easeOut),
+                            );
+                          },
                         ),
-                        child: FadeTransition(opacity: anim, child: child),
-                      ),
-                  child: Padding(
-                    key: ValueKey(_tipIndex),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  // Typewriter loading message
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Text(
-                      _tips[_tipIndex],
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodyMedium?.color?.withValues(
-                          alpha: 0.75,
-                        ),
+                      _displayedText,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 8),
+
+                  // Pulsing dots under the message
+                  const _PulsingDots(),
+
+                  const SizedBox(height: 20),
+
+                  // Stage chips
+                  _StageChips(primary: color),
+
+                  const SizedBox(height: 20),
+
+                  // Rotating cooking tips
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 350),
+                    transitionBuilder:
+                        (child, anim) => SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0.0, 0.25),
+                            end: Offset.zero,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: anim,
+                              curve: Curves.easeOut,
+                            ),
+                          ),
+                          child: FadeTransition(opacity: anim, child: child),
+                        ),
+                    child: Padding(
+                      key: ValueKey(_tipIndex),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        tipText,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.textTheme.bodyMedium?.color?.withValues(
+                            alpha: 0.75,
+                          ),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -306,7 +317,6 @@ class _IndeterminateRingPainter extends CustomPainter {
     canvas.drawArc(rect, 0, 2 * math.pi, false, trackPaint);
 
     // Segmento animado
-    // Avanza alrededor del círculo y “respira” en longitud
     final sweep =
         (0.6 + 0.4 * math.sin(progress * 2 * math.pi)) * math.pi / 1.5;
     final start = (progress * 2 * math.pi);
@@ -331,14 +341,13 @@ class _IndeterminateRingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _IndeterminateRingPainter oldDelegate) {
-    return oldDelegate.progress != progress ||
-        oldDelegate.color != color ||
-        oldDelegate.trackColor != trackColor;
+  bool shouldRepaint(covariant _IndeterminateRingPainter old) {
+    return old.progress != progress ||
+        old.color != color ||
+        old.trackColor != trackColor;
   }
 }
 
-/// Dots ... con pulso y pequeño desplazamiento vertical
 class _PulsingDots extends StatefulWidget {
   const _PulsingDots();
 
@@ -373,7 +382,6 @@ class _PulsingDotsState extends State<_PulsingDots>
     return AnimatedBuilder(
       animation: _a,
       builder: (context, _) {
-        // desfase entre puntos
         double f(int i) =>
             (math.sin((_a.value * 2 * math.pi) + i * 0.7) + 1) / 2;
         return Row(
@@ -395,7 +403,6 @@ class _PulsingDotsState extends State<_PulsingDots>
   }
 }
 
-/// Chips de etapas para dar sensación de progreso sin bloquear la UI
 class _StageChips extends StatefulWidget {
   const _StageChips({required this.primary});
   final Color primary;
@@ -479,7 +486,6 @@ class _StageChipsState extends State<_StageChips> {
   }
 }
 
-/// Blobs muy suaves para dar profundidad al fondo
 class _BlobPainter extends CustomPainter {
   _BlobPainter(this.color);
   final Color color;

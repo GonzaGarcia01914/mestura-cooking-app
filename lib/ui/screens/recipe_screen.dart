@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../ui/screens/loading_screen.dart';
 import '../../models/recipe.dart';
 import '../../core/services/openai_service.dart';
 import '../../core/services/storage_service.dart';
+import '../../core/navigation/run_with_loading.dart';
 
 // Design system
 import '../widgets/app_scaffold.dart';
@@ -26,7 +26,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   final bool _loading = false;
   Locale? _locale;
 
-  // === Nuevo: controlar opacidad del AppBar según scroll ===
+  // AppBar tint con scroll
   final _scrollCtrl = ScrollController();
   double _appBarTint = 0.0; // 0 = transparente, 0.08 = máximo
 
@@ -37,7 +37,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _loadPreferences();
 
     _scrollCtrl.addListener(() {
-      // entre 0 y ~48px empezamos a mostrar el tinte
       const maxTint = 0.08;
       final offset =
           _scrollCtrl.positions.isNotEmpty ? _scrollCtrl.offset : 0.0;
@@ -61,37 +60,35 @@ class _RecipeScreenState extends State<RecipeScreen> {
     setState(() => _locale = Locale(languageCode));
   }
 
-  void _rewriteRecipe() async {
+  Future<void> _rewriteRecipe() async {
     final excluded = <String>[];
     for (var i = 0; i < _checked.length; i++) {
       if (!_checked[i]) excluded.add(widget.recipe.ingredients[i]);
     }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const LoadingScreen()),
-    );
 
     try {
       final openai = OpenAIService();
       final langCode =
           _locale?.languageCode ?? Localizations.localeOf(context).languageCode;
 
-      final newRecipe = await openai.generateRecipe(
-        widget.recipe.title,
-        restrictions: excluded,
-        language: langCode,
+      final newRecipe = await runWithLoading(
+        context,
+        () => openai.generateRecipe(
+          widget.recipe.title,
+          restrictions: excluded,
+          language: langCode,
+          generateImage: false, // tu flag
+        ),
+        minShowMs: 700,
       );
 
       if (!mounted) return;
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
+        (route) => route.isFirst,
       );
     } catch (e) {
       if (!mounted) return;
-      Navigator.pop(context);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
@@ -114,13 +111,18 @@ class _RecipeScreenState extends State<RecipeScreen> {
     final ingredients = widget.recipe.ingredients;
     final steps = widget.recipe.steps;
 
+    // ⬇️ Solo mostramos bloque de imagen si hay URL no vacía
+    final String? imageUrl =
+        (widget.recipe.image ?? '').toString().trim().isEmpty
+            ? null
+            : widget.recipe.image!.trim();
+
     return AppScaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
       appBar: AppTopBar(
         title: Text(s.appTitle),
         leading: const BackButton(),
-        // dinámico: transparente al inicio, translúcido en scroll
         blurSigma: _appBarTint > 0 ? 6 : 0,
         tintOpacity: _appBarTint,
       ),
@@ -130,37 +132,28 @@ class _RecipeScreenState extends State<RecipeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // deja el contenido por debajo del AppBar transparente
             SizedBox(height: MediaQuery.of(context).padding.top + 72 + 8),
 
-            // Imagen de cabecera
-            FrostedContainer(
-              padding: EdgeInsets.zero,
-              borderRadius: BorderRadius.circular(16),
-              child: ClipRRect(
+            // 👇 Header image (opcional)
+            if (imageUrl != null) ...[
+              FrostedContainer(
+                padding: EdgeInsets.zero,
                 borderRadius: BorderRadius.circular(16),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.network(
-                    widget.recipe.image ?? '',
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (_, __, ___) => Container(
-                          alignment: Alignment.center,
-                          color: theme.colorScheme.surfaceVariant.withOpacity(
-                            0.5,
-                          ),
-                          child: Icon(
-                            Icons.image_not_supported,
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
-                          ),
-                        ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      // No placeholder ni icono; si falla, no pinta nada.
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                    ),
                   ),
                 ),
               ),
-            ),
-
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
+            ],
 
             Text(
               widget.recipe.title,

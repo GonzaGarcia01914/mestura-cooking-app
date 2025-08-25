@@ -13,11 +13,14 @@ class RecipeModel {
 
   factory RecipeModel.fromJson(Map<String, dynamic> json) {
     return RecipeModel(
-      title: json['title'] ?? 'Untitled',
-      ingredients: List<String>.from(json['ingredients'] ?? []),
-      steps: List<String>.from(json['steps'] ?? []),
-      image: json['image'],
+      title: (json['title'] ?? 'Untitled').toString(),
+      ingredients: List<String>.from(
+        (json['ingredients'] ?? const <String>[]) as List,
+      ),
+      steps: List<String>.from((json['steps'] ?? const <String>[]) as List),
+      image: json['image']?.toString(),
     );
+    // La validación de campos obligatorios se hace en OpenAIService para no romper compatibilidad aquí.
   }
 
   Map<String, dynamic> toJson() {

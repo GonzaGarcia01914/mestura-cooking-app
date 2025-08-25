@@ -30,7 +30,6 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
 
     final defaultOverlay =
         Theme.of(context).brightness == Brightness.dark
@@ -53,7 +52,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       leading: leading,
       actions: actions,
-      // capa opcional (blur + tinte MUY sutil) sobre el fondo real que está detrás
+
       flexibleSpace:
           (blurSigma > 0 || tintOpacity > 0)
               ? ClipRect(
@@ -63,12 +62,12 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                     sigmaY: blurSigma,
                   ),
                   child: Container(
-                    color: Colors.black.withOpacity(tintOpacity),
+                    color: Colors.black.withValues(alpha: tintOpacity),
                   ),
                 ),
               )
               : null,
-      // sin línea inferior
+
       bottom: null,
     );
   }

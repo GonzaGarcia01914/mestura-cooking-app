@@ -1,6 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/openai_service.dart';
+import '../../core/navigation/run_with_loading.dart';
+
+import '../../core/services/ad_service.dart';
+import '../../core/services/ad_gate.dart';
 import '../../ui/screens/loading_screen.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/app_title.dart';
@@ -23,15 +29,50 @@ class _HomeScreenState extends State<HomeScreen> {
   final _openAI = OpenAIService();
   bool _loading = false;
 
+  Future<void> _showErrorDialog(String rawMessage) async {
+    if (!mounted) return;
+    final lang = Localizations.localeOf(context).languageCode;
+    final title = lang == 'es' ? 'Ups…' : 'Oops…';
+    final ok = lang == 'es' ? 'Entendido' : 'OK';
+    final message = rawMessage.replaceFirst('Exception: ', '');
+
+    await showGeneralDialog<void>(
+      context: context,
+      barrierLabel: 'error',
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.35), // velo suave
+      transitionDuration: const Duration(milliseconds: 220),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (ctx, anim, _, __) {
+        final curved = CurvedAnimation(
+          parent: anim,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+        return Opacity(
+          opacity: curved.value,
+          child: Center(
+            child: _GlassAlert(
+              title: title,
+              message: message,
+              okLabel: ok,
+              onOk: () => Navigator.of(ctx).pop(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _generateRecipe() async {
     final query = _controller.text.trim();
     if (query.isEmpty) return;
 
     setState(() => _loading = true); // spinner SOLO para isFood
-
     final languageCode = Localizations.localeOf(context).languageCode;
 
     try {
+      // 1) Filtro rápido: ¿es comida?
       final isFood = await _openAI.isFood(query);
       if (!isFood) {
         throw Exception(
@@ -43,28 +84,42 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (!mounted) return;
       setState(() => _loading = false);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const LoadingScreen()),
-      );
 
-      final result = await _openAI.generateRecipe(
-        query,
-        language: languageCode,
-      );
+      // 2) Decidir si mostramos anuncio
+      final shouldShowAd = await AdGate.shouldShowThisTime();
 
-      if (!mounted) return;
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => RecipeScreen(recipe: result)),
-      );
+      if (shouldShowAd && await AdService.instance.showIfAvailable()) {
+        // a) Hubo anuncio -> generamos en paralelo SIN loading
+        final recipe = await _openAI.generateRecipe(
+          query,
+          language: languageCode,
+          // pon true/false según prefieras
+          generateImage: false,
+        );
+        if (!mounted) return;
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)));
+      } else {
+        // b) Sin anuncio -> usamos helper que abre/cierra LoadingScreen
+        final recipe = await runWithLoading(
+          context,
+          () => _openAI.generateRecipe(
+            query,
+            language: languageCode,
+            // pon true/false según prefieras
+            generateImage: false,
+          ),
+        );
+        if (!mounted) return;
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)));
+      }
     } catch (e) {
       if (!mounted) return;
       setState(() => _loading = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      await _showErrorDialog(e.toString());
     }
   }
 
@@ -117,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: EdgeInsets.symmetric(
           horizontal: 25,
           vertical: style.padding.vertical * 1.5,
@@ -125,10 +181,13 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 50),
-
-            //Image.asset('assets/images/logo_sin_fondo.png', height: 220),
-            Image.asset('assets/images/logo_sin_fondo.png', height: 300),
-            //const SizedBox(height: 16),
+            Center(
+              child: Image.asset(
+                'assets/images/logo_sin_fondo.png',
+                height: 300,
+                fit: BoxFit.contain,
+              ),
+            ),
             AppTitle(s.homePrompt),
             const SizedBox(height: 24),
             AppTextField(
@@ -157,6 +216,86 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GlassAlert extends StatelessWidget {
+  const _GlassAlert({
+    required this.title,
+    required this.message,
+    required this.okLabel,
+    required this.onOk,
+  });
+
+  final String title;
+  final String message;
+  final String okLabel;
+  final VoidCallback onOk;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.86,
+          constraints: const BoxConstraints(maxWidth: 420),
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+          decoration: BoxDecoration(
+            color: cs.surface.withOpacity(0.70),
+            border: Border.all(color: cs.outlineVariant.withOpacity(0.35)),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 32,
+                spreadRadius: -8,
+                color: Colors.black.withOpacity(0.28),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icono dentro de círculo sutil
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: cs.error.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.error_outline, size: 28, color: cs.error),
+              ),
+              const SizedBox(height: 12),
+
+              const SizedBox(height: 8),
+              Text(
+                message,
+                style: theme.textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: onOk,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(okLabel),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
