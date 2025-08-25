@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../../l10n/app_localizations.dart';
 
 import 'ui/screens/home_screen.dart';
-import 'ui/screens/rewrite_screen.dart';
 import 'ui/screens/saved_screen.dart';
 import 'ui/screens/settings_screen.dart';
 import 'core/theme/app_theme.dart';
@@ -29,7 +28,6 @@ class App extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (_) => const HomeScreen(),
-        '/rewrite': (_) => const RewriteScreen(),
         '/saved': (_) => const SavedScreen(),
         '/settings': (_) => const SettingsScreen(),
       },

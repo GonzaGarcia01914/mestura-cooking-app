@@ -3,11 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/openai_service.dart';
-import '../../core/navigation/run_with_loading.dart';
+//import '../../core/navigation/run_with_loading.dart';
 
 import '../../core/services/ad_service.dart';
 import '../../core/services/ad_gate.dart';
-import '../../ui/screens/loading_screen.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/app_title.dart';
 import '../widgets/app_text_field.dart';
@@ -16,6 +15,7 @@ import '../widgets/app_primary_button.dart';
 import '../widgets/app_top_bar.dart';
 import '../style/app_style.dart';
 import 'recipe_screen.dart';
+import 'loading_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -66,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _generateRecipe() async {
     final query = _controller.text.trim();
-    if (query.isEmpty) return;
+    if (query.isEmpty || _loading) return;
 
-    setState(() => _loading = true); // spinner SOLO para isFood
+    setState(() => _loading = true); // spinner SOLO durante isFood
     final languageCode = Localizations.localeOf(context).languageCode;
 
     try {
@@ -85,40 +85,77 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
       setState(() => _loading = false);
 
-      // 2) Decidir si mostramos anuncio
-      final shouldShowAd = await AdGate.shouldShowThisTime();
+      // 2) Contador global de usos (Home + Rewrite)
+      await AdGate.registerAction();
 
-      if (shouldShowAd && await AdService.instance.showIfAvailable()) {
-        // a) Hubo anuncio -> generamos en paralelo SIN loading
-        final recipe = await _openAI.generateRecipe(
-          query,
-          language: languageCode,
-          // pon true/false según prefieras
-          generateImage: false,
-        );
+      // 3) Mostramos Loading primero (el anuncio irá por encima)
+      bool loadingShown = false;
+      final pushedAt = DateTime.now();
+      const minShowMs = 700; // anti-flicker
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => const LoadingScreen(),
+          settings: const RouteSettings(name: 'loading'),
+        ),
+      );
+      loadingShown = true;
+
+      // 4) Lanzamos la generación YA (en paralelo al anuncio)
+      final recipeFuture = _openAI.generateRecipe(
+        query,
+        language: languageCode,
+        generateImage: false, // tu flag
+      );
+
+      // 5) Si toca anuncio, lo mostramos SOBRE la Loading y esperamos a su cierre en paralelo
+      bool adClosed = true;
+      Future<bool>? adFuture;
+      if (await AdGate.shouldShowThisTime()) {
+        adClosed = false;
+        adFuture = AdService.instance.showIfAvailable().whenComplete(() {
+          adClosed = true;
+        });
+      }
+
+      // 6) Esperamos la receta
+      final recipe = await recipeFuture;
+      if (!mounted) return;
+
+      // 7) Cerrar loading con mínimo tiempo visible
+      Future<void> closeLoadingAndGo() async {
+        final elapsed = DateTime.now().difference(pushedAt).inMilliseconds;
+        if (elapsed < minShowMs) {
+          await Future.delayed(Duration(milliseconds: minShowMs - elapsed));
+        }
         if (!mounted) return;
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)));
-      } else {
-        // b) Sin anuncio -> usamos helper que abre/cierra LoadingScreen
-        final recipe = await runWithLoading(
-          context,
-          () => _openAI.generateRecipe(
-            query,
-            language: languageCode,
-            // pon true/false según prefieras
-            generateImage: false,
-          ),
-        );
+        if (loadingShown && Navigator.canPop(context)) {
+          Navigator.of(context).pop(); // cierra Loading
+          loadingShown = false;
+        }
         if (!mounted) return;
         Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)));
       }
+
+      // Si el anuncio sigue abierto, navegamos justo al cerrarse; si no, navegamos ya.
+      if (!adClosed && adFuture != null) {
+        adFuture.whenComplete(() {
+          if (mounted) closeLoadingAndGo();
+        });
+      } else {
+        await closeLoadingAndGo();
+      }
     } catch (e) {
       if (!mounted) return;
       setState(() => _loading = false);
+
+      // Si la Loading quedó abierta, ciérrala
+      if (ModalRoute.of(context)?.settings.name == 'loading' &&
+          Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
+
       await _showErrorDialog(e.toString());
     }
   }

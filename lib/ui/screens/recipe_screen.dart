@@ -3,9 +3,11 @@ import '../../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/recipe.dart';
 import '../../core/services/openai_service.dart';
+import '../../core/services/ad_gate.dart';
+import '../../core/services/ad_service.dart';
 import '../../core/services/storage_service.dart';
-import '../../core/navigation/run_with_loading.dart';
-
+//import '../../core/navigation/run_with_loading.dart';
+import 'loading_screen.dart';
 // Design system
 import '../widgets/app_scaffold.dart';
 import '../widgets/app_top_bar.dart';
@@ -25,6 +27,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
   late List<bool> _checked;
   final bool _loading = false;
   Locale? _locale;
+  String? _headerImageUrl;
+  bool _showHeaderImage = false;
 
   // AppBar tint con scroll
   final _scrollCtrl = ScrollController();
@@ -45,6 +49,37 @@ class _RecipeScreenState extends State<RecipeScreen> {
         setState(() => _appBarTint = target);
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant RecipeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.recipe.image != widget.recipe.image) {
+      _deriveHeaderImage();
+    }
+  }
+
+  void _deriveHeaderImage() {
+    final url = _normalizeImageUrl(widget.recipe.image);
+    setState(() {
+      _headerImageUrl = url;
+      _showHeaderImage = url != null;
+    });
+  }
+
+  String? _normalizeImageUrl(String? raw) {
+    if (raw == null) return null;
+    final s = raw.trim();
+    if (s.isEmpty) return null;
+    final l = s.toLowerCase();
+    if (l == 'null' || l == 'none' || l == 'n/a' || l == 'na' || l == '-') {
+      return null;
+    }
+    final uri = Uri.tryParse(s);
+    if (uri == null) return null;
+    final scheme = uri.scheme.toLowerCase();
+    if (scheme != 'http' && scheme != 'https') return null;
+    return s;
   }
 
   @override
@@ -71,24 +106,80 @@ class _RecipeScreenState extends State<RecipeScreen> {
       final langCode =
           _locale?.languageCode ?? Localizations.localeOf(context).languageCode;
 
-      final newRecipe = await runWithLoading(
-        context,
-        () => openai.generateRecipe(
-          widget.recipe.title,
-          restrictions: excluded,
-          language: langCode,
-          generateImage: false, // tu flag
+      // 1) Cuenta este uso también
+      await AdGate.registerAction();
+
+      // 2) Loading debajo del anuncio
+      bool loadingShown = false;
+      final pushedAt = DateTime.now();
+      const minShowMs = 700; // anti-flicker
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => const LoadingScreen(),
+          settings: const RouteSettings(name: 'loading'),
         ),
-        minShowMs: 700,
+      );
+      loadingShown = true;
+
+      // 3) Generación en paralelo
+      final recipeFuture = openai.generateRecipe(
+        widget.recipe.title,
+        restrictions: excluded,
+        language: langCode,
+        generateImage: false, // tu flag
       );
 
+      // 4) ¿Toca anuncio? Muéstralo encima de la Loading
+      bool adClosed = true;
+      Future<bool>? adFuture;
+      if (await AdGate.shouldShowThisTime()) {
+        adClosed = false;
+        adFuture = AdService.instance.showIfAvailable().whenComplete(() {
+          adClosed = true;
+        });
+      }
+
+      // 5) Espera la nueva receta
+      final newRecipe = await recipeFuture;
       if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
-        (route) => route.isFirst,
-      );
+
+      // 6) Cerrar loading (con tiempo mínimo) y navegar
+      Future<void> closeLoadingAndGo() async {
+        final elapsed = DateTime.now().difference(pushedAt).inMilliseconds;
+        if (elapsed < minShowMs) {
+          await Future.delayed(Duration(milliseconds: minShowMs - elapsed));
+        }
+        if (!mounted) return;
+
+        if (loadingShown && Navigator.canPop(context)) {
+          Navigator.of(context).pop(); // cierra Loading
+          loadingShown = false;
+        }
+        if (!mounted) return;
+
+        // Reemplaza la receta actual por la reescrita
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
+        );
+      }
+
+      // Si el anuncio sigue abierto, navegamos al cerrarse; si no, ya mismo
+      if (!adClosed && adFuture != null) {
+        adFuture.whenComplete(() {
+          if (mounted) closeLoadingAndGo();
+        });
+      } else {
+        await closeLoadingAndGo();
+      }
     } catch (e) {
       if (!mounted) return;
+
+      // Si por lo que sea la loading quedó abierta, la cerramos
+      final route = ModalRoute.of(context);
+      if (route?.settings.name == 'loading' && Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
+
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
@@ -112,10 +203,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
     final steps = widget.recipe.steps;
 
     // ⬇️ Solo mostramos bloque de imagen si hay URL no vacía
-    final String? imageUrl =
-        (widget.recipe.image ?? '').toString().trim().isEmpty
-            ? null
-            : widget.recipe.image!.trim();
 
     return AppScaffold(
       extendBodyBehindAppBar: true,
@@ -135,7 +222,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             SizedBox(height: MediaQuery.of(context).padding.top + 72 + 8),
 
             // 👇 Header image (opcional)
-            if (imageUrl != null) ...[
+            if (_showHeaderImage && _headerImageUrl != null) ...[
               FrostedContainer(
                 padding: EdgeInsets.zero,
                 borderRadius: BorderRadius.circular(16),
@@ -144,10 +231,18 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
                     child: Image.network(
-                      imageUrl,
+                      _headerImageUrl!,
                       fit: BoxFit.cover,
-                      // No placeholder ni icono; si falla, no pinta nada.
-                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                      // Si falla, ocultamos COMPLETAMENTE el bloque en el siguiente frame
+                      errorBuilder: (_, __, ___) {
+                        if (_showHeaderImage) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted)
+                              setState(() => _showHeaderImage = false);
+                          });
+                        }
+                        return const SizedBox.shrink();
+                      },
                     ),
                   ),
                 ),
