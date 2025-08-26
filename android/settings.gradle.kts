@@ -18,8 +18,10 @@ pluginManagement {
 
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "8.5.2"
-    id("com.android.application") version "8.7.0" apply false
+    id("com.android.application") version "8.7.2" apply false
     id("org.jetbrains.kotlin.android") version "2.1.0" apply false
+    // 👇 Añadido: declaramos el plugin de Google Services vía Plugins DSL
+    id("com.google.gms.google-services") version "4.4.2" apply false
 }
 
 include(":app")
