@@ -21,6 +21,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get numberOfGuests => 'Number of Guests';
 
   @override
+  String get maxCalories => 'Max calories';
+
+  @override
+  String get perServing => '(per serving)';
+
+  @override
+  String get includeMacros => 'Include macros (estimated)';
+
+  @override
+  String get includeMacrosSubtitle => 'Adds calories & macros per serving.';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
   String get searchButton => 'Search recipe';
 
   @override
