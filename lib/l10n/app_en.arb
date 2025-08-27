@@ -4,7 +4,7 @@
   "homePrompt": "What would you like?",
   "advancedOptions": "Advanced options",
   "numberOfGuests": "Number of Guests",
-  "searchButton": "Search recipe",
+  "searchButton": "Generate recipe",
   "surpriseButton": "Surprise me",
   "ingredientsTitle": "Ingredients",
   "stepsTitle": "Steps",

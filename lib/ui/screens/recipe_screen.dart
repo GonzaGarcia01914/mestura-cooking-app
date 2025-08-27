@@ -6,8 +6,8 @@ import '../../core/services/openai_service.dart';
 import '../../core/services/ad_gate.dart';
 import '../../core/services/ad_service.dart';
 import '../../core/services/storage_service.dart';
-//import '../../core/navigation/run_with_loading.dart';
 import 'loading_screen.dart';
+
 // Design system
 import '../widgets/app_scaffold.dart';
 import '../widgets/glass_alert.dart';
@@ -28,8 +28,12 @@ class _RecipeScreenState extends State<RecipeScreen> {
   late List<bool> _checked;
   final bool _loading = false;
   Locale? _locale;
+
+  // Header image (solo aparece si realmente carga)
   String? _headerImageUrl;
   bool _showHeaderImage = false;
+
+  // Guardado
   bool _isSaved = false;
 
   // AppBar tint con scroll
@@ -41,7 +45,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
     super.initState();
     _checked = List.generate(widget.recipe.ingredients.length, (_) => true);
     _loadPreferences();
-
     _checkIfAlreadySaved();
     _prepareHeaderImage();
 
@@ -56,18 +59,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
     });
   }
 
-  Future<void> _checkIfAlreadySaved() async {
-    final storage = StorageService();
-    final list = await storage.getSavedRecipes();
-    if (!mounted) return;
-
-    String _sig(RecipeModel r) =>
-        '${r.title}::${r.ingredients.join('|')}::${r.steps.join('|')}';
-
-    final already = list.any((r) => _sig(r) == _sig(widget.recipe));
-    setState(() => _isSaved = already);
-  }
-
   @override
   void didUpdateWidget(covariant RecipeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -76,14 +67,38 @@ class _RecipeScreenState extends State<RecipeScreen> {
     }
   }
 
+  @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final languageCode = prefs.getString('languageCode') ?? 'es';
+    if (!mounted) return;
+    setState(() => _locale = Locale(languageCode));
+  }
+
+  Future<void> _checkIfAlreadySaved() async {
+    final storage = StorageService();
+    final list = await storage.getSavedRecipes();
+    if (!mounted) return;
+
+    String sig(RecipeModel r) =>
+        '${r.title}::${r.ingredients.join('|')}::${r.steps.join('|')}';
+
+    final already = list.any((r) => sig(r) == sig(widget.recipe));
+    setState(() => _isSaved = already);
+  }
+
   String? _normalizeImageUrl(String? raw) {
     if (raw == null) return null;
     final s = raw.trim();
     if (s.isEmpty) return null;
     final l = s.toLowerCase();
-    if (l == 'null' || l == 'none' || l == 'n/a' || l == 'na' || l == '-') {
+    if (l == 'null' || l == 'none' || l == 'n/a' || l == 'na' || l == '-')
       return null;
-    }
     final uri = Uri.tryParse(s);
     if (uri == null) return null;
     final scheme = uri.scheme.toLowerCase();
@@ -101,7 +116,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
       return;
     }
 
-    // Precargamos: si va bien, recién entonces mostramos el bloque
+    // Precarga: solo mostramos si se resuelve correctamente
     final img = NetworkImage(url);
     final stream = img.resolve(const ImageConfiguration());
     late final ImageStreamListener listener;
@@ -126,19 +141,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
     stream.addListener(listener);
   }
 
-  @override
-  void dispose() {
-    _scrollCtrl.dispose();
-    super.dispose();
-  }
-
-  Future<void> _loadPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    final languageCode = prefs.getString('languageCode') ?? 'es';
-    if (!mounted) return;
-    setState(() => _locale = Locale(languageCode));
-  }
-
   Future<void> _rewriteRecipe() async {
     final excluded = <String>[];
     for (var i = 0; i < _checked.length; i++) {
@@ -150,10 +152,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
       final langCode =
           _locale?.languageCode ?? Localizations.localeOf(context).languageCode;
 
-      // 1) Cuenta este uso también
+      // Cuenta uso para publicidad
       await AdGate.registerAction();
 
-      // 2) Loading debajo del anuncio
+      // Loading debajo del anuncio
       bool loadingShown = false;
       final pushedAt = DateTime.now();
       const minShowMs = 700; // anti-flicker
@@ -166,15 +168,17 @@ class _RecipeScreenState extends State<RecipeScreen> {
       );
       loadingShown = true;
 
-      // 3) Generación en paralelo
       final recipeFuture = openai.generateRecipe(
         widget.recipe.title,
         restrictions: excluded,
         language: langCode,
-        generateImage: false, // tu flag
+        generateImage: false,
+        includeMacros: widget.recipe.nutrition != null,
       );
 
-      // 4) ¿Toca anuncio? Muéstralo encima de la Loading
+      // Generación en paralelo
+
+      // ¿Anuncio?
       bool adClosed = true;
       Future<bool>? adFuture;
       if (await AdGate.shouldShowThisTime()) {
@@ -184,11 +188,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
         });
       }
 
-      // 5) Espera la nueva receta
+      // Espera receta
       final newRecipe = await recipeFuture;
       if (!mounted) return;
 
-      // 6) Cerrar loading (con tiempo mínimo) y navegar
+      // Cerrar loading con tiempo mínimo y navegar
       Future<void> closeLoadingAndGo() async {
         final elapsed = DateTime.now().difference(pushedAt).inMilliseconds;
         if (elapsed < minShowMs) {
@@ -202,13 +206,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
         }
         if (!mounted) return;
 
-        // Reemplaza la receta actual por la reescrita
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => RecipeScreen(recipe: newRecipe)),
         );
       }
 
-      // Si el anuncio sigue abierto, navegamos al cerrarse; si no, ya mismo
       if (!adClosed && adFuture != null) {
         adFuture.whenComplete(() {
           if (mounted) closeLoadingAndGo();
@@ -219,7 +221,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      // Si por lo que sea la loading quedó abierta, la cerramos
+      // Si la loading quedó abierta, ciérrala
       final route = ModalRoute.of(context);
       if (route?.settings.name == 'loading' && Navigator.canPop(context)) {
         Navigator.of(context).pop();
@@ -236,11 +238,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
     final storage = StorageService();
     await storage.saveRecipe(widget.recipe);
-
     if (!mounted) return;
-    setState(() => _isSaved = true); // 👈 oculta el botón
 
-    // 👇 Alert “bonito” en lugar de SnackBar
+    setState(() => _isSaved = true); // oculta el botón
+
+    // Alert bonito
     final lang = Localizations.localeOf(context).languageCode;
     final title = lang == 'es' ? '¡Listo!' : 'Done!';
     final ok = lang == 'es' ? 'Entendido' : 'OK';
@@ -255,13 +257,13 @@ class _RecipeScreenState extends State<RecipeScreen> {
       transitionDuration: const Duration(milliseconds: 220),
       pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (ctx, anim, _, __) {
+        final curved = CurvedAnimation(
+          parent: anim,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
         return Opacity(
-          opacity:
-              CurvedAnimation(
-                parent: anim,
-                curve: Curves.easeOutCubic,
-                reverseCurve: Curves.easeInCubic,
-              ).value,
+          opacity: curved.value,
           child: Center(
             child: GlassAlert(
               icon: Icons.check_circle_outline_rounded,
@@ -277,6 +279,12 @@ class _RecipeScreenState extends State<RecipeScreen> {
       },
     );
   }
+
+  String _t(String es, String en) =>
+      (_locale?.languageCode ?? Localizations.localeOf(context).languageCode) ==
+              'es'
+          ? es
+          : en;
 
   @override
   Widget build(BuildContext context) {
@@ -302,7 +310,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top + 72 + 8),
 
-            // Imagen opcional
+            // Imagen opcional (solo cuando ya está lista)
             if (_showHeaderImage && _headerImageUrl != null) ...[
               FrostedContainer(
                 padding: EdgeInsets.zero,
@@ -314,11 +322,13 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     child: Image.network(
                       _headerImageUrl!,
                       fit: BoxFit.cover,
+                      // Fallback extra por si algo falla tras la precarga
                       errorBuilder: (_, __, ___) {
                         if (_showHeaderImage) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (mounted)
+                            if (mounted) {
                               setState(() => _showHeaderImage = false);
+                            }
                           });
                         }
                         return const SizedBox.shrink();
@@ -395,6 +405,92 @@ class _RecipeScreenState extends State<RecipeScreen> {
               ),
             ),
 
+            // Dentro del Column principal, tras el contenedor de pasos:
+            if (widget.recipe.nutrition != null) ...[
+              const SizedBox(height: 16),
+              FrostedContainer(
+                borderRadius: BorderRadius.circular(14),
+                child: Theme(
+                  data: Theme.of(
+                    context,
+                  ).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(horizontal: 8),
+                    childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+                    title: Text(
+                      (_locale?.languageCode ??
+                                  Localizations.localeOf(
+                                    context,
+                                  ).languageCode) ==
+                              'es'
+                          ? 'Información nutricional (aprox.)'
+                          : 'Nutrition facts (approx.)',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(
+                      (_locale?.languageCode ??
+                                  Localizations.localeOf(
+                                    context,
+                                  ).languageCode) ==
+                              'es'
+                          ? 'Valores por ración'
+                          : 'Per serving',
+                    ),
+                    children: [
+                      _NutritionRow(
+                        label: 'Calorías',
+                        value:
+                            widget.recipe.nutrition!.caloriesKcal != null
+                                ? '${widget.recipe.nutrition!.caloriesKcal} kcal'
+                                : '—',
+                      ),
+                      _NutritionRow(
+                        label: 'Proteínas',
+                        value:
+                            widget.recipe.nutrition!.proteinG != null
+                                ? '${widget.recipe.nutrition!.proteinG!.toStringAsFixed(1)} g'
+                                : '—',
+                      ),
+                      _NutritionRow(
+                        label: 'Carbohidratos',
+                        value:
+                            widget.recipe.nutrition!.carbsG != null
+                                ? '${widget.recipe.nutrition!.carbsG!.toStringAsFixed(1)} g'
+                                : '—',
+                      ),
+                      _NutritionRow(
+                        label: 'Grasas',
+                        value:
+                            widget.recipe.nutrition!.fatG != null
+                                ? '${widget.recipe.nutrition!.fatG!.toStringAsFixed(1)} g'
+                                : '—',
+                      ),
+                      if (widget.recipe.nutrition!.fiberG != null)
+                        _NutritionRow(
+                          label: 'Fibra',
+                          value:
+                              '${widget.recipe.nutrition!.fiberG!.toStringAsFixed(1)} g',
+                        ),
+                      if (widget.recipe.nutrition!.sugarG != null)
+                        _NutritionRow(
+                          label: 'Azúcares',
+                          value:
+                              '${widget.recipe.nutrition!.sugarG!.toStringAsFixed(1)} g',
+                        ),
+                      if (widget.recipe.nutrition!.sodiumMg != null)
+                        _NutritionRow(
+                          label: 'Sodio',
+                          value:
+                              '${widget.recipe.nutrition!.sodiumMg!.toStringAsFixed(0)} mg',
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+
             const SizedBox(height: 20),
 
             AppPrimaryButton(
@@ -414,6 +510,30 @@ class _RecipeScreenState extends State<RecipeScreen> {
             const SizedBox(height: 24),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _NutritionRow extends StatelessWidget {
+  final String label;
+  final String value;
+  const _NutritionRow({required this.label, required this.value});
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: t.textTheme.bodyMedium)),
+          Text(
+            value,
+            style: t.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

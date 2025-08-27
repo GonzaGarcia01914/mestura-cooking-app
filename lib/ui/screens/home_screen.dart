@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:mestura/ui/widgets/glass_alert.dart';
 import '../../l10n/app_localizations.dart';
@@ -27,9 +25,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _controller = TextEditingController();
+  final ScrollController _homeScrollCtrl = ScrollController();
   final _openAI = OpenAIService();
   bool _loading = false;
   int _servings = 2;
+  int? _maxCalories;
+  bool _countMacros = false;
+
+  static const double _threshold = 160.0; // píxeles para ocultar completamente
+
+  String _t(BuildContext ctx, String es, String en) =>
+      Localizations.localeOf(ctx).languageCode == 'es' ? es : en;
 
   Future<void> _showErrorDialog(String rawMessage) async {
     if (!mounted) return;
@@ -42,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       barrierLabel: 'error',
       barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.35), // velo suave
+      barrierColor: Colors.black.withOpacity(0.35),
       transitionDuration: const Duration(milliseconds: 220),
       pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (ctx, anim, _, __) {
@@ -66,15 +72,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  @override
+  void dispose() {
+    _homeScrollCtrl.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
   Future<void> _generateRecipe() async {
     final query = _controller.text.trim();
     if (query.isEmpty || _loading) return;
 
-    setState(() => _loading = true); // spinner SOLO durante isFood
+    setState(() => _loading = true);
     final languageCode = Localizations.localeOf(context).languageCode;
 
     try {
-      // 1) Filtro rápido: ¿es comida?
       final isFood = await _openAI.isFood(query);
       if (!isFood) {
         throw Exception(
@@ -83,17 +95,14 @@ class _HomeScreenState extends State<HomeScreen> {
               : 'Let’s stick to edible things.',
         );
       }
-
       if (!mounted) return;
       setState(() => _loading = false);
 
-      // 2) Contador global de usos (Home + Rewrite)
       await AdGate.registerAction();
 
-      // 3) Mostramos Loading primero (el anuncio irá por encima)
       bool loadingShown = false;
       final pushedAt = DateTime.now();
-      const minShowMs = 700; // anti-flicker
+      const minShowMs = 700;
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => const LoadingScreen(),
@@ -102,15 +111,15 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       loadingShown = true;
 
-      // 4) Lanzamos la generación YA (en paralelo al anuncio)
       final recipeFuture = _openAI.generateRecipe(
         query,
         language: languageCode,
         generateImage: false,
         servings: _servings,
+        includeMacros: _countMacros,
+        maxCaloriesKcal: _maxCalories,
       );
 
-      // 5) Si toca anuncio, lo mostramos SOBRE la Loading y esperamos a su cierre en paralelo
       bool adClosed = true;
       Future<bool>? adFuture;
       if (await AdGate.shouldShowThisTime()) {
@@ -120,11 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
 
-      // 6) Esperamos la receta
       final recipe = await recipeFuture;
       if (!mounted) return;
 
-      // 7) Cerrar loading con mínimo tiempo visible
       Future<void> closeLoadingAndGo() async {
         final elapsed = DateTime.now().difference(pushedAt).inMilliseconds;
         if (elapsed < minShowMs) {
@@ -132,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         if (!mounted) return;
         if (loadingShown && Navigator.canPop(context)) {
-          Navigator.of(context).pop(); // cierra Loading
+          Navigator.of(context).pop();
           loadingShown = false;
         }
         if (!mounted) return;
@@ -141,7 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ).push(MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)));
       }
 
-      // Si el anuncio sigue abierto, navegamos justo al cerrarse; si no, navegamos ya.
       if (!adClosed && adFuture != null) {
         adFuture.whenComplete(() {
           if (mounted) closeLoadingAndGo();
@@ -152,13 +158,10 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _loading = false);
-
-      // Si la Loading quedó abierta, ciérrala
       if (ModalRoute.of(context)?.settings.name == 'loading' &&
           Navigator.canPop(context)) {
         Navigator.of(context).pop();
       }
-
       await _showErrorDialog(e.toString());
     }
   }
@@ -211,7 +214,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+
       body: SingleChildScrollView(
+        controller: _homeScrollCtrl,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: EdgeInsets.symmetric(
           horizontal: 25,
@@ -221,15 +226,48 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 50),
+
+            // === LOGO: fade por scroll, sin colapsar el layout ===
             Center(
-              child: Image.asset(
-                'assets/images/logo_sin_fondo.png',
-                height: 300,
-                fit: BoxFit.contain,
+              child: AnimatedBuilder(
+                animation: _homeScrollCtrl, // se reconstruye solo el logo
+                builder: (_, child) {
+                  final has = _homeScrollCtrl.hasClients;
+                  final offset = has ? _homeScrollCtrl.offset : 0.0;
+                  final max =
+                      has ? _homeScrollCtrl.position.maxScrollExtent : 0.0;
+
+                  // umbral efectivo: si hay poco scroll, usa max para que llegue a 0
+                  final effective =
+                      (max > 0)
+                          ? (max < _threshold ? max : _threshold)
+                          : _threshold;
+
+                  double t = effective == 0 ? 0.0 : (offset / effective);
+                  if (t < 0)
+                    t = 0;
+                  else if (t > 1)
+                    t = 1;
+
+                  // opcional: suaviza la curva
+                  final opacity = 1.0 - Curves.easeOutCubic.transform(t);
+
+                  // Mantiene el espacio (no colapsa) y no intercepta toques cuando es 0
+                  return IgnorePointer(
+                    ignoring: opacity <= 0.01,
+                    child: Opacity(opacity: opacity, child: child),
+                  );
+                },
+                child: Image.asset(
+                  'assets/images/logo_sin_fondo.png',
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
+
             AppTitle(s.homePrompt),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             AppTextField(
               controller: _controller,
@@ -237,6 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onSubmitted: (_) => _generateRecipe(),
             ),
             const SizedBox(height: 16),
+
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
@@ -255,10 +294,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   tilePadding: const EdgeInsets.symmetric(horizontal: 12),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                   title: Text(
-                    s.advancedOptions, // si tienes l10n cambia por s.advancedOptions
+                    s.advancedOptions,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
+
+                  // Evita el auto-scroll “raro” al expandir
+                  onExpansionChanged: (expanded) {
+                    if (expanded && _homeScrollCtrl.hasClients) {
+                      final keep = _homeScrollCtrl.offset;
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted && _homeScrollCtrl.hasClients) {
+                          _homeScrollCtrl.jumpTo(keep);
+                        }
+                      });
+                    }
+                  },
+
                   children: [
+                    // --- Invitados ---
                     Row(
                       children: [
                         Text(
@@ -290,6 +343,105 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: const Icon(Icons.add_circle_outline),
                         ),
                       ],
+                    ),
+
+                    // --- Calorías máx. (por ración) ---
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _t(context, 'Calorías máx.', 'Max calories'),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              Text(
+                                _t(context, '(por ración)', '(per serving)'),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).hintColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed:
+                              () => setState(() {
+                                final v = (_maxCalories ?? 600) - 50;
+                                _maxCalories = v < 200 ? 200 : v;
+                              }),
+                          icon: const Icon(Icons.remove_circle_outline),
+                        ),
+                        Text(
+                          _maxCalories == null ? '—' : '${_maxCalories} kcal',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        IconButton(
+                          onPressed:
+                              () => setState(() {
+                                final v = (_maxCalories ?? 600) + 50;
+                                _maxCalories = v > 1500 ? 1500 : v;
+                              }),
+                          icon: const Icon(Icons.add_circle_outline),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+
+                    // --- Macros ---
+                    SwitchListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      value: _countMacros,
+                      onChanged: (v) => setState(() => _countMacros = v),
+                      title: Text(
+                        _t(
+                          context,
+                          'Contar macros (estimados)',
+                          'Include macros (estimated)',
+                        ),
+                      ),
+                      subtitle: Text(
+                        _t(
+                          context,
+                          'Añade calorías y macronutrientes por ración.',
+                          'Adds calories & macros per serving.',
+                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+
+                    // --- Botón Restablecer ---
+                    const SizedBox(height: 8),
+                    Center(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          setState(() {
+                            _servings = 2;
+                            _maxCalories = null;
+                            _countMacros = false;
+                          });
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 10,
+                          ),
+                          foregroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1.6,
+                          ),
+                          shape: const StadiumBorder(),
+                        ),
+                        child: Text(_t(context, 'Restablecer', 'Reset')),
+                      ),
                     ),
                   ],
                 ),

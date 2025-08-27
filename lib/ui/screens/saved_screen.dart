@@ -21,90 +21,6 @@ class _SavedScreenState extends State<SavedScreen> {
   double _appBarTint = 0.0; // 0 = transparente, ~0.08 = máximo
   List<RecipeModel> _recipes = [];
 
-  String? _normalizeImageUrl(String? raw) {
-    if (raw == null) return null;
-    final s = raw.trim();
-    if (s.isEmpty) return null;
-    final l = s.toLowerCase();
-    if (l == 'null' || l == 'none' || l == 'n/a' || l == 'na' || l == '-') {
-      return null;
-    }
-    final uri = Uri.tryParse(s);
-    if (uri == null) return null;
-    final scheme = uri.scheme.toLowerCase();
-    if (scheme != 'http' && scheme != 'https') return null;
-    return s;
-  }
-
-  Widget list() {
-    final s = AppLocalizations.of(context)!;
-    final topPad = MediaQuery.of(context).padding.top + 72 + 8;
-
-    return ListView.separated(
-      controller: _scrollCtrl,
-      padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
-      itemCount: _recipes.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (_, i) {
-        final recipe = _recipes[i];
-        final imageUrl = _normalizeImageUrl(recipe.image);
-
-        return InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
-            );
-          },
-          child: FrostedContainer(
-            padding: const EdgeInsets.all(12),
-            borderRadius: BorderRadius.circular(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 👇 No reservamos espacio hasta que realmente cargue
-                if (imageUrl != null) _ThumbIfLoadable(url: imageUrl),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 12,
-                    ), // separación fija al texto
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          recipe.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${recipe.ingredients.length} ${s.filterIngredients}',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.color?.withOpacity(0.7),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward_ios, size: 16),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -127,6 +43,33 @@ class _SavedScreenState extends State<SavedScreen> {
     final saved = await StorageService().getSavedRecipes();
     if (!mounted) return;
     setState(() => _recipes = saved);
+  }
+
+  Widget _dismissBg(AlignmentGeometry align) {
+    return Container(
+      alignment: align,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.red.withOpacity(0.90),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Icon(Icons.delete, color: Colors.white, size: 28),
+    );
+  }
+
+  String? _normalizeImageUrl(String? raw) {
+    if (raw == null) return null;
+    final s = raw.trim();
+    if (s.isEmpty) return null;
+    final l = s.toLowerCase();
+    if (l == 'null' || l == 'none' || l == 'n/a' || l == 'na' || l == '-') {
+      return null;
+    }
+    final uri = Uri.tryParse(s);
+    if (uri == null) return null;
+    final scheme = uri.scheme.toLowerCase();
+    if (scheme != 'http' && scheme != 'https') return null;
+    return s;
   }
 
   @override
@@ -169,6 +112,63 @@ class _SavedScreenState extends State<SavedScreen> {
       );
     }
 
+    Widget list() => ListView.separated(
+      controller: _scrollCtrl,
+      padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
+      itemCount: _recipes.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (_, i) {
+        final recipe = _recipes[i];
+        final imageUrl = _normalizeImageUrl(recipe.image);
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
+            );
+          },
+          child: FrostedContainer(
+            padding: const EdgeInsets.all(12),
+            borderRadius: BorderRadius.circular(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (imageUrl != null) _ThumbIfLoadable(url: imageUrl),
+                // El texto no tiene padding izquierdo extra: si no hay imagen, queda alineado
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        recipe.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${recipe.ingredients.length} ${s.filterIngredients}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward_ios, size: 16),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
     return AppScaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
@@ -185,7 +185,7 @@ class _SavedScreenState extends State<SavedScreen> {
   }
 }
 
-/// Muestra un thumb SOLO si la imagen se resuelve; si no, no ocupa espacio.
+/// Thumb que solo ocupa espacio si la imagen se ha resuelto correctamente.
 class _ThumbIfLoadable extends StatefulWidget {
   const _ThumbIfLoadable({required this.url});
   final String url;
