@@ -18,7 +18,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       locale: locale, // ✅ usamos el locale pasado desde main.dart
-      supportedLocales: const [Locale('en'), Locale('es')],
+      supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

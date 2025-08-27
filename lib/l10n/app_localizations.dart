@@ -92,7 +92,17 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('es')
+    Locale('es'),
+    Locale('ru'),
+    Locale('de'),
+    Locale('pl'),
+    Locale('pt'),
+    Locale('fr'),
+    Locale('ja'),
+    Locale('zh'),
+    Locale('ko'),
+    Locale('it'),
+    Locale('gn'),
   ];
 
   /// No description provided for @appTitle.
@@ -118,6 +128,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Number of Guests'**
   String get numberOfGuests;
+
+  /// No description provided for @maxCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Max calories'**
+  String get maxCalories;
+
+  /// No description provided for @perServing.
+  ///
+  /// In en, this message translates to:
+  /// **'(per serving)'**
+  String get perServing;
+
+  /// No description provided for @includeMacros.
+  ///
+  /// In en, this message translates to:
+  /// **'Include macros (estimated)'**
+  String get includeMacros;
+
+  /// No description provided for @includeMacrosSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds calories & macros per serving.'**
+  String get includeMacrosSubtitle;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
 
   /// No description provided for @searchButton.
   ///
@@ -333,7 +373,20 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+        'en',
+        'es',
+        'ru',
+        'de',
+        'pl',
+        'pt',
+        'fr',
+        'ja',
+        'zh',
+        'ko',
+        'it',
+        'gn',
+      ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -344,8 +397,20 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'es': return AppLocalizationsEs();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'en':
+    case 'ru':
+    case 'de':
+    case 'pl':
+    case 'pt':
+    case 'fr':
+    case 'ja':
+    case 'zh':
+    case 'ko':
+    case 'it':
+    case 'gn':
+      return AppLocalizationsEn();
   }
 
   throw FlutterError(

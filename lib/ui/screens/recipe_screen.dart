@@ -75,7 +75,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    final languageCode = prefs.getString('languageCode') ?? 'es';
+    final languageCode = prefs.getString('languageCode') ?? 'en';
     if (!mounted) return;
     setState(() => _locale = Locale(languageCode));
   }
