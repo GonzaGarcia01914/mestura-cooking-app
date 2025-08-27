@@ -113,7 +113,21 @@ class _MyAppState extends State<MyApp> {
       return Locale(widget.savedLocale!);
     }
     final sys = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
-    return (sys == 'es') ? const Locale('es') : const Locale('en');
+    const supported = [
+      'en',
+      'es',
+      'ru',
+      'de',
+      'pl',
+      'pt',
+      'fr',
+      'ja',
+      'zh',
+      'ko',
+      'it',
+      'gn',
+    ];
+    return supported.contains(sys) ? Locale(sys) : const Locale('en');
   }
 
   Future<void> changeLocale(Locale newLocale) async {

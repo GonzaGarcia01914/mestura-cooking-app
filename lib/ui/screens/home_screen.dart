@@ -36,8 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   static const double _threshold = 160.0; // píxeles para ocultar completamente
   final ValueNotifier<double> _logoOpacity = ValueNotifier<double>(1.0);
 
-  String _t(BuildContext ctx, String es, String en) =>
-      Localizations.localeOf(ctx).languageCode == 'es' ? es : en;
 
   Future<void> _showErrorDialog(String rawMessage) async {
     if (!mounted) return;
@@ -380,11 +378,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _t(context, 'Calorías máx.', 'Max calories'),
+                                  s.maxCalories,
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 Text(
-                                  _t(context, '(por ración)', '(per serving)'),
+                                  s.perServing,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodySmall?.copyWith(
@@ -425,19 +423,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         contentPadding: EdgeInsets.zero,
                         value: _countMacros,
                         onChanged: (v) => setState(() => _countMacros = v),
-                        title: Text(
-                          _t(
-                            context,
-                            'Contar macros (estimados)',
-                            'Include macros (estimated)',
-                          ),
-                        ),
+                        title: Text(s.includeMacros),
                         subtitle: Text(
-                          _t(
-                            context,
-                            'Añade calorías y macronutrientes por ración.',
-                            'Adds calories & macros per serving.',
-                          ),
+                          s.includeMacrosSubtitle,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
@@ -466,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             shape: const StadiumBorder(),
                           ),
-                          child: Text(_t(context, 'Restablecer', 'Reset')),
+                          child: Text(s.reset),
                         ),
                       ),
                     ],
