@@ -412,20 +412,28 @@ class _StageChips extends StatefulWidget {
 }
 
 class _StageChipsState extends State<_StageChips> {
-  static const _stages = [
-    'Preparando',
-    'Mezclando',
-    'Sazonando',
-    'Cocinando',
-    'Emplatando',
-  ];
+  late List<String> _stages;
   int _active = 0;
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 1600), (_) {
+    _stages = const [];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final s = AppLocalizations.of(context)!;
+    _stages = [
+      s.loadingStagePreparing,
+      s.loadingStageMixing,
+      s.loadingStageSeasoning,
+      s.loadingStageCooking,
+      s.loadingStagePlating,
+    ];
+    _timer ??= Timer.periodic(const Duration(milliseconds: 1600), (_) {
       if (mounted) {
         setState(() => _active = (_active + 1) % _stages.length);
       }

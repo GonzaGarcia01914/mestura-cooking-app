@@ -362,6 +362,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plating'**
   String get loadingStagePlating;
+
+  /// No description provided for @nutritionFactsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition facts (approx.)'**
+  String get nutritionFactsTitle;
+
+  /// No description provided for @nutritionPerServing.
+  ///
+  /// In en, this message translates to:
+  /// **'Per serving'**
+  String get nutritionPerServing;
+
+  /// No description provided for @nutritionCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get nutritionCalories;
+
+  /// No description provided for @nutritionProtein.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get nutritionProtein;
+
+  /// No description provided for @nutritionCarbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get nutritionCarbs;
+
+  /// No description provided for @nutritionFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get nutritionFat;
+
+  /// No description provided for @nutritionFiber.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiber'**
+  String get nutritionFiber;
+
+  /// No description provided for @nutritionSugar.
+  ///
+  /// In en, this message translates to:
+  /// **'Sugars'**
+  String get nutritionSugar;
+
+  /// No description provided for @nutritionSodium.
+  ///
+  /// In en, this message translates to:
+  /// **'Sodium'**
+  String get nutritionSodium;
+
+  /// No description provided for @dialogDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Done!'**
+  String get dialogDoneTitle;
+
+  /// No description provided for @dialogErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops…'**
+  String get dialogErrorTitle;
+
+  /// No description provided for @dialogOk.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get dialogOk;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

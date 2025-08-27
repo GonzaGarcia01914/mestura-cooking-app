@@ -43,5 +43,17 @@
   "loadingStageMixing": "Mischen",
   "loadingStageSeasoning": "Würzen",
   "loadingStageCooking": "Kochen",
-  "loadingStagePlating": "Anrichten"
+  "loadingStagePlating": "Anrichten",
+  "nutritionFactsTitle": "Nährwertangaben (ca.)",
+  "nutritionPerServing": "Pro Portion",
+  "nutritionCalories": "Kalorien",
+  "nutritionProtein": "Protein",
+  "nutritionCarbs": "Kohlenhydrate",
+  "nutritionFat": "Fett",
+  "nutritionFiber": "Ballaststoffe",
+  "nutritionSugar": "Zucker",
+  "nutritionSodium": "Natrium",
+  "dialogDoneTitle": "Fertig!",
+  "dialogErrorTitle": "Ups…",
+  "dialogOk": "OK"
 }

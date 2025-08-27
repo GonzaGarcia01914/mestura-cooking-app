@@ -43,5 +43,17 @@
   "loadingStageMixing": "섞는 중",
   "loadingStageSeasoning": "간하는 중",
   "loadingStageCooking": "조리 중",
-  "loadingStagePlating": "담는 중"
+  "loadingStagePlating": "담는 중",
+  "nutritionFactsTitle": "영양 정보 (대략)",
+  "nutritionPerServing": "1인분당",
+  "nutritionCalories": "칼로리",
+  "nutritionProtein": "단백질",
+  "nutritionCarbs": "탄수화물",
+  "nutritionFat": "지방",
+  "nutritionFiber": "식이섬유",
+  "nutritionSugar": "당류",
+  "nutritionSodium": "나트륨",
+  "dialogDoneTitle": "완료!",
+  "dialogErrorTitle": "이런…",
+  "dialogOk": "확인"
 }

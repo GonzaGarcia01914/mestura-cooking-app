@@ -43,5 +43,17 @@
   "loadingStageMixing": "Mezclando",
   "loadingStageSeasoning": "Sazonando",
   "loadingStageCooking": "Cocinando",
-  "loadingStagePlating": "Emplatando"
+  "loadingStagePlating": "Emplatando",
+  "nutritionFactsTitle": "Información nutricional (aprox.)",
+  "nutritionPerServing": "Valores por ración",
+  "nutritionCalories": "Calorías",
+  "nutritionProtein": "Proteínas",
+  "nutritionCarbs": "Carbohidratos",
+  "nutritionFat": "Grasas",
+  "nutritionFiber": "Fibra",
+  "nutritionSugar": "Azúcares",
+  "nutritionSodium": "Sodio",
+  "dialogDoneTitle": "¡Listo!",
+  "dialogErrorTitle": "Ups…",
+  "dialogOk": "Entendido"
 }

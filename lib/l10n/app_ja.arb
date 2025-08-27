@@ -43,6 +43,18 @@
   "loadingStageMixing": "混合",
   "loadingStageSeasoning": "味付け",
   "loadingStageCooking": "調理",
-  "loadingStagePlating": "盛り付け"
+  "loadingStagePlating": "盛り付け",
+  "nutritionFactsTitle": "栄養成分 (概算)",
+  "nutritionPerServing": "1人分あたり",
+  "nutritionCalories": "カロリー",
+  "nutritionProtein": "たんぱく質",
+  "nutritionCarbs": "炭水化物",
+  "nutritionFat": "脂質",
+  "nutritionFiber": "食物繊維",
+  "nutritionSugar": "糖質",
+  "nutritionSodium": "ナトリウム",
+  "dialogDoneTitle": "完了!",
+  "dialogErrorTitle": "おっと…",
+  "dialogOk": "OK"
 }
 

@@ -136,4 +136,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingStagePlating => 'Plating';
+
+  @override
+  String get nutritionFactsTitle => 'Nutrition facts (approx.)';
+
+  @override
+  String get nutritionPerServing => 'Per serving';
+
+  @override
+  String get nutritionCalories => 'Calories';
+
+  @override
+  String get nutritionProtein => 'Protein';
+
+  @override
+  String get nutritionCarbs => 'Carbs';
+
+  @override
+  String get nutritionFat => 'Fat';
+
+  @override
+  String get nutritionFiber => 'Fiber';
+
+  @override
+  String get nutritionSugar => 'Sugars';
+
+  @override
+  String get nutritionSodium => 'Sodium';
+
+  @override
+  String get dialogDoneTitle => 'Done!';
+
+  @override
+  String get dialogErrorTitle => 'Oops…';
+
+  @override
+  String get dialogOk => 'OK';
 }

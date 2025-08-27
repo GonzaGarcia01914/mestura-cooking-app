@@ -39,9 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _showErrorDialog(String rawMessage) async {
     if (!mounted) return;
-    final lang = Localizations.localeOf(context).languageCode;
-    final title = lang == 'es' ? 'Ups…' : 'Oops…';
-    final ok = lang == 'es' ? 'Entendido' : 'OK';
+    final s = AppLocalizations.of(context)!;
+    final title = s.dialogErrorTitle;
+    final ok = s.dialogOk;
     final message = rawMessage.replaceFirst('Exception: ', '');
 
     await showGeneralDialog<void>(
@@ -122,15 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() => _loading = true);
     final languageCode = Localizations.localeOf(context).languageCode;
+    final s = AppLocalizations.of(context)!;
 
     try {
       final isFood = await _openAI.isFood(query);
       if (!isFood) {
-        throw Exception(
-          languageCode == 'es'
-              ? 'Vamos a limitarnos a cosas comestibles.'
-              : 'Let’s stick to edible things.',
-        );
+        throw Exception(s.inappropriateInput);
       }
       if (!mounted) return;
       setState(() => _loading = false);
