@@ -16,7 +16,7 @@
   "stepsTitle": "步骤",
   "rewriteButton": "去除所选食材重新生成",
   "savedTitle": "已保存的食谱",
-  "noSavedRecipes": "你还没有保存任何食谱。",
+  "noSavedRecipes": "你还没有保存任何食谱",
   "filterTips": "提示",
   "filterIngredients": "食材",
   "filterDate": "日期",
