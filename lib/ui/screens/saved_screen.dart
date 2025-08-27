@@ -49,18 +49,6 @@ class _SavedScreenState extends State<SavedScreen> {
     });
   }
 
-  // Widget _dismissBg(AlignmentGeometry align) {
-  //   return Container(
-  //     alignment: align,
-  //     padding: const EdgeInsets.symmetric(horizontal: 16),
-  //     decoration: BoxDecoration(
-  //       color: Colors.red.withOpacity(0.90),
-  //       borderRadius: BorderRadius.circular(16),
-  //     ),
-  //     child: const Icon(Icons.delete, color: Colors.white, size: 28),
-  //   );
-  // }
-
   String? _normalizeImageUrl(String? raw) {
     if (raw == null) return null;
     final s = raw.trim();
@@ -85,7 +73,7 @@ class _SavedScreenState extends State<SavedScreen> {
     Widget emptyState() {
       final vh = MediaQuery.of(context).size.height;
       final contentHeight =
-          (vh - topPad - 24).clamp(0, double.infinity).toDouble();
+          (vh - topPad - 24).clamp(0.0, double.infinity).toDouble();
 
       return ListView(
         controller: _scrollCtrl,
@@ -116,6 +104,7 @@ class _SavedScreenState extends State<SavedScreen> {
       );
     }
 
+    // Tarjeta de receta (arreglada y completa)
     Widget _recipeCard(RecipeModel recipe, String? imageUrl) {
       return InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -141,21 +130,18 @@ class _SavedScreenState extends State<SavedScreen> {
                       recipe.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${recipe.ingredients.length} ${s.filterIngredients}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.color
-                                ?.withOpacity(0.7),
-                          ),
+                        color: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                      ),
                     ),
                   ],
                 ),
@@ -166,162 +152,67 @@ class _SavedScreenState extends State<SavedScreen> {
                 child: const Center(
                   child: Icon(
                     Icons.arrow_forward_ios,
-                    size: 32,
-                    color: Colors.orange,
-                  ),
-                ),
-              ),
-            ],
                     size: 24,
                     color: Colors.orange,
                   ),
                 ),
               ),
             ],
-
-    Widget list() => ListView.separated(
-      controller: _scrollCtrl,
-      padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
-      itemCount: _recipes.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (_, i) {
-        final recipe = _recipes[i];
-        final imageUrl = _normalizeImageUrl(recipe.image);
-
-        return Dismissible(
-          key: ValueKey(recipe.title),
-          direction: DismissDirection.startToEnd,
-          background: Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(Icons.delete, color: Colors.white, size: 28),
-          ),
-          onDismissed: (_) {
-            StorageService().deleteRecipe(recipe.title);
-            setState(() => _recipes.removeAt(i));
-          },
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
-              );
-            },
-            child: FrostedContainer(
-              padding: const EdgeInsets.all(12),
-              borderRadius: BorderRadius.circular(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (imageUrl != null) _ThumbIfLoadable(url: imageUrl),
-                  // El texto no tiene padding izquierdo extra: si no hay imagen, queda alineado
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          recipe.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${recipe.ingredients.length} ${s.filterIngredients}',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.color
-                                        ?.withOpacity(0.7),
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    height: 76,
-                    child: const Center(
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 24,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       );
     }
 
+    // Lista animada (dejamos solo esta versión)
     Widget list() => AnimatedList(
-          key: _listKey,
-          controller: _scrollCtrl,
-          padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
-          initialItemCount: _recipes.length,
-          itemBuilder: (_, i, animation) {
-            final recipe = _recipes[i];
-            final imageUrl = _normalizeImageUrl(recipe.image);
+      key: _listKey,
+      controller: _scrollCtrl,
+      padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
+      initialItemCount: _recipes.length,
+      itemBuilder: (_, i, animation) {
+        final recipe = _recipes[i];
+        final imageUrl = _normalizeImageUrl(recipe.image);
 
-            return SizeTransition(
-              sizeFactor: animation,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: i == _recipes.length - 1 ? 0 : 12),
-                child: Dismissible(
-                  key: ValueKey(recipe.title),
-                  direction: DismissDirection.startToEnd,
-                  background: Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(Icons.delete, color: Colors.white, size: 28),
-                  ),
-                  onDismissed: (_) {
-
-                    final index = _recipes.indexOf(recipe);
-                    final removed = _recipes.removeAt(index);
-                    _listKey.currentState!.removeItem(
-                      index,
-
-                    final removed = _recipes.removeAt(i);
-                    _listKey.currentState!.removeItem(
-                      i,
-
-                      (_, anim) => SizeTransition(
-                        sizeFactor: anim,
-                        child: FadeTransition(
-                          opacity: anim,
-                          child: _recipeCard(removed, _normalizeImageUrl(removed.image)),
-                        ),
-                      ),
-                      duration: const Duration(milliseconds: 300),
-                    );
-                    StorageService().deleteRecipe(removed.title);
-
-                    setState(() {});
-
-
-                  },
-                  child: _recipeCard(recipe, imageUrl),
+        return SizeTransition(
+          sizeFactor: animation,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: i == _recipes.length - 1 ? 0 : 12),
+            child: Dismissible(
+              key: ValueKey('${recipe.title}-$i'),
+              direction: DismissDirection.startToEnd,
+              background: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(16),
                 ),
+                child: const Icon(Icons.delete, color: Colors.white, size: 28),
               ),
-            );
-          },
+              onDismissed: (_) {
+                final removed = _recipes.removeAt(i);
+                _listKey.currentState!.removeItem(
+                  i,
+                  (_, anim) => SizeTransition(
+                    sizeFactor: anim,
+                    child: FadeTransition(
+                      opacity: anim,
+                      child: _recipeCard(
+                        removed,
+                        _normalizeImageUrl(removed.image),
+                      ),
+                    ),
+                  ),
+                  duration: const Duration(milliseconds: 300),
+                );
+                StorageService().deleteRecipe(removed.title);
+              },
+              child: _recipeCard(recipe, imageUrl),
+            ),
+          ),
         );
+      },
+    );
 
     return AppScaffold(
       extendBodyBehindAppBar: true,

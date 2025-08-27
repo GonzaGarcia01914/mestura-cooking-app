@@ -36,7 +36,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reset => 'Restablecer';
 
   @override
-  String get searchButton => 'Buscar receta';
+  String get searchButton => 'Generar receta';
 
   @override
   String get surpriseButton => 'Sorpréndeme';

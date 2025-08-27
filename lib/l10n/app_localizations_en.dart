@@ -36,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reset => 'Reset';
 
   @override
-  String get searchButton => 'Search recipe';
+  String get searchButton => 'Generate recipe';
 
   @override
   String get surpriseButton => 'Surprise me';

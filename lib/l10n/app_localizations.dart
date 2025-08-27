@@ -5,8 +5,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_gn.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_ja.dart';
+import 'app_localizations_ko.dart';
+import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -91,18 +101,18 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
     Locale('es'),
-    Locale('ru'),
-    Locale('de'),
+    Locale('fr'),
+    Locale('gn'),
+    Locale('it'),
+    Locale('ja'),
+    Locale('ko'),
     Locale('pl'),
     Locale('pt'),
-    Locale('fr'),
-    Locale('ja'),
-    Locale('zh'),
-    Locale('ko'),
-    Locale('it'),
-    Locale('gn'),
+    Locale('ru'),
+    Locale('zh')
   ];
 
   /// No description provided for @appTitle.
@@ -162,7 +172,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchButton.
   ///
   /// In en, this message translates to:
-  /// **'Search recipe'**
+  /// **'Generate recipe'**
   String get searchButton;
 
   /// No description provided for @surpriseButton.
@@ -198,7 +208,7 @@ abstract class AppLocalizations {
   /// No description provided for @noSavedRecipes.
   ///
   /// In en, this message translates to:
-  /// **'You haven\'t saved any recipes yet.'**
+  /// **'You haven\'t saved any recipes yet'**
   String get noSavedRecipes;
 
   /// No description provided for @filterTips.
@@ -445,20 +455,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>[
-        'en',
-        'es',
-        'ru',
-        'de',
-        'pl',
-        'pt',
-        'fr',
-        'ja',
-        'zh',
-        'ko',
-        'it',
-        'gn',
-      ].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'gn', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -469,20 +466,18 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'es':
-      return AppLocalizationsEs();
-    case 'en':
-    case 'ru':
-    case 'de':
-    case 'pl':
-    case 'pt':
-    case 'fr':
-    case 'ja':
-    case 'zh':
-    case 'ko':
-    case 'it':
-    case 'gn':
-      return AppLocalizationsEn();
+    case 'de': return AppLocalizationsDe();
+    case 'en': return AppLocalizationsEn();
+    case 'es': return AppLocalizationsEs();
+    case 'fr': return AppLocalizationsFr();
+    case 'gn': return AppLocalizationsGn();
+    case 'it': return AppLocalizationsIt();
+    case 'ja': return AppLocalizationsJa();
+    case 'ko': return AppLocalizationsKo();
+    case 'pl': return AppLocalizationsPl();
+    case 'pt': return AppLocalizationsPt();
+    case 'ru': return AppLocalizationsRu();
+    case 'zh': return AppLocalizationsZh();
   }
 
   throw FlutterError(
