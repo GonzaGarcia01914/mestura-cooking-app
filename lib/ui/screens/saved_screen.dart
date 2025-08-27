@@ -116,7 +116,6 @@ class _SavedScreenState extends State<SavedScreen> {
       );
     }
 
-
     Widget _recipeCard(RecipeModel recipe, String? imageUrl) {
       return InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -167,6 +166,12 @@ class _SavedScreenState extends State<SavedScreen> {
                 child: const Center(
                   child: Icon(
                     Icons.arrow_forward_ios,
+                    size: 32,
+                    color: Colors.orange,
+                  ),
+                ),
+              ),
+            ],
                     size: 24,
                     color: Colors.orange,
                   ),
@@ -255,7 +260,6 @@ class _SavedScreenState extends State<SavedScreen> {
                 ],
               ),
             ),
-
           ),
         ),
       );
@@ -287,9 +291,16 @@ class _SavedScreenState extends State<SavedScreen> {
                     child: const Icon(Icons.delete, color: Colors.white, size: 28),
                   ),
                   onDismissed: (_) {
+
+                    final index = _recipes.indexOf(recipe);
+                    final removed = _recipes.removeAt(index);
+                    _listKey.currentState!.removeItem(
+                      index,
+
                     final removed = _recipes.removeAt(i);
                     _listKey.currentState!.removeItem(
                       i,
+
                       (_, anim) => SizeTransition(
                         sizeFactor: anim,
                         child: FadeTransition(
@@ -300,6 +311,10 @@ class _SavedScreenState extends State<SavedScreen> {
                       duration: const Duration(milliseconds: 300),
                     );
                     StorageService().deleteRecipe(removed.title);
+
+                    setState(() {});
+
+
                   },
                   child: _recipeCard(recipe, imageUrl),
                 ),
