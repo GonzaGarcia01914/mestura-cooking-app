@@ -16,7 +16,7 @@
   "stepsTitle": "手順",
   "rewriteButton": "選択した材料を除いて書き直す",
   "savedTitle": "保存したレシピ",
-  "noSavedRecipes": "まだレシピを保存していません。",
+  "noSavedRecipes": "まだレシピを保存していません",
   "filterTips": "ヒント",
   "filterIngredients": "材料",
   "filterDate": "日付",
