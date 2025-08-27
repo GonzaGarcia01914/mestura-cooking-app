@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/recipe.dart';
-import '../../core/services/openai_service.dart';
+import '../../core/providers.dart';
 import '../../core/services/ad_gate.dart';
 import '../../core/services/ad_service.dart';
 import '../../core/services/storage_service.dart';
@@ -15,16 +16,16 @@ import '../widgets/app_top_bar.dart';
 import '../widgets/app_primary_button.dart';
 import '../widgets/frosted_container.dart';
 
-class RecipeScreen extends StatefulWidget {
+class RecipeScreen extends ConsumerStatefulWidget {
   final RecipeModel recipe;
 
   const RecipeScreen({super.key, required this.recipe});
 
   @override
-  State<RecipeScreen> createState() => _RecipeScreenState();
+  ConsumerState<RecipeScreen> createState() => _RecipeScreenState();
 }
 
-class _RecipeScreenState extends State<RecipeScreen> {
+class _RecipeScreenState extends ConsumerState<RecipeScreen> {
   late List<bool> _checked;
   final bool _loading = false;
   Locale? _locale;
@@ -148,7 +149,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     }
 
     try {
-      final openai = OpenAIService();
+      final openai = ref.read(openAIServiceProvider);
       final langCode =
           _locale?.languageCode ?? Localizations.localeOf(context).languageCode;
 
