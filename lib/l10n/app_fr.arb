@@ -1,7 +1,6 @@
 {
   "@@locale": "fr",
   "appTitle": "Mestura",
-
   "homePrompt": "Que souhaitez-vous ?",
   "advancedOptions": "Options avancées",
   "numberOfGuests": "Nombre de convives",

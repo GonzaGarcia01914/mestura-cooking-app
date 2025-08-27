@@ -1,7 +1,6 @@
 {
   "@@locale": "ja",
   "appTitle": "Mestura",
-
   "homePrompt": "何を作りたいですか？",
   "advancedOptions": "詳細オプション",
   "numberOfGuests": "人数",
