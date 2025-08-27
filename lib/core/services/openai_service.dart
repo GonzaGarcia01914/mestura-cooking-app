@@ -165,16 +165,16 @@ class OpenAIService {
 
   // ----- Helpers -------------------------------------------------------------
 
-  List<String> _toStringList(dynamic v) {
-    if (v is List) {
-      return v
-          .where((e) => e != null)
-          .map((e) => e.toString().trim())
-          .where((s) => s.isNotEmpty)
-          .toList(growable: false);
-    }
-    return const <String>[];
-  }
+  // List<String> _toStringList(dynamic v) {
+  //   if (v is List) {
+  //     return v
+  //         .where((e) => e != null)
+  //         .map((e) => e.toString().trim())
+  //         .where((s) => s.isNotEmpty)
+  //         .toList(growable: false);
+  //   }
+  //   return const <String>[];
+  // }
 
   String? _normalizeImageUrl(String? raw) {
     if (raw == null) return null;

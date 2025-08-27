@@ -280,11 +280,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
     );
   }
 
-  String _t(String es, String en) =>
-      (_locale?.languageCode ?? Localizations.localeOf(context).languageCode) ==
-              'es'
-          ? es
-          : en;
+  // String _t(String es, String en) =>
+  //     (_locale?.languageCode ?? Localizations.localeOf(context).languageCode) ==
+  //             'es'
+  //         ? es
+  //         : en;
 
   @override
   Widget build(BuildContext context) {

@@ -45,17 +45,17 @@ class _SavedScreenState extends State<SavedScreen> {
     setState(() => _recipes = saved);
   }
 
-  Widget _dismissBg(AlignmentGeometry align) {
-    return Container(
-      alignment: align,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.90),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: const Icon(Icons.delete, color: Colors.white, size: 28),
-    );
-  }
+  // Widget _dismissBg(AlignmentGeometry align) {
+  //   return Container(
+  //     alignment: align,
+  //     padding: const EdgeInsets.symmetric(horizontal: 16),
+  //     decoration: BoxDecoration(
+  //       color: Colors.red.withOpacity(0.90),
+  //       borderRadius: BorderRadius.circular(16),
+  //     ),
+  //     child: const Icon(Icons.delete, color: Colors.white, size: 28),
+  //   );
+  // }
 
   String? _normalizeImageUrl(String? raw) {
     if (raw == null) return null;
