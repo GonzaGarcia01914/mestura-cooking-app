@@ -15,22 +15,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homePrompt => 'Что бы вы хотели?';
 
   @override
-  String get advancedOptions => 'Расширенные настройки';
+  String get advancedOptions => 'Расширенные параметры';
 
   @override
   String get numberOfGuests => 'Количество гостей';
 
   @override
-  String get maxCalories => 'Макс. калорий';
+  String get maxCalories => 'Максимум калорий';
 
   @override
   String get perServing => '(на порцию)';
 
   @override
-  String get includeMacros => 'Включить макросы (примерно)';
+  String get includeMacros => 'Включить макроэлементы (примерно)';
 
   @override
-  String get includeMacrosSubtitle => 'Добавляет калории и макросы на порцию.';
+  String get includeMacrosSubtitle => 'Добавляет калории и макроэлементы на порцию.';
 
   @override
   String get reset => 'Сбросить';
@@ -54,7 +54,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get savedTitle => 'Сохранённые рецепты';
 
   @override
-  String get noSavedRecipes => 'Вы ещё не сохранили ни одного рецепта';
+  String get noSavedRecipes => 'Вы ещё не сохранили ни одного рецепта.';
 
   @override
   String get filterTips => 'Советы';
@@ -78,7 +78,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsTitle => 'Настройки';
 
   @override
-  String get preferenceVegan => 'Веган';
+  String get preferenceVegan => 'Веганский';
 
   @override
   String get preferenceGlutenFree => 'Без глютена';
@@ -108,19 +108,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadingMessage => 'Готовим рецепт...';
 
   @override
-  String get loadingTip1 => 'Совет: попробуйте копчёные специи для более глубокого вкуса.';
+  String get loadingTip1 => 'Совет: Используйте копчёные специи для более глубокого вкуса.';
 
   @override
-  String get loadingTip2 => 'Совет: обжаривайте специи 30 с, чтобы раскрыть аромат.';
+  String get loadingTip2 => 'Совет: Поджарьте специи 30 секунд, чтобы раскрыть аромат.';
 
   @override
-  String get loadingTip3 => 'Совет: сохраняйте воду после варки, чтобы регулировать консистенцию.';
+  String get loadingTip3 => 'Совет: Сохраняйте воду после варки, чтобы регулировать текстуру.';
 
   @override
-  String get loadingTip4 => 'Совет: немного кислоты (лимон/уксус) оживит любое блюдо.';
+  String get loadingTip4 => 'Совет: Капля кислоты (лимон/уксус) оживит любое блюдо.';
 
   @override
-  String get loadingTip5 => 'Совет: солите слоями, а не всё в конце.';
+  String get loadingTip5 => 'Совет: Солите поэтапно, а не всё в конце.';
 
   @override
   String get loadingStagePreparing => 'Подготовка';
@@ -138,38 +138,38 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadingStagePlating => 'Подача';
 
   @override
-  String get nutritionFactsTitle => 'Пищевая ценность (примерно)';
+  String get nutritionFactsTitle => 'Nutrition facts (approx.)';
 
   @override
-  String get nutritionPerServing => 'На порцию';
+  String get nutritionPerServing => 'Per serving';
 
   @override
-  String get nutritionCalories => 'Калории';
+  String get nutritionCalories => 'Calories';
 
   @override
-  String get nutritionProtein => 'Белки';
+  String get nutritionProtein => 'Protein';
 
   @override
-  String get nutritionCarbs => 'Углеводы';
+  String get nutritionCarbs => 'Carbs';
 
   @override
-  String get nutritionFat => 'Жиры';
+  String get nutritionFat => 'Fat';
 
   @override
-  String get nutritionFiber => 'Клетчатка';
+  String get nutritionFiber => 'Fiber';
 
   @override
-  String get nutritionSugar => 'Сахара';
+  String get nutritionSugar => 'Sugars';
 
   @override
-  String get nutritionSodium => 'Натрий';
+  String get nutritionSodium => 'Sodium';
 
   @override
-  String get dialogDoneTitle => 'Готово!';
+  String get dialogDoneTitle => 'Done!';
 
   @override
-  String get dialogErrorTitle => 'Упс…';
+  String get dialogErrorTitle => 'Oops…';
 
   @override
-  String get dialogOk => 'ОК';
+  String get dialogOk => 'OK';
 }

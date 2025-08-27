@@ -65,26 +65,29 @@ Future<String?> _loadSavedLocale() async {
   return prefs.getString('locale');
 }
 
-void main() {
-  // Captura errores fuera del framework
+Future<void> main() async {
+  // Asegura binding y configura manejadores de error
+  WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+  };
+
+  // Inicializaciones previas a runApp
+  await _initFirebase();
+  await _initAds();
+
+  final savedLocale = await _loadSavedLocale();
+  final initialLocale = _initialLocale(savedLocale);
+
+  // Ejecuta la app dentro de una zona protegida
   runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
-
-      // (Opcional) Captura errores de Flutter
-      FlutterError.onError = (FlutterErrorDetails details) {
-        FlutterError.dumpErrorToConsole(details);
-      };
-
-      await _initFirebase();
-      await _initAds();
-
-      final savedLocale = await _loadSavedLocale();
-      final initialLocale = _initialLocale(savedLocale);
+    () {
       runApp(
         ProviderScope(
           overrides: [
-            localeProvider.overrideWithValue(StateController(initialLocale)),
+            // En Riverpod 2, StateProvider.overrideWith espera devolver el estado (Locale)
+            localeProvider.overrideWith((ref) => initialLocale),
           ],
           child: const MyApp(),
         ),
