@@ -121,48 +121,77 @@ class _SavedScreenState extends State<SavedScreen> {
         final recipe = _recipes[i];
         final imageUrl = _normalizeImageUrl(recipe.image);
 
-        return InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
-            );
+        return Dismissible(
+          key: ValueKey(recipe.title),
+          direction: DismissDirection.startToEnd,
+          background: Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(Icons.delete, color: Colors.white, size: 28),
+          ),
+          onDismissed: (_) {
+            StorageService().deleteRecipe(recipe.title);
+            setState(() => _recipes.removeAt(i));
           },
-          child: FrostedContainer(
-            padding: const EdgeInsets.all(12),
+          child: InkWell(
             borderRadius: BorderRadius.circular(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (imageUrl != null) _ThumbIfLoadable(url: imageUrl),
-                // El texto no tiene padding izquierdo extra: si no hay imagen, queda alineado
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        recipe.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${recipe.ingredients.length} ${s.filterIngredients}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.color?.withOpacity(0.7),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
+              );
+            },
+            child: FrostedContainer(
+              padding: const EdgeInsets.all(12),
+              borderRadius: BorderRadius.circular(16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (imageUrl != null) _ThumbIfLoadable(url: imageUrl),
+                  // El texto no tiene padding izquierdo extra: si no hay imagen, queda alineado
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          recipe.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          '${recipe.ingredients.length} ${s.filterIngredients}',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.color
+                                        ?.withOpacity(0.7),
+                                  ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward_ios, size: 16),
-              ],
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 76,
+                    child: const Center(
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 24,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
