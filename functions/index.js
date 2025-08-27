@@ -53,6 +53,31 @@ function validStringArray(v) {
     return Array.isArray(v) && v.length > 0 && v.every((e) => typeof e === "string" && e.trim().length > 0);
 }
 
+const LANGUAGE_NAMES = {
+    en: "English",
+    es: "Spanish",
+    de: "German",
+    fr: "French",
+    pt: "Portuguese",
+    ru: "Russian",
+    pl: "Polish",
+    it: "Italian",
+    ja: "Japanese",
+    zh: "Chinese",
+    ko: "Korean",
+    gn: "Guarani",
+};
+
+function resolveSysLang(code) {
+    const normalized = String(code || "").toLowerCase();
+    for (const key of Object.keys(LANGUAGE_NAMES)) {
+        if (normalized.startsWith(key)) {
+            return LANGUAGE_NAMES[key];
+        }
+    }
+    return "English";
+}
+
 // Moderación (true = bloqueado)
 async function isFlagged(text, apiKey) {
     const r = await fetch(MOD_URL, {
@@ -147,7 +172,7 @@ exports.generateRecipe = onCall(commonOpts, async (req) => {
             throw new HttpsError("failed-precondition", "Your input was flagged as inappropriate.");
         }
 
-        const sysLang = language.toLowerCase().startsWith("es") ? "Spanish" : "English";
+        const sysLang = resolveSysLang(language);
 
         // Prompt del sistema
         const nutritionRule = includeMacros

@@ -19,6 +19,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _scrollCtrl = ScrollController();
   double _appBarTint = 0.0; // 0 = transparente, ~0.08 = máximo
 
+  static const Map<String, String> _languages = {
+    'es': 'Español',
+    'en': 'English',
+    'ru': 'Русский',
+    'de': 'Deutsch',
+    'pl': 'Polski',
+    'pt': 'Português',
+    'fr': 'Français',
+    'ja': '日本語',
+    'zh': '中文',
+    'ko': '한국어',
+    'it': 'Italiano',
+    'gn': "Avañe'ẽ",
+  };
+
   String _selected = 'en'; // valor por defecto
 
   @override
@@ -49,7 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         prefs.getString('languageCode') ??
         Localizations.localeOf(context).languageCode;
 
-    setState(() => _selected = (saved == 'es') ? 'es' : 'en');
+    setState(() => _selected = _languages.keys.contains(saved) ? saved : 'en');
   }
 
   Future<void> _changeLanguage(String langCode) async {
@@ -92,25 +107,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
-              RadioListTile<String>(
-                value: 'es',
-                groupValue: _selected,
-                onChanged: (lang) {
-                  if (lang != null) _changeLanguage(lang);
-                },
-                title: const Text('Español'),
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-              ),
-              RadioListTile<String>(
-                value: 'en',
-                groupValue: _selected,
-                onChanged: (lang) {
-                  if (lang != null) _changeLanguage(lang);
-                },
-                title: const Text('English'),
-                contentPadding: EdgeInsets.zero,
-                dense: true,
+              ..._languages.entries.map(
+                (entry) => RadioListTile<String>(
+                  value: entry.key,
+                  groupValue: _selected,
+                  onChanged: (lang) {
+                    if (lang != null) _changeLanguage(lang);
+                  },
+                  title: Text(entry.value),
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                ),
               ),
             ],
           ),

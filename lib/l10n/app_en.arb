@@ -4,6 +4,12 @@
   "homePrompt": "What would you like?",
   "advancedOptions": "Advanced options",
   "numberOfGuests": "Number of Guests",
+  "maxCalories": "Max calories",
+  "perServing": "(per serving)",
+  "includeMacros": "Include macros (estimated)",
+  "includeMacrosSubtitle": "Adds calories & macros per serving.",
+  "reset": "Reset",
+  
   "searchButton": "Generate recipe",
   "surpriseButton": "Surprise me",
   "ingredientsTitle": "Ingredients",

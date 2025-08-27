@@ -4,6 +4,12 @@
   "homePrompt": "¿Qué te apetece?",
   "advancedOptions": "Opciones Avanzadas",
   "numberOfGuests": "Número de Invitados",
+  "maxCalories": "Calorías máx.",
+  "perServing": "(por ración)",
+  "includeMacros": "Contar macros (estimados)",
+  "includeMacrosSubtitle": "Añade calorías y macronutrientes por ración.",
+  "reset": "Restablecer",
+  
   "searchButton": "Generar receta",
   "surpriseButton": "Sorpréndeme",
   "ingredientsTitle": "Ingredientes",
