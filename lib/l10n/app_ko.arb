@@ -1,6 +1,7 @@
 {
   "@@locale": "ko",
   "appTitle": "Mestura",
+
   "homePrompt": "무엇을 원하시나요?",
   "advancedOptions": "고급 옵션",
   "numberOfGuests": "인원 수",
@@ -45,3 +46,4 @@
   "loadingStageCooking": "조리 중",
   "loadingStagePlating": "담는 중"
 }
+

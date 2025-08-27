@@ -1,6 +1,7 @@
 {
   "@@locale": "gn",
   "appTitle": "Mestura",
+
   "homePrompt": "Mba'épa reipota?",
   "advancedOptions": "Jeporavorã iporãvéva",
   "numberOfGuests": "Mboy oútava",
@@ -45,3 +46,4 @@
   "loadingStageCooking": "Oñembojy",
   "loadingStagePlating": "Oñemoĩ mboypy"
 }
+

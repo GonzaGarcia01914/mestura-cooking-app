@@ -1,6 +1,7 @@
 {
   "@@locale": "ja",
   "appTitle": "Mestura",
+
   "homePrompt": "何を作りたいですか？",
   "advancedOptions": "詳細オプション",
   "numberOfGuests": "人数",
@@ -45,3 +46,4 @@
   "loadingStageCooking": "調理",
   "loadingStagePlating": "盛り付け"
 }
+

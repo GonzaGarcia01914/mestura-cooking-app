@@ -1,6 +1,7 @@
 {
   "@@locale": "zh",
   "appTitle": "Mestura",
+
   "homePrompt": "想做什么？",
   "advancedOptions": "高级选项",
   "numberOfGuests": "用餐人数",
@@ -45,3 +46,4 @@
   "loadingStageCooking": "烹饪",
   "loadingStagePlating": "装盘"
 }
+
