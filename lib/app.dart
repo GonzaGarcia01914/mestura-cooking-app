@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 
 import 'ui/screens/home_screen.dart';
 import 'ui/screens/saved_screen.dart';
 import 'ui/screens/settings_screen.dart';
 import 'core/theme/app_theme.dart';
+import 'core/providers.dart';
 
-class App extends StatelessWidget {
-  final Locale locale;
+class App extends ConsumerWidget {
+  const App({super.key});
 
-  const App({super.key, required this.locale});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localeProvider);
     return MaterialApp(
       title: 'Mestura',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
-      locale: locale, // ✅ usamos el locale pasado desde main.dart
+      locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
         AppLocalizations.delegate,

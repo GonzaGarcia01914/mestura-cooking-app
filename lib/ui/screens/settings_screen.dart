@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
-import '../../main.dart';
+import '../../core/providers.dart';
 
 // Design system
 import '../widgets/app_scaffold.dart';
 import '../widgets/app_top_bar.dart';
 import '../widgets/frosted_container.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _scrollCtrl = ScrollController();
   double _appBarTint = 0.0; // 0 = transparente, ~0.08 = máximo
 
@@ -75,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await prefs.setString('locale', langCode);
     await prefs.setString('languageCode', langCode);
 
-    MyApp.setLocale(context, Locale(langCode));
+    ref.read(localeProvider.notifier).state = Locale(langCode);
   }
 
   @override

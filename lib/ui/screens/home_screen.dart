@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mestura/ui/widgets/glass_alert.dart';
 import '../../l10n/app_localizations.dart';
-import '../../core/services/openai_service.dart';
+import '../../core/providers.dart';
 //import '../../core/navigation/run_with_loading.dart';
 
 import '../../core/services/ad_service.dart';
@@ -16,18 +17,19 @@ import '../style/app_style.dart';
 import 'recipe_screen.dart';
 import 'loading_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+final homeLoadingProvider =
+    StateProvider.autoDispose<bool>((ref) => false);
+
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _controller = TextEditingController();
   final ScrollController _homeScrollCtrl = ScrollController();
-  final _openAI = OpenAIService();
-  bool _loading = false;
   int _servings = 2;
   int? _maxCalories;
   bool _countMacros = false;
@@ -118,19 +120,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _generateRecipe() async {
     final query = _controller.text.trim();
-    if (query.isEmpty || _loading) return;
+    if (query.isEmpty || ref.read(homeLoadingProvider)) return;
 
-    setState(() => _loading = true);
+    ref.read(homeLoadingProvider.notifier).state = true;
     final languageCode = Localizations.localeOf(context).languageCode;
     final s = AppLocalizations.of(context)!;
+    final openAI = ref.read(openAIServiceProvider);
 
     try {
-      final isFood = await _openAI.isFood(query);
+      final isFood = await openAI.isFood(query);
       if (!isFood) {
         throw Exception(s.inappropriateInput);
       }
       if (!mounted) return;
-      setState(() => _loading = false);
+      ref.read(homeLoadingProvider.notifier).state = false;
 
       await AdGate.registerAction();
 
@@ -145,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       loadingShown = true;
 
-      final recipeFuture = _openAI.generateRecipe(
+      final recipeFuture = openAI.generateRecipe(
         query,
         language: languageCode,
         generateImage: false,
@@ -191,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      setState(() => _loading = false);
+      ref.read(homeLoadingProvider.notifier).state = false;
       if (ModalRoute.of(context)?.settings.name == 'loading' &&
           Navigator.canPop(context)) {
         Navigator.of(context).pop();
@@ -461,7 +464,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 12),
               AppPrimaryButton(
-                loading: _loading,
+                loading: ref.watch(homeLoadingProvider),
                 onPressed: _generateRecipe,
                 child: Text(
                   s.searchButton,
