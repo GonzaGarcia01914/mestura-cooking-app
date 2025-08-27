@@ -43,6 +43,18 @@
   "loadingStageMixing": "Oñembojere",
   "loadingStageSeasoning": "Oñembohety",
   "loadingStageCooking": "Oñembojy",
-  "loadingStagePlating": "Oñemoĩ mboypy"
+  "loadingStagePlating": "Oñemoĩ mboypy",
+  "nutritionFactsTitle": "Mandu'a tembirekorã (jeipapapyre)",
+  "nutritionPerServing": "Peteĩ tembi'upehẽme",
+  "nutritionCalories": "Kalore",
+  "nutritionProtein": "Proteína",
+  "nutritionCarbs": "Carbohidrato",
+  "nutritionFat": "Ñandy",
+  "nutritionFiber": "Fibra",
+  "nutritionSugar": "Azukar",
+  "nutritionSodium": "Sodio",
+  "dialogDoneTitle": "Opáma!",
+  "dialogErrorTitle": "Ha'ehína...",
+  "dialogOk": "Moneĩ"
 }
 

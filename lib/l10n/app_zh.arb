@@ -43,6 +43,18 @@
   "loadingStageMixing": "混合",
   "loadingStageSeasoning": "调味",
   "loadingStageCooking": "烹饪",
-  "loadingStagePlating": "装盘"
+  "loadingStagePlating": "装盘",
+  "nutritionFactsTitle": "营养成分（约）",
+  "nutritionPerServing": "每份",
+  "nutritionCalories": "卡路里",
+  "nutritionProtein": "蛋白质",
+  "nutritionCarbs": "碳水化合物",
+  "nutritionFat": "脂肪",
+  "nutritionFiber": "纤维",
+  "nutritionSugar": "糖",
+  "nutritionSodium": "钠",
+  "dialogDoneTitle": "完成!",
+  "dialogErrorTitle": "哎呀…",
+  "dialogOk": "好的"
 }
 

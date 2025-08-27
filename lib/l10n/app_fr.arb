@@ -43,5 +43,17 @@
   "loadingStageMixing": "Mélange",
   "loadingStageSeasoning": "Assaisonnement",
   "loadingStageCooking": "Cuisson",
-  "loadingStagePlating": "Dressage"
+  "loadingStagePlating": "Dressage",
+  "nutritionFactsTitle": "Informations nutritionnelles (approx.)",
+  "nutritionPerServing": "Par portion",
+  "nutritionCalories": "Calories",
+  "nutritionProtein": "Protéines",
+  "nutritionCarbs": "Glucides",
+  "nutritionFat": "Lipides",
+  "nutritionFiber": "Fibres",
+  "nutritionSugar": "Sucres",
+  "nutritionSodium": "Sodium",
+  "dialogDoneTitle": "Terminé !",
+  "dialogErrorTitle": "Oups…",
+  "dialogOk": "OK"
 }

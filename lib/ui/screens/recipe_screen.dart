@@ -243,10 +243,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
     setState(() => _isSaved = true); // oculta el botón
 
     // Alert bonito
-    final lang = Localizations.localeOf(context).languageCode;
-    final title = lang == 'es' ? '¡Listo!' : 'Done!';
-    final ok = lang == 'es' ? 'Entendido' : 'OK';
-    final message = AppLocalizations.of(context)!.savedConfirmation;
+    final s = AppLocalizations.of(context)!;
+    final title = s.dialogDoneTitle;
+    final ok = s.dialogOk;
+    final message = s.savedConfirmation;
 
     // ignore: use_build_context_synchronously
     await showGeneralDialog<void>(
@@ -418,50 +418,38 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     tilePadding: const EdgeInsets.symmetric(horizontal: 8),
                     childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
                     title: Text(
-                      (_locale?.languageCode ??
-                                  Localizations.localeOf(
-                                    context,
-                                  ).languageCode) ==
-                              'es'
-                          ? 'Información nutricional (aprox.)'
-                          : 'Nutrition facts (approx.)',
+                      s.nutritionFactsTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     subtitle: Text(
-                      (_locale?.languageCode ??
-                                  Localizations.localeOf(
-                                    context,
-                                  ).languageCode) ==
-                              'es'
-                          ? 'Valores por ración'
-                          : 'Per serving',
+                      s.nutritionPerServing,
                     ),
                     children: [
                       _NutritionRow(
-                        label: 'Calorías',
+                        label: s.nutritionCalories,
                         value:
                             widget.recipe.nutrition!.caloriesKcal != null
                                 ? '${widget.recipe.nutrition!.caloriesKcal} kcal'
                                 : '—',
                       ),
                       _NutritionRow(
-                        label: 'Proteínas',
+                        label: s.nutritionProtein,
                         value:
                             widget.recipe.nutrition!.proteinG != null
                                 ? '${widget.recipe.nutrition!.proteinG!.toStringAsFixed(1)} g'
                                 : '—',
                       ),
                       _NutritionRow(
-                        label: 'Carbohidratos',
+                        label: s.nutritionCarbs,
                         value:
                             widget.recipe.nutrition!.carbsG != null
                                 ? '${widget.recipe.nutrition!.carbsG!.toStringAsFixed(1)} g'
                                 : '—',
                       ),
                       _NutritionRow(
-                        label: 'Grasas',
+                        label: s.nutritionFat,
                         value:
                             widget.recipe.nutrition!.fatG != null
                                 ? '${widget.recipe.nutrition!.fatG!.toStringAsFixed(1)} g'
@@ -469,19 +457,19 @@ class _RecipeScreenState extends State<RecipeScreen> {
                       ),
                       if (widget.recipe.nutrition!.fiberG != null)
                         _NutritionRow(
-                          label: 'Fibra',
+                          label: s.nutritionFiber,
                           value:
                               '${widget.recipe.nutrition!.fiberG!.toStringAsFixed(1)} g',
                         ),
                       if (widget.recipe.nutrition!.sugarG != null)
                         _NutritionRow(
-                          label: 'Azúcares',
+                          label: s.nutritionSugar,
                           value:
                               '${widget.recipe.nutrition!.sugarG!.toStringAsFixed(1)} g',
                         ),
                       if (widget.recipe.nutrition!.sodiumMg != null)
                         _NutritionRow(
-                          label: 'Sodio',
+                          label: s.nutritionSodium,
                           value:
                               '${widget.recipe.nutrition!.sodiumMg!.toStringAsFixed(0)} mg',
                         ),

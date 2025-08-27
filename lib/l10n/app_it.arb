@@ -42,5 +42,17 @@
   "loadingStageMixing": "Mischiando",
   "loadingStageSeasoning": "Condendo",
   "loadingStageCooking": "Cottura",
-  "loadingStagePlating": "Impiattamento"
+  "loadingStagePlating": "Impiattamento",
+  "nutritionFactsTitle": "Valori nutrizionali (circa)",
+  "nutritionPerServing": "Per porzione",
+  "nutritionCalories": "Calorie",
+  "nutritionProtein": "Proteine",
+  "nutritionCarbs": "Carboidrati",
+  "nutritionFat": "Grassi",
+  "nutritionFiber": "Fibre",
+  "nutritionSugar": "Zuccheri",
+  "nutritionSodium": "Sodio",
+  "dialogDoneTitle": "Fatto!",
+  "dialogErrorTitle": "Ops…",
+  "dialogOk": "OK"
 }

@@ -43,5 +43,17 @@
   "loadingStageMixing": "Смешивание",
   "loadingStageSeasoning": "Приправление",
   "loadingStageCooking": "Приготовление",
-  "loadingStagePlating": "Подача"
+  "loadingStagePlating": "Подача",
+  "nutritionFactsTitle": "Пищевая ценность (примерно)",
+  "nutritionPerServing": "На порцию",
+  "nutritionCalories": "Калории",
+  "nutritionProtein": "Белки",
+  "nutritionCarbs": "Углеводы",
+  "nutritionFat": "Жиры",
+  "nutritionFiber": "Клетчатка",
+  "nutritionSugar": "Сахара",
+  "nutritionSodium": "Натрий",
+  "dialogDoneTitle": "Готово!",
+  "dialogErrorTitle": "Упс…",
+  "dialogOk": "ОК"
 }

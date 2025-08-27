@@ -43,5 +43,17 @@
   "loadingStageMixing": "Mieszanie",
   "loadingStageSeasoning": "Doprawianie",
   "loadingStageCooking": "Gotowanie",
-  "loadingStagePlating": "Serwowanie"
+  "loadingStagePlating": "Serwowanie",
+  "nutritionFactsTitle": "Wartości odżywcze (ok.)",
+  "nutritionPerServing": "Na porcję",
+  "nutritionCalories": "Kalorie",
+  "nutritionProtein": "Białko",
+  "nutritionCarbs": "Węglowodany",
+  "nutritionFat": "Tłuszcz",
+  "nutritionFiber": "Błonnik",
+  "nutritionSugar": "Cukry",
+  "nutritionSodium": "Sód",
+  "dialogDoneTitle": "Gotowe!",
+  "dialogErrorTitle": "Ups…",
+  "dialogOk": "OK"
 }
