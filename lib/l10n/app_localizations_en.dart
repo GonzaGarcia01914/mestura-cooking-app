@@ -54,7 +54,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get savedTitle => 'Saved Recipes';
 
   @override
-  String get noSavedRecipes => 'You haven\'t saved any recipes yet.';
+  String get noSavedRecipes => 'You haven\'t saved any recipes yet';
 
   @override
   String get filterTips => 'Tips';

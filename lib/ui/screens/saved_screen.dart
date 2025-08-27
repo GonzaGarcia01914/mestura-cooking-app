@@ -20,6 +20,7 @@ class _SavedScreenState extends State<SavedScreen> {
   final _scrollCtrl = ScrollController();
   double _appBarTint = 0.0; // 0 = transparente, ~0.08 = máximo
   List<RecipeModel> _recipes = [];
+  GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
@@ -42,7 +43,10 @@ class _SavedScreenState extends State<SavedScreen> {
   Future<void> _loadRecipes() async {
     final saved = await StorageService().getSavedRecipes();
     if (!mounted) return;
-    setState(() => _recipes = saved);
+    setState(() {
+      _recipes = saved;
+      _listKey = GlobalKey<AnimatedListState>();
+    });
   }
 
   // Widget _dismissBg(AlignmentGeometry align) {
@@ -112,62 +116,113 @@ class _SavedScreenState extends State<SavedScreen> {
       );
     }
 
-    Widget list() => ListView.separated(
-      controller: _scrollCtrl,
-      padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
-      itemCount: _recipes.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (_, i) {
-        final recipe = _recipes[i];
-        final imageUrl = _normalizeImageUrl(recipe.image);
-
-        return InkWell(
+    Widget _recipeCard(RecipeModel recipe, String? imageUrl) {
+      return InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
+          );
+        },
+        child: FrostedContainer(
+          padding: const EdgeInsets.all(12),
           borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
-            );
-          },
-          child: FrostedContainer(
-            padding: const EdgeInsets.all(12),
-            borderRadius: BorderRadius.circular(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (imageUrl != null) _ThumbIfLoadable(url: imageUrl),
-                // El texto no tiene padding izquierdo extra: si no hay imagen, queda alineado
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        recipe.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${recipe.ingredients.length} ${s.filterIngredients}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.color?.withOpacity(0.7),
-                        ),
-                      ),
-                    ],
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (imageUrl != null) _ThumbIfLoadable(url: imageUrl),
+              // El texto no tiene padding izquierdo extra: si no hay imagen, queda alineado
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      recipe.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${recipe.ingredients.length} ${s.filterIngredients}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.color
+                                ?.withOpacity(0.7),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                height: 76,
+                child: const Center(
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 24,
+                    color: Colors.orange,
                   ),
                 ),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward_ios, size: 16),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
+      );
+    }
+
+    Widget list() => AnimatedList(
+          key: _listKey,
+          controller: _scrollCtrl,
+          padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
+          initialItemCount: _recipes.length,
+          itemBuilder: (_, i, animation) {
+            final recipe = _recipes[i];
+            final imageUrl = _normalizeImageUrl(recipe.image);
+
+            return SizeTransition(
+              sizeFactor: animation,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: i == _recipes.length - 1 ? 0 : 12),
+                child: Dismissible(
+                  key: ValueKey(recipe.title),
+                  direction: DismissDirection.startToEnd,
+                  background: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Icon(Icons.delete, color: Colors.white, size: 28),
+                  ),
+                  onDismissed: (_) {
+                    final removed = _recipes.removeAt(i);
+                    _listKey.currentState!.removeItem(
+                      i,
+                      (_, anim) => SizeTransition(
+                        sizeFactor: anim,
+                        child: FadeTransition(
+                          opacity: anim,
+                          child: _recipeCard(removed, _normalizeImageUrl(removed.image)),
+                        ),
+                      ),
+                      duration: const Duration(milliseconds: 300),
+                    );
+                    StorageService().deleteRecipe(removed.title);
+                  },
+                  child: _recipeCard(recipe, imageUrl),
+                ),
+              ),
+            );
+          },
         );
-      },
-    );
 
     return AppScaffold(
       extendBodyBehindAppBar: true,
