@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -315,16 +316,16 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
             if (_showHeaderImage && _headerImageUrl != null) ...[
               FrostedContainer(
                 padding: EdgeInsets.zero,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
-                    child: Image.network(
-                      _headerImageUrl!,
+                    child: CachedNetworkImage(
+                      imageUrl: _headerImageUrl!,
                       fit: BoxFit.cover,
-                      // Fallback extra por si algo falla tras la precarga
-                      errorBuilder: (_, __, ___) {
+                      fadeInDuration: const Duration(milliseconds: 200),
+                      errorWidget: (_, __, ___) {
                         if (_showHeaderImage) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (mounted) {
@@ -353,7 +354,7 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
 
             // Ingredientes
             FrostedContainer(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: const BorderRadius.all(Radius.circular(14)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -384,7 +385,7 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
 
             // Pasos
             FrostedContainer(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: const BorderRadius.all(Radius.circular(14)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -410,7 +411,7 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
             if (widget.recipe.nutrition != null) ...[
               const SizedBox(height: 16),
               FrostedContainer(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: const BorderRadius.all(Radius.circular(14)),
                 child: Theme(
                   data: Theme.of(
                     context,

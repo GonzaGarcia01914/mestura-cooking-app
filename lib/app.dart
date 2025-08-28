@@ -6,6 +6,7 @@ import 'l10n/app_localizations.dart';
 import 'ui/screens/home_screen.dart';
 import 'ui/screens/saved_screen.dart';
 import 'ui/screens/settings_screen.dart';
+import 'ui/screens/preferences_screen.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers.dart';
 
@@ -32,6 +33,7 @@ class App extends ConsumerWidget {
         '/': (_) => const HomeScreen(),
         '/saved': (_) => const SavedScreen(),
         '/settings': (_) => const SettingsScreen(),
+        '/preferences': (_) => const PreferencesScreen(),
       },
     );
   }

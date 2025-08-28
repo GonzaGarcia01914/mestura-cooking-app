@@ -172,4 +172,184 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dialogOk => 'Entendido';
+
+  @override
+  String get preferencesMenu => 'Preferencias alimenticias';
+
+  @override
+  String get preferencesTitle => 'Preferencias alimenticias';
+
+  @override
+  String get preferencesSubtitle => 'Se usan para personalizar recetas';
+
+  @override
+  String get preferencesSectionDiet => 'Dieta';
+
+  @override
+  String get preferencesSectionMedical => 'Médicas';
+
+  @override
+  String get preferencesSectionAllergens => 'Alérgenos a evitar';
+
+  @override
+  String get preferencesSectionIntolerances => 'Intolerancias';
+
+  @override
+  String get preferencesSectionReligion => 'Religión / Cultura';
+
+  @override
+  String get preferencesDisliked => 'Ingredientes no deseados';
+
+  @override
+  String get preferencesAddIngredientPlaceholder => 'Añade ingrediente y pulsa Enter';
+
+  @override
+  String get preferencesSave => 'Guardar preferencias';
+
+  @override
+  String get preferencesClear => 'Limpiar todo';
+
+  @override
+  String get preferencesSaved => '¡Preferencias guardadas!';
+
+  @override
+  String get prefVegan => 'Vegana';
+
+  @override
+  String get prefVegetarian => 'Vegetariana';
+
+  @override
+  String get prefVegetarianOvo => 'Vegetariana (ovo)';
+
+  @override
+  String get prefVegetarianLacto => 'Vegetariana (lacto)';
+
+  @override
+  String get prefVegetarianStrict => 'Vegetariana (sin huevo/lácteos)';
+
+  @override
+  String get prefPescetarian => 'Pescetariana';
+
+  @override
+  String get prefFlexitarian => 'Flexitariana';
+
+  @override
+  String get prefMediterranean => 'Mediterránea';
+
+  @override
+  String get prefLowCarbKeto => 'Baja en carb./Keto';
+
+  @override
+  String get prefLowFat => 'Baja en grasa';
+
+  @override
+  String get prefHighProtein => 'Alta en proteína';
+
+  @override
+  String get prefPaleo => 'Paleo';
+
+  @override
+  String get prefWholeFoods => 'Comida real';
+
+  @override
+  String get prefNoUltraProcessed => 'Sin ultraprocesados';
+
+  @override
+  String get prefNoAlcohol => 'Sin alcohol';
+
+  @override
+  String get prefSpicyLow => 'Poco picante';
+
+  @override
+  String get prefSpicyMedium => 'Picante medio';
+
+  @override
+  String get prefSpicyHigh => 'Muy picante';
+
+  @override
+  String get prefOrganic => 'Orgánico';
+
+  @override
+  String get prefGlutenFree => 'Sin gluten';
+
+  @override
+  String get prefLowFodmap => 'Baja en FODMAP';
+
+  @override
+  String get prefLowSodium => 'Baja en sodio';
+
+  @override
+  String get prefLowSugar => 'Baja en azúcar / diabética';
+
+  @override
+  String get prefLowCholesterol => 'Baja en colesterol';
+
+  @override
+  String get prefLowPurine => 'Baja en purinas';
+
+  @override
+  String get prefLowOxalatePotassium => 'Baja en oxalatos / potasio';
+
+  @override
+  String get prefLactoseFree => 'Sin lactosa';
+
+  @override
+  String get allergenGluten => 'Gluten';
+
+  @override
+  String get allergenCrustaceans => 'Crustáceos';
+
+  @override
+  String get allergenEggs => 'Huevos';
+
+  @override
+  String get allergenFish => 'Pescado';
+
+  @override
+  String get allergenPeanuts => 'Cacahuetes';
+
+  @override
+  String get allergenSoy => 'Soja';
+
+  @override
+  String get allergenMilk => 'Leche';
+
+  @override
+  String get allergenTreeNuts => 'Frutos de cáscara';
+
+  @override
+  String get allergenCelery => 'Apio';
+
+  @override
+  String get allergenMustard => 'Mostaza';
+
+  @override
+  String get allergenSesame => 'Sésamo';
+
+  @override
+  String get allergenSulphites => 'Sulfitos';
+
+  @override
+  String get allergenLupin => 'Altramuz';
+
+  @override
+  String get allergenMolluscs => 'Moluscos';
+
+  @override
+  String get prefHalal => 'Halal';
+
+  @override
+  String get prefKosher => 'Kosher';
+
+  @override
+  String get prefHindu => 'Hindú (suele evitar ternera)';
+
+  @override
+  String get prefJain => 'Jain (sin raíces; vegetariana estricta)';
+
+  @override
+  String get prefBuddhist => 'Budista (varía por región)';
+
+  @override
+  String get prefLentFasting => 'Cuaresma / ayuno (sin carne ciertos días)';
 }

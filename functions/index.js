@@ -197,6 +197,104 @@ Set "nutrition" to null.
                 ? `Ensure estimated calories per serving are <= ${maxCaloriesKcal}. If needed, adjust the recipe realistically (portion sizes/ingredients) to meet this limit.`
                 : "";
 
+        // Preferences handling
+        const prefs = req.data?.preferences || {};
+        const asArray = (v) => (Array.isArray(v) ? v : []);
+        const pref = {
+            diet: asArray(prefs.diet),
+            religion: asArray(prefs.religion),
+            medical: asArray(prefs.medical),
+            allergens: asArray(prefs.allergens_avoid),
+            intolerances: asArray(prefs.intolerances),
+            disliked: asArray(prefs.disliked_ingredients),
+        };
+
+        const t = (en, es) => (sysLang === 'Spanish' ? es : en);
+        function describePrefs() {
+            const lines = [];
+            if (pref.diet.length) {
+                lines.push(t(
+                    `Follow these dietary patterns strictly: ${pref.diet.join(', ')}.`,
+                    `Sigue estrictamente estos patrones de dieta: ${pref.diet.join(', ')}.`
+                ));
+            }
+            // Strong constraints by patterns
+            if (pref.diet.includes('vegan')) {
+                lines.push(t(
+                    'ABSOLUTELY NO animal products: no meat, fish, seafood, dairy, eggs, honey, gelatin or animal-derived additives (e.g., rennet/carmine). Use only plant-based alternatives.',
+                    'PROHIBIDO TODO producto animal: sin carne, pescado, marisco, lácteos, huevos, miel, gelatina ni aditivos de origen animal (cuajo/carmín). Usa solo alternativas vegetales.'
+                ));
+            }
+            if (pref.diet.includes('vegetarian')) {
+                lines.push(t(
+                    'Vegetarian: no meat, no fish or seafood. Dairy and/or eggs allowed unless otherwise specified.',
+                    'Vegetariano: sin carne ni pescado/marisco. Se permiten lácteos y/o huevos salvo que se indique lo contrario.'
+                ));
+            }
+            if (pref.diet.includes('vegetarian_ovo')) {
+                lines.push(t(
+                    'Ovo-vegetarian: allow eggs; no meat or fish; avoid dairy.',
+                    'Ovo-vegetariano: permite huevos; sin carne ni pescado; evita lácteos.'
+                ));
+            }
+            if (pref.diet.includes('vegetarian_lacto')) {
+                lines.push(t(
+                    'Lacto-vegetarian: allow dairy; no meat or fish; avoid eggs.',
+                    'Lacto-vegetariano: permite lácteos; sin carne ni pescado; evita huevos.'
+                ));
+            }
+            if (pref.diet.includes('vegetarian_strict')) {
+                lines.push(t(
+                    'Strict vegetarian (no egg/dairy): same restrictions as vegan.',
+                    'Vegetariano estricto (sin huevo/lácteos): mismas restricciones que vegano.'
+                ));
+            }
+            if (pref.diet.includes('pescetarian')) {
+                lines.push(t(
+                    'Pescetarian: fish/seafood allowed; avoid meat from land animals.',
+                    'Pescetariano: permite pescado/marisco; evita carnes de animales terrestres.'
+                ));
+            }
+            if (pref.religion.length) {
+                lines.push(t(
+                    `Respect these religious/cultural restrictions: ${pref.religion.join(', ')}.`,
+                    `Respeta estas restricciones religiosas/culturales: ${pref.religion.join(', ')}.`
+                ));
+            }
+            if (pref.religion.includes('halal')) {
+                lines.push(t('No pork or alcohol; use halal meat if meat is used.', 'Sin cerdo ni alcohol; usa carne halal si se usa carne.'));
+            }
+            if (pref.religion.includes('kosher')) {
+                lines.push(t('No pork or shellfish; do not mix meat and dairy in the same recipe.', 'Sin cerdo ni marisco; no mezclar carne y lácteos en la misma receta.'));
+            }
+            if (pref.medical.length) {
+                lines.push(t(
+                    `Ensure compliance with these medical/dietary restrictions: ${pref.medical.join(', ')}.`,
+                    `Cumple estas restricciones médicas/dietéticas: ${pref.medical.join(', ')}.`
+                ));
+            }
+            const avoid = [...pref.allergens, ...pref.intolerances, ...pref.disliked];
+            if (avoid.length) {
+                lines.push(t(
+                    `Avoid absolutely these ingredients and their derivatives: ${avoid.join(', ')}.`,
+                    `Evita absolutamente estos ingredientes y sus derivados: ${avoid.join(', ')}.`
+                ));
+            }
+            // Spiciness hints
+            if (pref.diet.includes('spicy_low')) lines.push(t('Keep spiciness low.', 'Mantén el picante bajo.'));
+            if (pref.diet.includes('spicy_medium')) lines.push(t('Use medium spiciness.', 'Usa picante medio.'));
+            if (pref.diet.includes('spicy_high')) lines.push(t('Allow high spiciness.', 'Permite picante alto.'));
+            if (pref.diet.includes('no_ultra_processed')) lines.push(t('Avoid ultra-processed foods.', 'Evita ultraprocesados.'));
+            if (pref.diet.includes('organic')) lines.push(t('Prefer organic produce when possible.', 'Prefiere productos orgánicos cuando sea posible.'));
+            if (pref.diet.includes('wholefoods')) lines.push(t('Favor whole foods and minimally processed ingredients.', 'Favorece comida real e ingredientes mínimamente procesados.'));
+            if (pref.diet.includes('no_alcohol')) lines.push(t('Do not use alcohol in any form.', 'No uses alcohol en ninguna forma.'));
+            lines.push(t(
+                'The ingredient list MUST comply with all restrictions; if any conflict arises, replace or omit the offending ingredient and adapt the dish accordingly.',
+                'La lista de ingredientes DEBE cumplir todas las restricciones; si hay conflicto, sustituye u omite el ingrediente problemático y adapta el plato en consecuencia.'
+            ));
+            return lines.join('\n');
+        }
+
         const systemPrompt = `
 You are a chef assistant. Return ONLY a single valid JSON object with this exact structure:
 {
@@ -212,6 +310,7 @@ When the user gives just ingredients, pick a real, recognizable dish that those 
 Scale ingredient amounts and instructions for exactly ${servings} servings.
 ${nutritionRule}
 ${caloriesRule}
+ ${describePrefs()}
 `.trim();
 
         const userPrompt =

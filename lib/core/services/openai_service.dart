@@ -6,6 +6,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 import '../../models/recipe.dart';
+import 'preferences_service.dart';
+import '../../models/preferences.dart';
 
 class OpenAIService {
   // Región preferida (donde DESPLEGASTE). Cambia si es otra.
@@ -23,12 +25,13 @@ class OpenAIService {
     if (auth.currentUser == null) {
       await auth.signInAnonymously();
     }
-    await auth.currentUser!.getIdToken(true);
+    // Avoid forcing token refresh on every call; let Firebase cache handle it
+    await auth.currentUser!.getIdToken();
 
     // 2) Asegura App Check (fuerza obtener token válido)
     try {
-      // forceRefresh:true para evitar el placeholder inicial
-      await FirebaseAppCheck.instance.getToken(true);
+      // Try without forcing refresh first; fallback once if needed
+      await FirebaseAppCheck.instance.getToken(false);
     } catch (e) {
       debugPrint('[AppCheck] getToken error: $e');
       // Si falla, reintenta una vez tras breve espera
@@ -111,6 +114,7 @@ class OpenAIService {
       );
     }
 
+    final FoodPreferences prefs = await PreferencesService().load();
     final payload = <String, dynamic>{
       'query': trimmed,
       'language': language,
@@ -122,6 +126,7 @@ class OpenAIService {
       if (includeMacros) 'includeMacros': true, // ⭐
       if (maxCaloriesKcal != null) 'maxCaloriesKcal': maxCaloriesKcal, // ⭐
     };
+    payload['preferences'] = prefs.toJson();
 
     dynamic data;
     try {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/storage_service.dart';
 import '../../models/recipe.dart';
@@ -84,7 +85,7 @@ class _SavedScreenState extends State<SavedScreen> {
             height: contentHeight,
             child: Center(
               child: FrostedContainer(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -116,7 +117,7 @@ class _SavedScreenState extends State<SavedScreen> {
         },
         child: FrostedContainer(
           padding: const EdgeInsets.all(12),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -185,7 +186,7 @@ class _SavedScreenState extends State<SavedScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.red,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
                 ),
                 child: const Icon(Icons.delete, color: Colors.white, size: 28),
               ),
@@ -266,12 +267,14 @@ class _ThumbIfLoadableState extends State<_ThumbIfLoadable> {
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Image.network(
-          widget.url,
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
+        child: CachedNetworkImage(
+          imageUrl: widget.url,
           width: 76,
           height: 76,
           fit: BoxFit.cover,
+          fadeInDuration: const Duration(milliseconds: 150),
+          errorWidget: (_, __, ___) => const SizedBox.shrink(),
         ),
       ),
     );

@@ -37,6 +37,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   // Opacidad del logo controlada por scroll (sin AnimationController)
   static const double _threshold = 160.0; // píxeles para ocultar completamente
   final ValueNotifier<double> _logoOpacity = ValueNotifier<double>(1.0);
+  // Ajuste de sensibilidad del fade: mayor = desaparición más lenta
+  static const double _fadeThreshold = 220.0;
 
 
   Future<void> _showErrorDialog(String rawMessage) async {
@@ -104,10 +106,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final pixels = pos.pixels;
     final max = pos.maxScrollExtent;
 
-    final double effective = (max > 0 && max < _threshold) ? max : _threshold;
+    final double effective = (max > 0 && max < _fadeThreshold) ? max : _fadeThreshold;
 
     double t = effective <= 0 ? 0.0 : (pixels / effective);
-    if (max > 0 && max < _threshold && pixels >= max - 0.5) {
+    if (max > 0 && max < _fadeThreshold && pixels >= max - 0.5) {
       t = 1.0; // garantiza que llegue a invisible si el scroll es corto
     }
     t = t.clamp(0.0, 1.0);
@@ -232,6 +234,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/saved');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.restaurant_menu),
+            title: Text(AppLocalizations.of(context)!.preferencesMenu),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/preferences');
             },
           ),
           ListTile(
@@ -463,13 +473,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
 
               const SizedBox(height: 12),
-              AppPrimaryButton(
-                loading: ref.watch(homeLoadingProvider),
-                onPressed: _generateRecipe,
-                child: Text(
-                  s.searchButton,
-                  style: const TextStyle(fontSize: 16),
-                ),
+              // Restringe los rebuilds del 
+              // botón a los cambios de loading únicamente
+              Consumer(
+                builder: (context, ref, _) {
+                  final loading = ref.watch(homeLoadingProvider);
+                  return AppPrimaryButton(
+                    loading: loading,
+                    onPressed: _generateRecipe,
+                    child: Text(
+                      s.searchButton,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 8),
             ],

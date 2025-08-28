@@ -21,16 +21,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get numberOfGuests => 'Количество гостей';
 
   @override
-  String get maxCalories => 'Максимум калорий';
+  String get maxCalories => 'Макс. калорий';
 
   @override
   String get perServing => '(на порцию)';
 
   @override
-  String get includeMacros => 'Включить макроэлементы (примерно)';
+  String get includeMacros => 'Добавить макросы (оценочно)';
 
   @override
-  String get includeMacrosSubtitle => 'Добавляет калории и макроэлементы на порцию.';
+  String get includeMacrosSubtitle => 'Добавляет калории и макросы на порцию.';
 
   @override
   String get reset => 'Сбросить';
@@ -51,10 +51,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get rewriteButton => 'Переписать без выбранных ингредиентов';
 
   @override
-  String get savedTitle => 'Сохранённые рецепты';
+  String get savedTitle => 'Сохраненные рецепты';
 
   @override
-  String get noSavedRecipes => 'Вы ещё не сохранили ни одного рецепта.';
+  String get noSavedRecipes => 'Вы еще не сохранили ни одного рецепта';
 
   @override
   String get filterTips => 'Советы';
@@ -69,7 +69,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get saveButton => 'Сохранить';
 
   @override
-  String get savedConfirmation => 'Рецепт сохранён!';
+  String get savedConfirmation => 'Рецепт сохранен!';
 
   @override
   String get shareButton => 'Поделиться';
@@ -99,7 +99,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get themeLight => 'Светлая';
 
   @override
-  String get themeDark => 'Тёмная';
+  String get themeDark => 'Темная';
 
   @override
   String get inappropriateInput => 'Ваш запрос не подходит для рецепта. Попробуйте другую идею.';
@@ -108,19 +108,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadingMessage => 'Готовим рецепт...';
 
   @override
-  String get loadingTip1 => 'Совет: Используйте копчёные специи для более глубокого вкуса.';
+  String get loadingTip1 => 'Совет: попробуйте копченые специи для более яркого вкуса.';
 
   @override
-  String get loadingTip2 => 'Совет: Поджарьте специи 30 секунд, чтобы раскрыть аромат.';
+  String get loadingTip2 => 'Совет: прогрейте специи 30 сек., чтобы раскрыть аромат.';
 
   @override
-  String get loadingTip3 => 'Совет: Сохраняйте воду после варки, чтобы регулировать текстуру.';
+  String get loadingTip3 => 'Совет: сохраняйте воду после варки, чтобы регулировать текстуру.';
 
   @override
-  String get loadingTip4 => 'Совет: Капля кислоты (лимон/уксус) оживит любое блюдо.';
+  String get loadingTip4 => 'Совет: немного кислоты (лимон/уксус) оживит блюдо.';
 
   @override
-  String get loadingTip5 => 'Совет: Солите поэтапно, а не всё в конце.';
+  String get loadingTip5 => 'Совет: солите поэтапно, а не в конце.';
 
   @override
   String get loadingStagePreparing => 'Подготовка';
@@ -132,44 +132,224 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadingStageSeasoning => 'Приправление';
 
   @override
-  String get loadingStageCooking => 'Приготовление';
+  String get loadingStageCooking => 'Готовка';
 
   @override
   String get loadingStagePlating => 'Подача';
 
   @override
-  String get nutritionFactsTitle => 'Nutrition facts (approx.)';
+  String get nutritionFactsTitle => 'Пищевая ценность (примерно)';
 
   @override
-  String get nutritionPerServing => 'Per serving';
+  String get nutritionPerServing => 'На порцию';
 
   @override
-  String get nutritionCalories => 'Calories';
+  String get nutritionCalories => 'Калории';
 
   @override
-  String get nutritionProtein => 'Protein';
+  String get nutritionProtein => 'Белки';
 
   @override
-  String get nutritionCarbs => 'Carbs';
+  String get nutritionCarbs => 'Углеводы';
 
   @override
-  String get nutritionFat => 'Fat';
+  String get nutritionFat => 'Жиры';
 
   @override
-  String get nutritionFiber => 'Fiber';
+  String get nutritionFiber => 'Клетчатка';
 
   @override
-  String get nutritionSugar => 'Sugars';
+  String get nutritionSugar => 'Сахара';
 
   @override
-  String get nutritionSodium => 'Sodium';
+  String get nutritionSodium => 'Натрий';
 
   @override
-  String get dialogDoneTitle => 'Done!';
+  String get dialogDoneTitle => 'Готово!';
 
   @override
-  String get dialogErrorTitle => 'Oops…';
+  String get dialogErrorTitle => 'Упс…';
 
   @override
-  String get dialogOk => 'OK';
+  String get dialogOk => 'ОК';
+
+  @override
+  String get preferencesMenu => 'Пищевые предпочтения';
+
+  @override
+  String get preferencesTitle => 'Пищевые предпочтения';
+
+  @override
+  String get preferencesSubtitle => 'Используются для персонализации рецептов';
+
+  @override
+  String get preferencesSectionDiet => 'Диета';
+
+  @override
+  String get preferencesSectionMedical => 'Медицинские';
+
+  @override
+  String get preferencesSectionAllergens => 'Аллергены (избегать)';
+
+  @override
+  String get preferencesSectionIntolerances => 'Непереносимости';
+
+  @override
+  String get preferencesSectionReligion => 'Религиозные / культурные';
+
+  @override
+  String get preferencesDisliked => 'Нежелательные ингредиенты';
+
+  @override
+  String get preferencesAddIngredientPlaceholder => 'Добавьте ингредиент и нажмите Enter';
+
+  @override
+  String get preferencesSave => 'Сохранить предпочтения';
+
+  @override
+  String get preferencesClear => 'Очистить всё';
+
+  @override
+  String get preferencesSaved => 'Предпочтения сохранены!';
+
+  @override
+  String get prefVegan => 'Веганская';
+
+  @override
+  String get prefVegetarian => 'Вегетарианская';
+
+  @override
+  String get prefVegetarianOvo => 'Вегетарианская (ово)';
+
+  @override
+  String get prefVegetarianLacto => 'Вегетарианская (лакто)';
+
+  @override
+  String get prefVegetarianStrict => 'Вегетарианская (без яиц/молока)';
+
+  @override
+  String get prefPescetarian => 'Пескетарианская';
+
+  @override
+  String get prefFlexitarian => 'Флекситарианская';
+
+  @override
+  String get prefMediterranean => 'Средиземноморская';
+
+  @override
+  String get prefLowCarbKeto => 'Низкоуглеводная / кето';
+
+  @override
+  String get prefLowFat => 'Низкожировая';
+
+  @override
+  String get prefHighProtein => 'Высокобелковая';
+
+  @override
+  String get prefPaleo => 'Палео';
+
+  @override
+  String get prefWholeFoods => 'Натуральные продукты';
+
+  @override
+  String get prefNoUltraProcessed => 'Без ультрапереработанных продуктов';
+
+  @override
+  String get prefNoAlcohol => 'Без алкоголя';
+
+  @override
+  String get prefSpicyLow => 'Слабо острое';
+
+  @override
+  String get prefSpicyMedium => 'Средне острое';
+
+  @override
+  String get prefSpicyHigh => 'Очень острое';
+
+  @override
+  String get prefOrganic => 'Органическая';
+
+  @override
+  String get prefGlutenFree => 'Без глютена';
+
+  @override
+  String get prefLowFodmap => 'Низкий FODMAP';
+
+  @override
+  String get prefLowSodium => 'Низкий натрий';
+
+  @override
+  String get prefLowSugar => 'Низкий сахар / для диабетиков';
+
+  @override
+  String get prefLowCholesterol => 'Низкий холестерин';
+
+  @override
+  String get prefLowPurine => 'Низкие пурины';
+
+  @override
+  String get prefLowOxalatePotassium => 'Низкие оксалаты / калий';
+
+  @override
+  String get prefLactoseFree => 'Без лактозы';
+
+  @override
+  String get allergenGluten => 'Глютен';
+
+  @override
+  String get allergenCrustaceans => 'Ракообразные';
+
+  @override
+  String get allergenEggs => 'Яйца';
+
+  @override
+  String get allergenFish => 'Рыба';
+
+  @override
+  String get allergenPeanuts => 'Арахис';
+
+  @override
+  String get allergenSoy => 'Соя';
+
+  @override
+  String get allergenMilk => 'Молоко';
+
+  @override
+  String get allergenTreeNuts => 'Орехи';
+
+  @override
+  String get allergenCelery => 'Сельдерей';
+
+  @override
+  String get allergenMustard => 'Горчица';
+
+  @override
+  String get allergenSesame => 'Кунжут';
+
+  @override
+  String get allergenSulphites => 'Диоксид серы и сульфиты';
+
+  @override
+  String get allergenLupin => 'Люпин';
+
+  @override
+  String get allergenMolluscs => 'Моллюски';
+
+  @override
+  String get prefHalal => 'Халяль';
+
+  @override
+  String get prefKosher => 'Кошерная';
+
+  @override
+  String get prefHindu => 'Индуизм (часто без говядины)';
+
+  @override
+  String get prefJain => 'Джайнизм (без корнеплодов; строгий вегетарианец)';
+
+  @override
+  String get prefBuddhist => 'Буддизм (зависит от региона)';
+
+  @override
+  String get prefLentFasting => 'Пост / воздержание (в некоторые дни без мяса)';
 }

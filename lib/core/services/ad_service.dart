@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+/// Lightweight interstitial ads manager with retry and safe logging.
 class AdService {
   AdService._();
   static final AdService instance = AdService._();
@@ -12,7 +13,7 @@ class AdService {
   int _retryAttempt = 0;
   Timer? _retryTimer;
 
-  // ✅ TEST IDs correctos para INTERSTITIAL
+  // Test IDs for Interstitial
   static const _androidUnit = 'ca-app-pub-3940256099942544/1033173712';
   static const _iosUnit = 'ca-app-pub-3940256099942544/4411468910';
   String get _unitId => Platform.isIOS ? _iosUnit : _androidUnit;
@@ -26,7 +27,7 @@ class AdService {
     if (_isLoading || _ad != null) return;
     _isLoading = true;
 
-    _log('🔄 Loading Interstitial... unit=$_unitId');
+    _log('Loading interstitial... unit=$_unitId');
     await InterstitialAd.load(
       adUnitId: _unitId,
       request: _request,
@@ -36,7 +37,7 @@ class AdService {
           _ad = ad;
           _isLoading = false;
           _attachLifecycle(ad);
-          _log('✅ onAdLoaded');
+          _log('onAdLoaded');
           _dumpResponseInfo(ad.responseInfo);
         },
         onAdFailedToLoad: (error) {
@@ -48,10 +49,10 @@ class AdService {
             _scheduleRetry();
           } else {
             _log(
-              '🚫 El adUnitId no corresponde al formato *Interstitial*. '
-              'Usa el test ID correcto '
+              'The provided adUnitId does not match Interstitial format. '
+              'Use the correct test ID '
               '(${Platform.isAndroid ? _androidUnit : _iosUnit}) '
-              'y en producción crea una unidad de tipo “Interstitial” en AdMob.',
+              'and in production create an Interstitial unit in AdMob.',
             );
           }
         },
@@ -59,11 +60,11 @@ class AdService {
     );
   }
 
-  /// Muestra el interstitial si está listo. Devuelve true si llegó a mostrarse.
+  /// Shows the interstitial if ready. Returns true if it was displayed.
   Future<bool> showIfAvailable() async {
     final ad = _ad;
     if (ad == null) {
-      _log('ℹ️ showIfAvailable: no ad → preload()');
+      _log('showIfAvailable: no ad -> preload()');
       unawaited(preload());
       return false;
     }
@@ -74,9 +75,9 @@ class AdService {
     ad.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (_) {
         didShow = true;
-        _log('📺 onAdShowedFullScreenContent');
+        _log('onAdShowedFullScreenContent');
       },
-      onAdImpression: (_) => _log('📈 onAdImpression'),
+      onAdImpression: (_) => _log('onAdImpression'),
       onAdFailedToShowFullScreenContent: (a, e) {
         _logFsError('onAdFailedToShowFullScreenContent', e);
         a.dispose();
@@ -85,7 +86,7 @@ class AdService {
         if (!completer.isCompleted) completer.complete(false);
       },
       onAdDismissedFullScreenContent: (a) {
-        _log('👋 onAdDismissedFullScreenContent');
+        _log('onAdDismissedFullScreenContent');
         a.dispose();
         _ad = null;
         unawaited(preload());
@@ -103,7 +104,7 @@ class AdService {
     ad.setImmersiveMode(true);
     ad.fullScreenContentCallback ??= FullScreenContentCallback(
       onAdDismissedFullScreenContent: (a) {
-        _log('👋 (default) onAdDismissedFullScreenContent');
+        _log('(default) onAdDismissedFullScreenContent');
         a.dispose();
         _ad = null;
         unawaited(preload());
@@ -120,7 +121,7 @@ class AdService {
   void _scheduleRetry() {
     _retryAttempt = (_retryAttempt + 1).clamp(1, 6);
     final seconds = (1 << _retryAttempt).clamp(2, 64);
-    _log('⏳ Scheduling retry in ${seconds}s (attempt=$_retryAttempt)');
+    _log('Retry in ${seconds}s (attempt=$_retryAttempt)');
     _retryTimer?.cancel();
     _retryTimer = Timer(Duration(seconds: seconds), () {
       if (_ad == null && !_isLoading) unawaited(preload());
@@ -128,64 +129,67 @@ class AdService {
   }
 
   // --- Logging & helpers ---
-  void _log(String msg) => debugPrint('[Ads] $msg');
+  void _log(String msg) {
+    if (kDebugMode) debugPrint('[Ads] $msg');
+  }
 
   void _logLoadError(String where, LoadAdError e) {
-    _log('❌ $where code=${e.code} domain=${e.domain} message=${e.message}');
-    _log('ℹ️ ${_explainLoadAdErrorCode(e.code)}');
+    _log(
+      '$where failed: code=${e.code} domain=${e.domain} message=${e.message}',
+    );
+    _log(_explainLoadAdErrorCode(e.code));
   }
 
   bool _isFormatMismatch(LoadAdError e) {
-    final m = e.message.toLowerCase();
+    final m = (e.message).toLowerCase();
     return m.contains("doesn't match format") ||
         m.contains('does not match format');
   }
 
   void _logFsError(String where, AdError e) {
-    _log('❌ $where code=${e.code} domain=${e.domain} message=${e.message}');
-    _log('ℹ️ ${_explainAdErrorCode(e.code)}');
+    _log('$where: code=${e.code} domain=${e.domain} message=${e.message}');
+    _log(_explainAdErrorCode(e.code));
   }
 
   void _dumpResponseInfo(ResponseInfo? info) {
+    if (!kDebugMode) return;
     if (info == null) {
-      _log('🧾 responseInfo: <null>');
+      _log('responseInfo: <null>');
       return;
     }
     _log(
-      '🧾 responseInfo: '
-      'id=${info.responseId}; '
-      'mediationAdapter=${info.mediationAdapterClassName}',
+      'responseInfo: id=${info.responseId}; mediationAdapter=${info.mediationAdapterClassName}',
     );
     final loaded = info.loadedAdapterResponseInfo;
     if (loaded != null) {
       _log(
-        '   ↳ LOADED by adapter=${loaded.adapterClassName} '
+        '   LOADED by ${loaded.adapterClassName} '
         'source=${loaded.adSourceName}(${loaded.adSourceId}) '
         'instance=${loaded.adSourceInstanceName}(${loaded.adSourceInstanceId}) '
         'latencyMs=${loaded.latencyMillis}',
       );
     }
     final list = info.adapterResponses;
-    if (list!.isEmpty) {
-      _log('   ↳ adapterResponses: []');
+    if (list == null || list.isEmpty) {
+      _log('   adapterResponses: []');
       return;
     }
-    _log('   ↳ adapterResponses (${list.length}):');
+    _log('   adapterResponses (${list.length}):');
     for (final a in list) {
       final err = a.adError;
       if (err == null) {
         _log(
-          '      • ${a.adapterClassName} '
+          '      ${a.adapterClassName} '
           '[source=${a.adSourceName}/${a.adSourceId} '
           'inst=${a.adSourceInstanceName}/${a.adSourceInstanceId}] '
-          'latencyMs=${a.latencyMillis} → FILL',
+          'latencyMs=${a.latencyMillis} => FILL',
         );
       } else {
         _log(
-          '      • ${a.adapterClassName} '
+          '      ${a.adapterClassName} '
           '[source=${a.adSourceName}/${a.adSourceId} '
           'inst=${a.adSourceInstanceName}/${a.adSourceInstanceId}] '
-          'latencyMs=${a.latencyMillis} → NO-FILL: '
+          'latencyMs=${a.latencyMillis} => NO-FILL '
           'code=${err.code} domain=${err.domain} msg=${err.message}',
         );
       }
@@ -195,28 +199,28 @@ class AdService {
   String _explainLoadAdErrorCode(int code) {
     switch (code) {
       case 0:
-        return 'INTERNAL_ERROR – reintenta.';
+        return 'INTERNAL_ERROR: retry later.';
       case 1:
-        return 'INVALID_REQUEST – revisa adUnitId/parámetros.';
+        return 'INVALID_REQUEST: check adUnitId/parameters.';
       case 2:
-        return 'NETWORK_ERROR – sin red / firewall / Play Services.';
+        return 'NETWORK_ERROR: network/Play Services issue.';
       case 3:
-        return 'NO_FILL – sin inventario ahora; reintenta más tarde.';
+        return 'NO_FILL: no inventory right now; retry later.';
       default:
-        return 'Código $code.';
+        return 'Load error code $code';
     }
   }
 
   String _explainAdErrorCode(int code) {
     switch (code) {
       case 0:
-        return 'INTERNAL_ERROR al mostrar.';
+        return 'INTERNAL_ERROR while showing.';
       case 1:
-        return 'INVALID_REQUEST (ad expirado, etc.). Recarga.';
+        return 'INVALID_REQUEST (expired ad, etc.). Reload.';
       case 3:
-        return 'NO_FILL al mostrar. Recarga.';
+        return 'NO_FILL while showing. Reload.';
       default:
-        return 'Error de presentación $code.';
+        return 'Show error code $code';
     }
   }
 

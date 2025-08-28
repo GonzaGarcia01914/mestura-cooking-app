@@ -172,4 +172,184 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get dialogOk => 'OK';
+
+  @override
+  String get preferencesMenu => '食事の好み';
+
+  @override
+  String get preferencesTitle => '食事の好み';
+
+  @override
+  String get preferencesSubtitle => 'レシピのパーソナライズに使用します';
+
+  @override
+  String get preferencesSectionDiet => '食事';
+
+  @override
+  String get preferencesSectionMedical => '医療';
+
+  @override
+  String get preferencesSectionAllergens => '避けたいアレルゲン';
+
+  @override
+  String get preferencesSectionIntolerances => '不耐性';
+
+  @override
+  String get preferencesSectionReligion => '宗教 / 文化';
+
+  @override
+  String get preferencesDisliked => '苦手な食材';
+
+  @override
+  String get preferencesAddIngredientPlaceholder => '食材を追加してEnterキーを押してください';
+
+  @override
+  String get preferencesSave => '設定を保存';
+
+  @override
+  String get preferencesClear => 'すべてクリア';
+
+  @override
+  String get preferencesSaved => '設定を保存しました';
+
+  @override
+  String get prefVegan => 'ヴィーガン';
+
+  @override
+  String get prefVegetarian => 'ベジタリアン';
+
+  @override
+  String get prefVegetarianOvo => 'ベジタリアン（オボ）';
+
+  @override
+  String get prefVegetarianLacto => 'ベジタリアン（ラクト）';
+
+  @override
+  String get prefVegetarianStrict => 'ベジタリアン（卵・乳製品なし）';
+
+  @override
+  String get prefPescetarian => 'ペスカタリアン';
+
+  @override
+  String get prefFlexitarian => 'フレキシタリアン';
+
+  @override
+  String get prefMediterranean => '地中海食';
+
+  @override
+  String get prefLowCarbKeto => '低炭水化物 / ケト';
+
+  @override
+  String get prefLowFat => '低脂肪';
+
+  @override
+  String get prefHighProtein => '高たんぱく';
+
+  @override
+  String get prefPaleo => 'パレオ';
+
+  @override
+  String get prefWholeFoods => 'ホールフード';
+
+  @override
+  String get prefNoUltraProcessed => '超加工食品なし';
+
+  @override
+  String get prefNoAlcohol => 'アルコールなし';
+
+  @override
+  String get prefSpicyLow => '辛さ控えめ';
+
+  @override
+  String get prefSpicyMedium => '中辛';
+
+  @override
+  String get prefSpicyHigh => '辛口';
+
+  @override
+  String get prefOrganic => 'オーガニック';
+
+  @override
+  String get prefGlutenFree => 'グルテンフリー';
+
+  @override
+  String get prefLowFodmap => '低FODMAP';
+
+  @override
+  String get prefLowSodium => '低ナトリウム';
+
+  @override
+  String get prefLowSugar => '低糖（糖尿病向け）';
+
+  @override
+  String get prefLowCholesterol => '低コレステロール';
+
+  @override
+  String get prefLowPurine => '低プリン体';
+
+  @override
+  String get prefLowOxalatePotassium => '低シュウ酸/カリウム';
+
+  @override
+  String get prefLactoseFree => '乳糖不耐';
+
+  @override
+  String get allergenGluten => 'グルテン';
+
+  @override
+  String get allergenCrustaceans => '甲殻類';
+
+  @override
+  String get allergenEggs => '卵';
+
+  @override
+  String get allergenFish => '魚';
+
+  @override
+  String get allergenPeanuts => 'ピーナッツ';
+
+  @override
+  String get allergenSoy => '大豆';
+
+  @override
+  String get allergenMilk => '乳';
+
+  @override
+  String get allergenTreeNuts => '木の実（ナッツ類）';
+
+  @override
+  String get allergenCelery => 'セロリ';
+
+  @override
+  String get allergenMustard => 'マスタード';
+
+  @override
+  String get allergenSesame => 'ごま';
+
+  @override
+  String get allergenSulphites => '亜硫酸塩';
+
+  @override
+  String get allergenLupin => 'ルピナス';
+
+  @override
+  String get allergenMolluscs => '軟体動物';
+
+  @override
+  String get prefHalal => 'ハラール';
+
+  @override
+  String get prefKosher => 'コーシャ';
+
+  @override
+  String get prefHindu => 'ヒンドゥー（牛肉を避けることが多い）';
+
+  @override
+  String get prefJain => 'ジャイナ（根菜なし・厳格な菜食）';
+
+  @override
+  String get prefBuddhist => '仏教（地域により異なる）';
+
+  @override
+  String get prefLentFasting => '四旬節/断食（一部の日は肉なし）';
 }

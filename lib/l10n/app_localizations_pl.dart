@@ -172,4 +172,184 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get dialogOk => 'OK';
+
+  @override
+  String get preferencesMenu => 'Preferencje żywieniowe';
+
+  @override
+  String get preferencesTitle => 'Preferencje żywieniowe';
+
+  @override
+  String get preferencesSubtitle => 'Używane do personalizacji przepisów';
+
+  @override
+  String get preferencesSectionDiet => 'Dieta';
+
+  @override
+  String get preferencesSectionMedical => 'Medyczne';
+
+  @override
+  String get preferencesSectionAllergens => 'Alergeny do unikania';
+
+  @override
+  String get preferencesSectionIntolerances => 'Nietolerancje';
+
+  @override
+  String get preferencesSectionReligion => 'Religijne / Kulturowe';
+
+  @override
+  String get preferencesDisliked => 'Nielubiane składniki';
+
+  @override
+  String get preferencesAddIngredientPlaceholder => 'Dodaj składnik i naciśnij Enter';
+
+  @override
+  String get preferencesSave => 'Zapisz preferencje';
+
+  @override
+  String get preferencesClear => 'Wyczyść wszystko';
+
+  @override
+  String get preferencesSaved => 'Zapisano preferencje!';
+
+  @override
+  String get prefVegan => 'Wegańska';
+
+  @override
+  String get prefVegetarian => 'Wegetariańska';
+
+  @override
+  String get prefVegetarianOvo => 'Wegetariańska (ovo)';
+
+  @override
+  String get prefVegetarianLacto => 'Wegetariańska (lakto)';
+
+  @override
+  String get prefVegetarianStrict => 'Wegetariańska (bez jaj/nabiału)';
+
+  @override
+  String get prefPescetarian => 'Pescowegetariańska';
+
+  @override
+  String get prefFlexitarian => 'Fleksitariańska';
+
+  @override
+  String get prefMediterranean => 'Śródziemnomorska';
+
+  @override
+  String get prefLowCarbKeto => 'Niskowęglowodanowa / Keto';
+
+  @override
+  String get prefLowFat => 'Niskotłuszczowa';
+
+  @override
+  String get prefHighProtein => 'Wysokobiałkowa';
+
+  @override
+  String get prefPaleo => 'Paleo';
+
+  @override
+  String get prefWholeFoods => 'Nieprzetworzona żywność';
+
+  @override
+  String get prefNoUltraProcessed => 'Bez ultraprzetworzonej żywności';
+
+  @override
+  String get prefNoAlcohol => 'Bez alkoholu';
+
+  @override
+  String get prefSpicyLow => 'Mało pikantne';
+
+  @override
+  String get prefSpicyMedium => 'Średnio pikantne';
+
+  @override
+  String get prefSpicyHigh => 'Bardzo pikantne';
+
+  @override
+  String get prefOrganic => 'Organiczna';
+
+  @override
+  String get prefGlutenFree => 'Bez glutenu';
+
+  @override
+  String get prefLowFodmap => 'Low FODMAP';
+
+  @override
+  String get prefLowSodium => 'Niska zawartość sodu';
+
+  @override
+  String get prefLowSugar => 'Niska zawartość cukru / dla diabetyków';
+
+  @override
+  String get prefLowCholesterol => 'Niska zawartość cholesterolu';
+
+  @override
+  String get prefLowPurine => 'Niska zawartość puryn';
+
+  @override
+  String get prefLowOxalatePotassium => 'Niska zawartość szczawianów / potasu';
+
+  @override
+  String get prefLactoseFree => 'Bez laktozy';
+
+  @override
+  String get allergenGluten => 'Gluten';
+
+  @override
+  String get allergenCrustaceans => 'Skorupiaki';
+
+  @override
+  String get allergenEggs => 'Jaja';
+
+  @override
+  String get allergenFish => 'Ryby';
+
+  @override
+  String get allergenPeanuts => 'Orzeszki ziemne';
+
+  @override
+  String get allergenSoy => 'Soja';
+
+  @override
+  String get allergenMilk => 'Mleko';
+
+  @override
+  String get allergenTreeNuts => 'Orzechy';
+
+  @override
+  String get allergenCelery => 'Seler';
+
+  @override
+  String get allergenMustard => 'Musztarda';
+
+  @override
+  String get allergenSesame => 'Sezam';
+
+  @override
+  String get allergenSulphites => 'Dwutlenek siarki i siarczyny';
+
+  @override
+  String get allergenLupin => 'Łubin';
+
+  @override
+  String get allergenMolluscs => 'Mięczaki';
+
+  @override
+  String get prefHalal => 'Halal';
+
+  @override
+  String get prefKosher => 'Koszerne';
+
+  @override
+  String get prefHindu => 'Hinduskie (często bez wołowiny)';
+
+  @override
+  String get prefJain => 'Dżinijskie (bez korzeni; ścisły wegetarianizm)';
+
+  @override
+  String get prefBuddhist => 'Buddyjskie (zależnie od regionu)';
+
+  @override
+  String get prefLentFasting => 'Post / Wielki Post (bez mięsa w niektóre dni)';
 }

@@ -73,9 +73,8 @@ Future<void> main() async {
     FlutterError.dumpErrorToConsole(details);
   };
 
-  // Inicializaciones previas a runApp
-  await _initFirebase();
-  await _initAds();
+  // Inicializaciones previas a runApp (en paralelo para reducir el tiempo de arranque)
+  await Future.wait([_initFirebase(), _initAds()]);
 
   final savedLocale = await _loadSavedLocale();
   final initialLocale = _initialLocale(savedLocale);

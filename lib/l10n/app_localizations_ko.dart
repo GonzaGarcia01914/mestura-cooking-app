@@ -172,4 +172,184 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get dialogOk => '확인';
+
+  @override
+  String get preferencesMenu => '식단 선호';
+
+  @override
+  String get preferencesTitle => '식단 선호';
+
+  @override
+  String get preferencesSubtitle => '레시피 개인화에 사용됩니다';
+
+  @override
+  String get preferencesSectionDiet => '식단';
+
+  @override
+  String get preferencesSectionMedical => '의학적';
+
+  @override
+  String get preferencesSectionAllergens => '피해야 할 알레르겐';
+
+  @override
+  String get preferencesSectionIntolerances => '불내증';
+
+  @override
+  String get preferencesSectionReligion => '종교 / 문화';
+
+  @override
+  String get preferencesDisliked => '싫어하는 재료';
+
+  @override
+  String get preferencesAddIngredientPlaceholder => '재료를 추가하고 Enter 키를 누르세요';
+
+  @override
+  String get preferencesSave => '선호 저장';
+
+  @override
+  String get preferencesClear => '모두 지우기';
+
+  @override
+  String get preferencesSaved => '선호가 저장되었습니다!';
+
+  @override
+  String get prefVegan => '비건';
+
+  @override
+  String get prefVegetarian => '베지테리언';
+
+  @override
+  String get prefVegetarianOvo => '오보 베지테리언';
+
+  @override
+  String get prefVegetarianLacto => '락토 베지테리언';
+
+  @override
+  String get prefVegetarianStrict => '엄격한 베지테리언(달걀/유제품 없음)';
+
+  @override
+  String get prefPescetarian => '페스코';
+
+  @override
+  String get prefFlexitarian => '플렉시테리언';
+
+  @override
+  String get prefMediterranean => '지중해식';
+
+  @override
+  String get prefLowCarbKeto => '저탄수 / 키토';
+
+  @override
+  String get prefLowFat => '저지방';
+
+  @override
+  String get prefHighProtein => '고단백';
+
+  @override
+  String get prefPaleo => '팔레오';
+
+  @override
+  String get prefWholeFoods => '자연식(가공 최소)';
+
+  @override
+  String get prefNoUltraProcessed => '초가공 식품 제외';
+
+  @override
+  String get prefNoAlcohol => '무알코올';
+
+  @override
+  String get prefSpicyLow => '약한 매운맛';
+
+  @override
+  String get prefSpicyMedium => '중간 매운맛';
+
+  @override
+  String get prefSpicyHigh => '매운맛 강함';
+
+  @override
+  String get prefOrganic => '유기농';
+
+  @override
+  String get prefGlutenFree => '글루텐 프리';
+
+  @override
+  String get prefLowFodmap => '저 FODMAP';
+
+  @override
+  String get prefLowSodium => '저나트륨';
+
+  @override
+  String get prefLowSugar => '저당 / 당뇨친화';
+
+  @override
+  String get prefLowCholesterol => '저콜레스테롤';
+
+  @override
+  String get prefLowPurine => '저퓨린';
+
+  @override
+  String get prefLowOxalatePotassium => '저옥살레이트 / 칼륨';
+
+  @override
+  String get prefLactoseFree => '무유당';
+
+  @override
+  String get allergenGluten => '글루텐';
+
+  @override
+  String get allergenCrustaceans => '갑각류';
+
+  @override
+  String get allergenEggs => '계란';
+
+  @override
+  String get allergenFish => '생선';
+
+  @override
+  String get allergenPeanuts => '땅콩';
+
+  @override
+  String get allergenSoy => '대두';
+
+  @override
+  String get allergenMilk => '우유';
+
+  @override
+  String get allergenTreeNuts => '견과류';
+
+  @override
+  String get allergenCelery => '셀러리';
+
+  @override
+  String get allergenMustard => '겨자';
+
+  @override
+  String get allergenSesame => '참깨';
+
+  @override
+  String get allergenSulphites => '아황산염';
+
+  @override
+  String get allergenLupin => '루핀';
+
+  @override
+  String get allergenMolluscs => '연체동물';
+
+  @override
+  String get prefHalal => '할랄';
+
+  @override
+  String get prefKosher => '코셔';
+
+  @override
+  String get prefHindu => '힌두교(소고기 기피)';
+
+  @override
+  String get prefJain => '자이나교(뿌리채소 금지; 엄격 채식)';
+
+  @override
+  String get prefBuddhist => '불교(지역에 따라 다름)';
+
+  @override
+  String get prefLentFasting => '사순절/금식(특정일 고기 금지)';
 }

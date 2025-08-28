@@ -97,30 +97,35 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         controller: _scrollCtrl,
         padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
         child: FrostedContainer(
-          borderRadius: BorderRadius.circular(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(horizontal: 8),
+              childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+              title: Text(
                 s.languageSettingLabel,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
-              const SizedBox(height: 8),
-              ..._languages.entries.map(
-                (entry) => RadioListTile<String>(
-                  value: entry.key,
-                  groupValue: _selected,
-                  onChanged: (lang) {
-                    if (lang != null) _changeLanguage(lang);
-                  },
-                  title: Text(entry.value),
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
+              subtitle: Text(_languages[_selected] ?? _selected),
+              children: [
+                ..._languages.entries.map(
+                  (entry) => RadioListTile<String>(
+                    value: entry.key,
+                    groupValue: _selected,
+                    onChanged: (lang) {
+                      if (lang != null) _changeLanguage(lang);
+                    },
+                    title: Text(entry.value),
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

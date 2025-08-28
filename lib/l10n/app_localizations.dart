@@ -444,6 +444,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get dialogOk;
+
+  /// No description provided for @preferencesMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary preferences'**
+  String get preferencesMenu;
+
+  /// No description provided for @preferencesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary preferences'**
+  String get preferencesTitle;
+
+  /// No description provided for @preferencesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used to personalize recipes'**
+  String get preferencesSubtitle;
+
+  /// No description provided for @preferencesSectionDiet.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet'**
+  String get preferencesSectionDiet;
+
+  /// No description provided for @preferencesSectionMedical.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical'**
+  String get preferencesSectionMedical;
+
+  /// No description provided for @preferencesSectionAllergens.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergens to avoid'**
+  String get preferencesSectionAllergens;
+
+  /// No description provided for @preferencesSectionIntolerances.
+  ///
+  /// In en, this message translates to:
+  /// **'Intolerances'**
+  String get preferencesSectionIntolerances;
+
+  /// No description provided for @preferencesSectionReligion.
+  ///
+  /// In en, this message translates to:
+  /// **'Religious / Cultural'**
+  String get preferencesSectionReligion;
+
+  /// No description provided for @preferencesDisliked.
+  ///
+  /// In en, this message translates to:
+  /// **'Disliked ingredients'**
+  String get preferencesDisliked;
+
+  /// No description provided for @preferencesAddIngredientPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ingredient and press Enter'**
+  String get preferencesAddIngredientPlaceholder;
+
+  /// No description provided for @preferencesSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save preferences'**
+  String get preferencesSave;
+
+  /// No description provided for @preferencesClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get preferencesClear;
+
+  /// No description provided for @preferencesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences saved!'**
+  String get preferencesSaved;
+
+  /// No description provided for @prefVegan.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegan'**
+  String get prefVegan;
+
+  /// No description provided for @prefVegetarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetarian'**
+  String get prefVegetarian;
+
+  /// No description provided for @prefVegetarianOvo.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetarian (ovo)'**
+  String get prefVegetarianOvo;
+
+  /// No description provided for @prefVegetarianLacto.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetarian (lacto)'**
+  String get prefVegetarianLacto;
+
+  /// No description provided for @prefVegetarianStrict.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetarian (no egg/dairy)'**
+  String get prefVegetarianStrict;
+
+  /// No description provided for @prefPescetarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Pescetarian'**
+  String get prefPescetarian;
+
+  /// No description provided for @prefFlexitarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Flexitarian'**
+  String get prefFlexitarian;
+
+  /// No description provided for @prefMediterranean.
+  ///
+  /// In en, this message translates to:
+  /// **'Mediterranean'**
+  String get prefMediterranean;
+
+  /// No description provided for @prefLowCarbKeto.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-carb / Keto'**
+  String get prefLowCarbKeto;
+
+  /// No description provided for @prefLowFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-fat'**
+  String get prefLowFat;
+
+  /// No description provided for @prefHighProtein.
+  ///
+  /// In en, this message translates to:
+  /// **'High-protein'**
+  String get prefHighProtein;
+
+  /// No description provided for @prefPaleo.
+  ///
+  /// In en, this message translates to:
+  /// **'Paleo'**
+  String get prefPaleo;
+
+  /// No description provided for @prefWholeFoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole foods'**
+  String get prefWholeFoods;
+
+  /// No description provided for @prefNoUltraProcessed.
+  ///
+  /// In en, this message translates to:
+  /// **'No ultra-processed'**
+  String get prefNoUltraProcessed;
+
+  /// No description provided for @prefNoAlcohol.
+  ///
+  /// In en, this message translates to:
+  /// **'No alcohol'**
+  String get prefNoAlcohol;
+
+  /// No description provided for @prefSpicyLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low spicy'**
+  String get prefSpicyLow;
+
+  /// No description provided for @prefSpicyMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium spicy'**
+  String get prefSpicyMedium;
+
+  /// No description provided for @prefSpicyHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High spicy'**
+  String get prefSpicyHigh;
+
+  /// No description provided for @prefOrganic.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic'**
+  String get prefOrganic;
+
+  /// No description provided for @prefGlutenFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Gluten-free'**
+  String get prefGlutenFree;
+
+  /// No description provided for @prefLowFodmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Low FODMAP'**
+  String get prefLowFodmap;
+
+  /// No description provided for @prefLowSodium.
+  ///
+  /// In en, this message translates to:
+  /// **'Low sodium'**
+  String get prefLowSodium;
+
+  /// No description provided for @prefLowSugar.
+  ///
+  /// In en, this message translates to:
+  /// **'Low sugar / Diabetic-friendly'**
+  String get prefLowSugar;
+
+  /// No description provided for @prefLowCholesterol.
+  ///
+  /// In en, this message translates to:
+  /// **'Low cholesterol'**
+  String get prefLowCholesterol;
+
+  /// No description provided for @prefLowPurine.
+  ///
+  /// In en, this message translates to:
+  /// **'Low purines'**
+  String get prefLowPurine;
+
+  /// No description provided for @prefLowOxalatePotassium.
+  ///
+  /// In en, this message translates to:
+  /// **'Low oxalates / potassium'**
+  String get prefLowOxalatePotassium;
+
+  /// No description provided for @prefLactoseFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Lactose-free'**
+  String get prefLactoseFree;
+
+  /// No description provided for @allergenGluten.
+  ///
+  /// In en, this message translates to:
+  /// **'Gluten'**
+  String get allergenGluten;
+
+  /// No description provided for @allergenCrustaceans.
+  ///
+  /// In en, this message translates to:
+  /// **'Crustaceans'**
+  String get allergenCrustaceans;
+
+  /// No description provided for @allergenEggs.
+  ///
+  /// In en, this message translates to:
+  /// **'Eggs'**
+  String get allergenEggs;
+
+  /// No description provided for @allergenFish.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get allergenFish;
+
+  /// No description provided for @allergenPeanuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Peanuts'**
+  String get allergenPeanuts;
+
+  /// No description provided for @allergenSoy.
+  ///
+  /// In en, this message translates to:
+  /// **'Soy'**
+  String get allergenSoy;
+
+  /// No description provided for @allergenMilk.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk'**
+  String get allergenMilk;
+
+  /// No description provided for @allergenTreeNuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Tree nuts'**
+  String get allergenTreeNuts;
+
+  /// No description provided for @allergenCelery.
+  ///
+  /// In en, this message translates to:
+  /// **'Celery'**
+  String get allergenCelery;
+
+  /// No description provided for @allergenMustard.
+  ///
+  /// In en, this message translates to:
+  /// **'Mustard'**
+  String get allergenMustard;
+
+  /// No description provided for @allergenSesame.
+  ///
+  /// In en, this message translates to:
+  /// **'Sesame'**
+  String get allergenSesame;
+
+  /// No description provided for @allergenSulphites.
+  ///
+  /// In en, this message translates to:
+  /// **'Sulphites'**
+  String get allergenSulphites;
+
+  /// No description provided for @allergenLupin.
+  ///
+  /// In en, this message translates to:
+  /// **'Lupin'**
+  String get allergenLupin;
+
+  /// No description provided for @allergenMolluscs.
+  ///
+  /// In en, this message translates to:
+  /// **'Molluscs'**
+  String get allergenMolluscs;
+
+  /// No description provided for @prefHalal.
+  ///
+  /// In en, this message translates to:
+  /// **'Halal'**
+  String get prefHalal;
+
+  /// No description provided for @prefKosher.
+  ///
+  /// In en, this message translates to:
+  /// **'Kosher'**
+  String get prefKosher;
+
+  /// No description provided for @prefHindu.
+  ///
+  /// In en, this message translates to:
+  /// **'Hindu (often avoids beef)'**
+  String get prefHindu;
+
+  /// No description provided for @prefJain.
+  ///
+  /// In en, this message translates to:
+  /// **'Jain (no roots; strict vegetarian)'**
+  String get prefJain;
+
+  /// No description provided for @prefBuddhist.
+  ///
+  /// In en, this message translates to:
+  /// **'Buddhist (varies by region)'**
+  String get prefBuddhist;
+
+  /// No description provided for @prefLentFasting.
+  ///
+  /// In en, this message translates to:
+  /// **'Lent / fasting (no meat certain days)'**
+  String get prefLentFasting;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

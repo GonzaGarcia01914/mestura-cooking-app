@@ -172,4 +172,184 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dialogOk => '好的';
+
+  @override
+  String get preferencesMenu => '饮食偏好';
+
+  @override
+  String get preferencesTitle => '饮食偏好';
+
+  @override
+  String get preferencesSubtitle => '用于个性化推荐菜谱';
+
+  @override
+  String get preferencesSectionDiet => '饮食';
+
+  @override
+  String get preferencesSectionMedical => '医疗';
+
+  @override
+  String get preferencesSectionAllergens => '需避免的过敏原';
+
+  @override
+  String get preferencesSectionIntolerances => '不耐受';
+
+  @override
+  String get preferencesSectionReligion => '宗教 / 文化';
+
+  @override
+  String get preferencesDisliked => '不喜欢的食材';
+
+  @override
+  String get preferencesAddIngredientPlaceholder => '添加食材并按回车键';
+
+  @override
+  String get preferencesSave => '保存偏好';
+
+  @override
+  String get preferencesClear => '清除所有';
+
+  @override
+  String get preferencesSaved => '已保存偏好设置！';
+
+  @override
+  String get prefVegan => '纯素';
+
+  @override
+  String get prefVegetarian => '素食';
+
+  @override
+  String get prefVegetarianOvo => '素食（蛋）';
+
+  @override
+  String get prefVegetarianLacto => '素食（奶）';
+
+  @override
+  String get prefVegetarianStrict => '素食（无蛋/奶）';
+
+  @override
+  String get prefPescetarian => '鱼素';
+
+  @override
+  String get prefFlexitarian => '弹性素食';
+
+  @override
+  String get prefMediterranean => '地中海饮食';
+
+  @override
+  String get prefLowCarbKeto => '低碳 / 生酮';
+
+  @override
+  String get prefLowFat => '低脂';
+
+  @override
+  String get prefHighProtein => '高蛋白';
+
+  @override
+  String get prefPaleo => '古法饮食';
+
+  @override
+  String get prefWholeFoods => '全食物';
+
+  @override
+  String get prefNoUltraProcessed => '无超加工食品';
+
+  @override
+  String get prefNoAlcohol => '不含酒精';
+
+  @override
+  String get prefSpicyLow => '微辣';
+
+  @override
+  String get prefSpicyMedium => '中辣';
+
+  @override
+  String get prefSpicyHigh => '重辣';
+
+  @override
+  String get prefOrganic => '有机';
+
+  @override
+  String get prefGlutenFree => '无麸质';
+
+  @override
+  String get prefLowFodmap => '低FODMAP';
+
+  @override
+  String get prefLowSodium => '低钠';
+
+  @override
+  String get prefLowSugar => '低糖 / 适合糖尿病';
+
+  @override
+  String get prefLowCholesterol => '低胆固醇';
+
+  @override
+  String get prefLowPurine => '低嘌呤';
+
+  @override
+  String get prefLowOxalatePotassium => '低草酸/钾';
+
+  @override
+  String get prefLactoseFree => '不含乳糖';
+
+  @override
+  String get allergenGluten => '麸质';
+
+  @override
+  String get allergenCrustaceans => '甲壳类';
+
+  @override
+  String get allergenEggs => '鸡蛋';
+
+  @override
+  String get allergenFish => '鱼';
+
+  @override
+  String get allergenPeanuts => '花生';
+
+  @override
+  String get allergenSoy => '大豆';
+
+  @override
+  String get allergenMilk => '牛奶';
+
+  @override
+  String get allergenTreeNuts => '坚果';
+
+  @override
+  String get allergenCelery => '芹菜';
+
+  @override
+  String get allergenMustard => '芥末';
+
+  @override
+  String get allergenSesame => '芝麻';
+
+  @override
+  String get allergenSulphites => '二氧化硫和亚硫酸盐';
+
+  @override
+  String get allergenLupin => '羽扇豆';
+
+  @override
+  String get allergenMolluscs => '软体动物';
+
+  @override
+  String get prefHalal => '清真';
+
+  @override
+  String get prefKosher => '犹太洁食';
+
+  @override
+  String get prefHindu => '印度教（常不食牛肉）';
+
+  @override
+  String get prefJain => '耆那教（不食根茎；严格素食）';
+
+  @override
+  String get prefBuddhist => '佛教（因地区而异）';
+
+  @override
+  String get prefLentFasting => '斋期/禁食（特定日不吃肉)';
 }
