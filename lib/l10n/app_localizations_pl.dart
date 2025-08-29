@@ -399,6 +399,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get cookingSheetTakePhotoShare => 'Zrób zdjęcie i udostępnij';
 
   @override
+  String get cookingSheetShareNoPhoto => 'Udostępnij bez zdjęcia';
+
+  @override
   String get cookingSheetSaveRecipe => 'Zapisz przepis';
 
   @override

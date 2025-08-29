@@ -399,6 +399,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cookingSheetTakePhotoShare => 'Сделать фото и поделиться';
 
   @override
+  String get cookingSheetShareNoPhoto => 'Поделиться без фото';
+
+  @override
   String get cookingSheetSaveRecipe => 'Сохранить рецепт';
 
   @override

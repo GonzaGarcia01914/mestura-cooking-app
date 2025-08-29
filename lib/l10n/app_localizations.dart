@@ -895,6 +895,12 @@ abstract class AppLocalizations {
   /// **'Take photo and share'**
   String get cookingSheetTakePhotoShare;
 
+  /// No description provided for @cookingSheetShareNoPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Share without photo'**
+  String get cookingSheetShareNoPhoto;
+
   /// No description provided for @cookingSheetSaveRecipe.
   ///
   /// In en, this message translates to:

@@ -1,21 +1,21 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mestura/ui/widgets/glass_alert.dart';
-import '../../l10n/app_localizations.dart';
-import '../../core/providers.dart';
+import 'package:mestura/l10n/app_localizations.dart';
+import 'package:mestura/core/providers.dart';
 //import '../../core/navigation/run_with_loading.dart';
 
-import '../../core/services/ad_service.dart';
-import '../../core/services/ad_gate.dart';
-import '../widgets/app_scaffold.dart';
-import '../widgets/app_title.dart';
-import '../widgets/app_text_field.dart';
-import '../widgets/app_drawer.dart';
-import '../widgets/app_primary_button.dart';
-import '../widgets/app_top_bar.dart';
-import '../style/app_style.dart';
-import 'recipe_screen.dart';
-import 'loading_screen.dart';
+import 'package:mestura/core/services/ad_service.dart';
+import 'package:mestura/core/services/ad_gate.dart';
+import 'package:mestura/ui/widgets/app_scaffold.dart';
+import 'package:mestura/ui/widgets/app_title.dart';
+import 'package:mestura/ui/widgets/app_text_field.dart';
+import 'package:mestura/ui/widgets/app_drawer.dart';
+import 'package:mestura/ui/widgets/app_primary_button.dart';
+import 'package:mestura/ui/widgets/app_top_bar.dart';
+import 'package:mestura/ui/style/app_style.dart';
+import 'package:mestura/ui/screens/recipe_screen.dart';
+import 'package:mestura/ui/screens/loading_screen.dart';
 
 final homeLoadingProvider =
     StateProvider.autoDispose<bool>((ref) => false);

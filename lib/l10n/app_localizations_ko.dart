@@ -399,6 +399,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get cookingSheetTakePhotoShare => '사진 찍어 공유';
 
   @override
+  String get cookingSheetShareNoPhoto => '사진 없이 공유';
+
+  @override
   String get cookingSheetSaveRecipe => '레시피 저장';
 
   @override

@@ -76,6 +76,39 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
     super.dispose();
   }
 
+  String _startCookingLabel(AppLocalizations s) {
+    try {
+      final dynamic d = s;
+      final val = d.startCookingButton as String?;
+      if (val != null) return val;
+    } catch (_) {}
+    final code = _locale?.languageCode ?? 'en';
+    switch (code) {
+      case 'es':
+        return 'Empezar a cocinar';
+      case 'pt':
+        return 'Começar a cozinhar';
+      case 'fr':
+        return 'Commencer à cuisiner';
+      case 'de':
+        return 'Mit dem Kochen beginnen';
+      case 'it':
+        return 'Inizia a cucinare';
+      case 'pl':
+        return 'Zacznij gotować';
+      case 'ru':
+        return 'Начать готовить';
+      case 'ja':
+        return '料理を開始';
+      case 'ko':
+        return '요리 시작';
+      case 'zh':
+        return '开始烹饪';
+      default:
+        return 'Start cooking';
+    }
+  }
+
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     final languageCode = prefs.getString('languageCode') ?? 'en';
@@ -426,9 +459,7 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    subtitle: Text(
-                      s.nutritionPerServing,
-                    ),
+                    subtitle: Text(s.nutritionPerServing),
                     children: [
                       _NutritionRow(
                         label: s.nutritionCalories,
@@ -484,18 +515,24 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
 
             const SizedBox(height: 20),
 
-            // Nuevo: botón para modo cocina paso a paso
-            AppPrimaryButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => CookingScreen(recipe: widget.recipe),
-                  ),
-                );
-              },
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-              child: Text(s.startCookingButton),
+            // Nuevo: botón para modo cocina paso a paso (verde destacado)
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => CookingScreen(recipe: widget.recipe),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(_startCookingLabel(s)),
+              ),
             ),
             const SizedBox(height: 10),
 

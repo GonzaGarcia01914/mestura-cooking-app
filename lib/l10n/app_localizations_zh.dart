@@ -399,6 +399,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cookingSheetTakePhotoShare => '拍照并分享';
 
   @override
+  String get cookingSheetShareNoPhoto => '不带照片分享';
+
+  @override
   String get cookingSheetSaveRecipe => '保存食谱';
 
   @override

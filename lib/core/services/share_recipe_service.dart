@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import '../../models/recipe.dart';
 
 class ShareRecipeService {
   static final _firestore = FirebaseFirestore.instance;
 
   // Configura tu dominio de Dynamic Links en Firebase Console
-  static const String _domainPrefix = 'https://mestura.page.link'; // TODO: ajusta si es distinto
-  static const String _deepHost = 'mestura.app'; // host simbólico para tu deep link
+  // Usaremos un deep link con esquema personalizado: mestura://recipe?id=...
+  static const String _scheme = 'mestura';
+  static const String _deepHost = 'recipe';
   static const String _androidPackage = 'com.gonzalogarcia.mestura';
   static const String _iosBundleId = 'com.gonzalogarcia.mestura';
 
@@ -27,26 +27,13 @@ class ShareRecipeService {
 
   static Future<Uri> createShareLink(RecipeModel recipe) async {
     final id = await _storeRecipe(recipe);
-    final deepLink = Uri(
-      scheme: 'https',
+    // Construimos un link de esquema personalizado. Requiere configuración en Android/iOS.
+    final deep = Uri(
+      scheme: _scheme,
       host: _deepHost,
-      path: '/recipe',
       queryParameters: {'id': id},
     );
-
-    final params = DynamicLinkParameters(
-      link: deepLink,
-      uriPrefix: _domainPrefix,
-      androidParameters: const AndroidParameters(packageName: _androidPackage),
-      iosParameters: const IOSParameters(bundleId: _iosBundleId),
-      socialMetaTagParameters: SocialMetaTagParameters(
-        title: recipe.title,
-        imageUrl: recipe.image != null ? Uri.tryParse(recipe.image!) : null,
-      ),
-    );
-
-    final short = await FirebaseDynamicLinks.instance.buildShortLink(params);
-    return short.shortUrl;
+    return deep;
   }
 
   static Future<RecipeModel?> fetchSharedRecipeById(String id) async {
@@ -56,4 +43,3 @@ class ShareRecipeService {
     return RecipeModel.fromJson(data);
   }
 }
-

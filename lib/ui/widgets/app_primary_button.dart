@@ -9,6 +9,7 @@ class AppPrimaryButton extends StatelessWidget {
     this.loading = false,
     this.backgroundColor,
     this.foregroundColor,
+    this.style,
   });
 
   final VoidCallback? onPressed;
@@ -16,23 +17,24 @@ class AppPrimaryButton extends StatelessWidget {
   final bool loading;
   final Color? backgroundColor;
   final Color? foregroundColor;
+  final ButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
-    final style = AppStyle.of(context);
+    final appStyle = AppStyle.of(context);
 
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: loading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
+        style: this.style ?? ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(style.radius),
+            borderRadius: BorderRadius.circular(appStyle.radius),
           ),
-          elevation: style.elevation,
+          elevation: appStyle.elevation,
         ),
         child:
             loading

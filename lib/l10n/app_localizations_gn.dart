@@ -399,6 +399,9 @@ class AppLocalizationsGn extends AppLocalizations {
   String get cookingSheetTakePhotoShare => 'Eipe’a ta’ãnga ha emoherakuã';
 
   @override
+  String get cookingSheetShareNoPhoto => 'Emoherakuã ta’ãnga’ỹre';
+
+  @override
   String get cookingSheetSaveRecipe => 'Eñongatu receta';
 
   @override

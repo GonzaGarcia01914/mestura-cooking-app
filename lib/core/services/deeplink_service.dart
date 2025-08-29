@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/recipe.dart';
@@ -14,24 +14,26 @@ class DeepLinkService {
   static Future<void> init() async {
     await _handleInitialLink();
     _sub?.cancel();
-    _sub = FirebaseDynamicLinks.instance.onLink.listen((data) {
-      _handleLink(data.link);
-    });
+    _sub = uriLinkStream.listen((uri) {
+      if (uri != null) _handleLink(uri);
+    }, onError: (_) {});
   }
 
   static Future<void> _handleInitialLink() async {
-    final data = await FirebaseDynamicLinks.instance.getInitialLink();
-    if (data?.link != null) {
-      // Empuja tras primer frame para asegurar navigatorKey
+    final uri = await getInitialUri();
+    if (uri != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _handleLink(data!.link);
+        _handleLink(uri);
       });
     }
   }
 
   static Future<void> _handleLink(Uri link) async {
     try {
-      if (link.path == '/recipe' && link.queryParameters['id'] != null) {
+      // Admitimos esquemas personalizados: mestura://recipe?id=...
+      final isRecipe = (link.scheme == 'mestura' && link.host == 'recipe') ||
+          (link.scheme == 'https' && link.host.contains('mestura') && link.path == '/recipe');
+      if (isRecipe && link.queryParameters['id'] != null) {
         final id = link.queryParameters['id']!;
         final RecipeModel? recipe = await ShareRecipeService.fetchSharedRecipeById(id);
         if (recipe != null) {
@@ -44,4 +46,3 @@ class DeepLinkService {
     }
   }
 }
-
