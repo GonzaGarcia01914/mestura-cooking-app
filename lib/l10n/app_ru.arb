@@ -1,6 +1,11 @@
 {
   "@@locale": "ru",
   "appTitle": "Mestura",
+  "shoppingMenu": "Список покупок",
+  "shoppingTitle": "Список покупок",
+  "shoppingAddPlaceholder": "Добавить элемент",
+  "shoppingAddTooltip": "Добавить",
+  "shoppingRemoveTooltip": "Удалить",
   "homePrompt": "Что бы вы хотели?",
   "advancedOptions": "Расширенные параметры",
   "numberOfGuests": "Количество гостей",

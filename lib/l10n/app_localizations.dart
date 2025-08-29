@@ -966,6 +966,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I just cooked \"{title}\"! Try the app: {link}'**
   String shareCookedText(String title, String link);
+
+  /// No description provided for @shoppingMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list'**
+  String get shoppingMenu;
+
+  /// No description provided for @shoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping List'**
+  String get shoppingTitle;
+
+  /// No description provided for @shoppingAddPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add item'**
+  String get shoppingAddPlaceholder;
+
+  /// No description provided for @shoppingAddTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get shoppingAddTooltip;
+
+  /// No description provided for @shoppingRemoveTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get shoppingRemoveTooltip;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

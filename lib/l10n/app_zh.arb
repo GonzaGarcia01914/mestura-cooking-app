@@ -1,6 +1,11 @@
 {
   "@@locale": "zh",
   "appTitle": "Mestura",
+  "shoppingMenu": "购物清单",
+  "shoppingTitle": "购物清单",
+  "shoppingAddPlaceholder": "添加项目",
+  "shoppingAddTooltip": "添加",
+  "shoppingRemoveTooltip": "删除",
   "homePrompt": "想做什么？",
   "advancedOptions": "高级选项",
   "numberOfGuests": "用餐人数",

@@ -1,6 +1,11 @@
 {
   "@@locale": "gn",
   "appTitle": "Mestura",
+  "shoppingMenu": "Lista de compras",
+  "shoppingTitle": "Lista de compras",
+  "shoppingAddPlaceholder": "Añadir artículo",
+  "shoppingAddTooltip": "Añadir",
+  "shoppingRemoveTooltip": "Eliminar",
   "homePrompt": "Mba'épa reipota?",
   "advancedOptions": "Jeporavorã iporãvéva",
   "numberOfGuests": "Mboy oútava",

@@ -162,5 +162,10 @@
       "title": {"type": "String"},
       "link": {"type": "String"}
     }
-  }
+  },
+  "shoppingMenu": "Shopping list",
+  "shoppingTitle": "Shopping List",
+  "shoppingAddPlaceholder": "Add item",
+  "shoppingAddTooltip": "Add",
+  "shoppingRemoveTooltip": "Remove"
 }

@@ -1,6 +1,11 @@
 {
   "@@locale": "fr",
   "appTitle": "Mestura",
+  "shoppingMenu": "Liste de courses",
+  "shoppingTitle": "Liste de courses",
+  "shoppingAddPlaceholder": "Ajouter un article",
+  "shoppingAddTooltip": "Ajouter",
+  "shoppingRemoveTooltip": "Supprimer",
   "homePrompt": "Que souhaitez-vous ?",
   "advancedOptions": "Options avancées",
   "numberOfGuests": "Nombre de convives",

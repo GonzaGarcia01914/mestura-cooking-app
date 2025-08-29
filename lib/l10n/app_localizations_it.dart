@@ -439,4 +439,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String shareCookedText(String title, String link) {
     return 'Ho appena cucinato \"$title\"! Prova l\'app: $link';
   }
+
+  @override
+  String get shoppingMenu => 'Lista della spesa';
+
+  @override
+  String get shoppingTitle => 'Lista della spesa';
+
+  @override
+  String get shoppingAddPlaceholder => 'Aggiungi elemento';
+
+  @override
+  String get shoppingAddTooltip => 'Aggiungi';
+
+  @override
+  String get shoppingRemoveTooltip => 'Rimuovi';
 }

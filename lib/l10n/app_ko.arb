@@ -1,6 +1,11 @@
 {
   "@@locale": "ko",
   "appTitle": "Mestura",
+  "shoppingMenu": "장보기 목록",
+  "shoppingTitle": "장보기 목록",
+  "shoppingAddPlaceholder": "항목 추가",
+  "shoppingAddTooltip": "추가",
+  "shoppingRemoveTooltip": "삭제",
   "homePrompt": "무엇을 원하시나요?",
   "advancedOptions": "고급 옵션",
   "numberOfGuests": "인원 수",

@@ -600,6 +600,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.shopping_cart),
+            title: Text(s.shoppingMenu),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/shopping');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.restaurant_menu),
             title: Text(AppLocalizations.of(context)!.preferencesMenu),
             onTap: () {

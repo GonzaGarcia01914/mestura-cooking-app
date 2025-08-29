@@ -97,15 +97,17 @@ class _SavedScreenState extends State<SavedScreen> {
       try {
         link = await ShareRecipeService.createShareLink(recipe);
       } catch (_) {
-        link = Uri.parse('https://play.google.com/store/apps/details?id=com.gonzalogarcia.mestura');
+        link = Uri.parse(
+          'https://play.google.com/store/apps/details?id=com.gonzalogarcia.mestura',
+        );
       }
       final text = _composeShareText(s, recipe.title, link.toString());
       await Share.share(text, subject: s.shareButton);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al compartir: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al compartir: $e')));
     }
   }
 
@@ -132,7 +134,8 @@ class _SavedScreenState extends State<SavedScreen> {
 
     Widget emptyState() {
       final vh = MediaQuery.of(context).size.height;
-      final contentHeight = (vh - topPad - 24).clamp(0.0, double.infinity).toDouble();
+      final contentHeight =
+          (vh - topPad - 24).clamp(0.0, double.infinity).toDouble();
 
       return ListView(
         controller: _scrollCtrl,
@@ -187,9 +190,7 @@ class _SavedScreenState extends State<SavedScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
                         children: [
                           TextSpan(text: recipe.title),
@@ -214,10 +215,11 @@ class _SavedScreenState extends State<SavedScreen> {
                     const SizedBox(height: 4),
                     Text(
                       '${recipe.ingredients.length} ${s.filterIngredients}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                      ),
                     ),
                   ],
                 ),
@@ -238,65 +240,74 @@ class _SavedScreenState extends State<SavedScreen> {
     }
 
     Widget list() => AnimatedList(
-          key: _listKey,
-          controller: _scrollCtrl,
-          padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
-          initialItemCount: _recipes.length,
-          itemBuilder: (_, i, animation) {
-            final recipe = _recipes[i];
-            final imageUrl = _normalizeImageUrl(recipe.image);
-            final isPending = _pendingDeleteIndex == i;
+      key: _listKey,
+      controller: _scrollCtrl,
+      padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
+      initialItemCount: _recipes.length,
+      itemBuilder: (_, i, animation) {
+        final recipe = _recipes[i];
+        final imageUrl = _normalizeImageUrl(recipe.image);
+        final isPending = _pendingDeleteIndex == i;
 
-            return SizeTransition(
-              sizeFactor: animation,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: i == _recipes.length - 1 ? 0 : 12),
-                child: Dismissible(
-                  resizeDuration: null,
-                  key: ValueKey('${recipe.title}-$i'),
-                  direction: DismissDirection.startToEnd,
-                  background: Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                    ),
-                    child: const Icon(Icons.delete, color: Colors.white, size: 28),
-                  ),
-                  confirmDismiss: (_) async {
-                    setState(() => _pendingDeleteIndex = i);
-                    await Future.delayed(const Duration(milliseconds: 140));
-                    return true;
-                  },
-                  onDismissed: (_) {
-                    final removed = _recipes.removeAt(i);
-                    _listKey.currentState!.removeItem(
-                      i,
-                      (_, anim) => FadeTransition(
-                        opacity: CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
-                        child: recipeCard(removed, _normalizeImageUrl(removed.image)),
-                      ),
-                      duration: const Duration(milliseconds: 0),
-                    );
-                    StorageService().deleteRecipe(removed.title);
-                    setState(() => _pendingDeleteIndex = null);
-                    if (_recipes.isEmpty) setState(() {});
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    curve: Curves.easeOutCubic,
-                    decoration: BoxDecoration(
-                      color: isPending ? Colors.red.withOpacity(0.08) : Colors.transparent,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                    ),
-                    child: recipeCard(recipe, imageUrl),
-                  ),
+        return SizeTransition(
+          sizeFactor: animation,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: i == _recipes.length - 1 ? 0 : 12),
+            child: Dismissible(
+              resizeDuration: null,
+              key: ValueKey('${recipe.title}-$i'),
+              direction: DismissDirection.startToEnd,
+              background: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
                 ),
+                child: const Icon(Icons.delete, color: Colors.white, size: 28),
               ),
-            );
-          },
+              confirmDismiss: (_) async {
+                setState(() => _pendingDeleteIndex = i);
+                await Future.delayed(const Duration(milliseconds: 140));
+                return true;
+              },
+              onDismissed: (_) {
+                final removed = _recipes.removeAt(i);
+                _listKey.currentState!.removeItem(
+                  i,
+                  (_, anim) => FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: anim,
+                      curve: Curves.easeOutCubic,
+                    ),
+                    child: recipeCard(
+                      removed,
+                      _normalizeImageUrl(removed.image),
+                    ),
+                  ),
+                  duration: const Duration(milliseconds: 0),
+                );
+                StorageService().deleteRecipe(removed.title);
+                setState(() => _pendingDeleteIndex = null);
+                if (_recipes.isEmpty) setState(() {});
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOutCubic,
+                decoration: BoxDecoration(
+                  color:
+                      isPending
+                          ? Colors.red.withOpacity(0.08)
+                          : Colors.transparent,
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                ),
+                child: recipeCard(recipe, imageUrl),
+              ),
+            ),
+          ),
         );
+      },
+    );
 
     return AppScaffold(
       extendBodyBehindAppBar: true,
@@ -368,8 +379,3 @@ class _ThumbIfLoadableState extends State<_ThumbIfLoadable> {
     );
   }
 }
-
-
-
-
-

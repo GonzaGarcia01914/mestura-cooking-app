@@ -1,6 +1,11 @@
 {
   "@@locale": "ja",
   "appTitle": "Mestura",
+  "shoppingMenu": "買い物リスト",
+  "shoppingTitle": "買い物リスト",
+  "shoppingAddPlaceholder": "項目を追加",
+  "shoppingAddTooltip": "追加",
+  "shoppingRemoveTooltip": "削除",
   "homePrompt": "何を作りたいですか？",
   "advancedOptions": "詳細オプション",
   "numberOfGuests": "人数",

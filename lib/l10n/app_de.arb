@@ -1,6 +1,11 @@
 {
   "@@locale": "de",
   "appTitle": "Mestura",
+  "shoppingMenu": "Einkaufsliste",
+  "shoppingTitle": "Einkaufsliste",
+  "shoppingAddPlaceholder": "Artikel hinzufügen",
+  "shoppingAddTooltip": "Hinzufügen",
+  "shoppingRemoveTooltip": "Entfernen",
   "homePrompt": "Was möchtest du?",
   "advancedOptions": "Erweiterte Optionen",
   "numberOfGuests": "Anzahl der Gäste",
@@ -20,7 +25,6 @@
   "skillStandard": "Standard",
   "skillElevated": "Fortgeschritten",
   "skillAny": "Beliebig",
-
   "searchButton": "Rezept generieren",
   "surpriseButton": "Überrasch mich",
   "ingredientsTitle": "Zutaten",
@@ -80,7 +84,6 @@
   "preferencesSave": "Präferenzen speichern",
   "preferencesClear": "Alles löschen",
   "preferencesSaved": "Einstellungen gespeichert!",
-
   "prefVegan": "Vegan",
   "prefVegetarian": "Vegetarisch",
   "prefVegetarianOvo": "Vegetarisch (Ovo)",
@@ -100,7 +103,6 @@
   "prefSpicyMedium": "Mittel scharf",
   "prefSpicyHigh": "Sehr scharf",
   "prefOrganic": "Bio",
-
   "prefGlutenFree": "Glutenfrei",
   "prefLowFodmap": "Low FODMAP",
   "prefLowSodium": "Natriumarm",
@@ -109,7 +111,6 @@
   "prefLowPurine": "Purinearm",
   "prefLowOxalatePotassium": "Oxalat-/Kaliumarm",
   "prefLactoseFree": "Laktosefrei",
-
   "allergenGluten": "Gluten",
   "allergenCrustaceans": "Krebstiere",
   "allergenEggs": "Eier",
@@ -124,14 +125,12 @@
   "allergenSulphites": "Schwefeldioxid und Sulfite",
   "allergenLupin": "Lupinen",
   "allergenMolluscs": "Weichtiere",
-
   "prefHalal": "Halal",
   "prefKosher": "Koscher",
   "prefHindu": "Hindu (vermeidet oft Rindfleisch)",
   "prefJain": "Jain (ohne Wurzeln; streng vegetarisch)",
   "prefBuddhist": "Buddhistisch (je nach Region)",
   "prefLentFasting": "Fasten / Fastenzeit (an bestimmten Tagen kein Fleisch)",
-
   "startCookingButton": "Mit dem Kochen beginnen",
   "finalizeButton": "Fertig",
   "cookingSheetTitle": "Rezept abgeschlossen!",
@@ -139,17 +138,13 @@
   "cookingSheetShareNoPhoto": "Ohne Foto teilen",
   "cookingSheetSaveRecipe": "Rezept speichern",
   "cookingSheetGoHome": "Schließen und zur Startseite",
-
   "timerStartTooltip": "Start",
   "timerPauseTooltip": "Pause",
   "timerResumeTooltip": "Fortsetzen",
   "timerDiscardTooltip": "Verwerfen",
-
   "timerDoneTitle": "Zeit abgelaufen!",
   "timerDoneBody": "Der Kochschritt ist beendet.",
-
   "cookingNotificationTitle": "Kochen: {title}",
-  "cookingOngoingBody": "Schritt {step} • Countdown"
-  ,
+  "cookingOngoingBody": "Schritt {step} • Countdown",
   "shareCookedText": "Ich habe gerade \"{title}\" gekocht! Probier die App aus: {link}"
 }

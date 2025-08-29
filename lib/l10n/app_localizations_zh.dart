@@ -439,4 +439,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String shareCookedText(String title, String link) {
     return '我刚刚做了\"$title\"！来试试这个应用：$link';
   }
+
+  @override
+  String get shoppingMenu => '购物清单';
+
+  @override
+  String get shoppingTitle => '购物清单';
+
+  @override
+  String get shoppingAddPlaceholder => '添加项目';
+
+  @override
+  String get shoppingAddTooltip => '添加';
+
+  @override
+  String get shoppingRemoveTooltip => '删除';
 }

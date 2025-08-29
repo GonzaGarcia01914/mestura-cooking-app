@@ -439,4 +439,19 @@ class AppLocalizationsGn extends AppLocalizations {
   String shareCookedText(String title, String link) {
     return 'Ambojy ko’ág̃a \"$title\"! Eiporu pe app: $link';
   }
+
+  @override
+  String get shoppingMenu => 'Lista de compras';
+
+  @override
+  String get shoppingTitle => 'Lista de compras';
+
+  @override
+  String get shoppingAddPlaceholder => 'Añadir artículo';
+
+  @override
+  String get shoppingAddTooltip => 'Añadir';
+
+  @override
+  String get shoppingRemoveTooltip => 'Eliminar';
 }

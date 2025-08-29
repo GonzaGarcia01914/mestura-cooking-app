@@ -439,4 +439,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String shareCookedText(String title, String link) {
     return 'Я только что приготовил(а) \"$title\"! Попробуй приложение: $link';
   }
+
+  @override
+  String get shoppingMenu => 'Список покупок';
+
+  @override
+  String get shoppingTitle => 'Список покупок';
+
+  @override
+  String get shoppingAddPlaceholder => 'Добавить элемент';
+
+  @override
+  String get shoppingAddTooltip => 'Добавить';
+
+  @override
+  String get shoppingRemoveTooltip => 'Удалить';
 }

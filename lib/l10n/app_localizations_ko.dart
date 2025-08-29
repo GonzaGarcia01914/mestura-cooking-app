@@ -439,4 +439,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String shareCookedText(String title, String link) {
     return '방금 \"$title\"를 만들었어요! 앱을 사용해 보세요: $link';
   }
+
+  @override
+  String get shoppingMenu => '장보기 목록';
+
+  @override
+  String get shoppingTitle => '장보기 목록';
+
+  @override
+  String get shoppingAddPlaceholder => '항목 추가';
+
+  @override
+  String get shoppingAddTooltip => '추가';
+
+  @override
+  String get shoppingRemoveTooltip => '삭제';
 }

@@ -1,6 +1,11 @@
 {
   "@@locale": "it",
   "appTitle": "Mestura",
+  "shoppingMenu": "Lista della spesa",
+  "shoppingTitle": "Lista della spesa",
+  "shoppingAddPlaceholder": "Aggiungi elemento",
+  "shoppingAddTooltip": "Aggiungi",
+  "shoppingRemoveTooltip": "Rimuovi",
   "homePrompt": "Cosa ti piacerebbe?",
   "advancedOptions": "Opzioni avanzate",
   "numberOfGuests": "Numero di ospiti",
