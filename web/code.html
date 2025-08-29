@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Code Viewer</title>
+    <style>
+        :root {
+            --bg: #0b0f14;
+            --panel: #0f141b;
+            --panel-2: #0d1218;
+            --text: #e5e7eb;
+            --muted: #94a3b8;
+            --border: #1f2937;
+            --accent: #334155;
+            --accent-2: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* 👇 clave: el documento del iframe NO agrega scroll */
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* 👇 usa 100% del contenedor (NO 100vw) y sin overflow del grid */
+        #layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100vh;
+            /* ocupa todo el alto disponible del iframe */
+            width: 100%;
+            /* evita scrollbar horizontal fantasma */
+            overflow: hidden;
+            /* el grid no scrollea */
+        }
+
+        /* Sólo el árbol scrollea */
+        #sidebar {
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            overflow: auto;
+            padding: 10px;
+        }
+
+        .search {
+            margin-bottom: 10px;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        #tree {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        #tree li {
+            margin: 2px 0;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .row:hover {
+            background: var(--accent-2);
+        }
+
+        .dir .chev {
+            width: 12px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .file {
+            color: var(--text);
+        }
+
+        .indent {
+            margin-left: 16px;
+        }
+
+        /* El panel derecho no genera scroll; lo gestiona Monaco */
+        main {
+            display: flex;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        #editor {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Asegura que Monaco ocupe TODO el alto sin contenedor extra con scroll */
+        .monaco-editor,
+        .monaco-editor .overflow-guard {
+            height: 100% !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout">
+        <aside id="sidebar">
+            <div class="search">
+                <input id="filter" type="search" placeholder="Filtrar archivos (ej. lib/ o main.dart)" />
+            </div>
+            <ul id="tree"></ul>
+        </aside>
+        <main>
+            <div id="editor"></div>
+        </main>
+    </div>
+
+    <!-- Monaco via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+    <script>
+        // ======= Config por defecto (puedes pasar ?owner=&repo=&branch= por query) =======
+        const qs = new URLSearchParams(location.search);
+        const owner = qs.get('owner') || 'GonzaGarcia01914';
+        const repo = qs.get('repo') || 'movies';
+        const branch = qs.get('branch') || 'main';
+
+        const treeEl = document.getElementById('tree');
+        const filterEl = document.getElementById('filter');
+        let monacoEditor, monacoModel;
+
+        // Monaco bootstrap (tema oscuro fijo)
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+        window.MonacoEnvironment = {
+            getWorkerUrl: (_, label) => {
+                return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+        self.MonacoEnvironment = { baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/' };
+        importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/base/worker/workerMain.js');
+      `)}`;
+            }
+        };
+
+        function guessLang(path) {
+            const p = path.toLowerCase();
+            if (p.endsWith('.dart')) return 'dart';
+            if (p.endsWith('.yaml') || p.endsWith('.yml')) return 'yaml';
+            if (p.endsWith('.json')) return 'json';
+            if (p.endsWith('.md')) return 'markdown';
+            if (p.endsWith('.html')) return 'html';
+            if (p.endsWith('.css')) return 'css';
+            if (p.endsWith('.js')) return 'javascript';
+            return 'plaintext';
+        }
+        function encPath(path) { return path.split('/').map(encodeURIComponent).join('/'); }
+
+        async function loadFile(path) {
+            const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encPath(path)}`;
+            const res = await fetch(rawUrl);
+            const text = res.ok ? await res.text() : `No se pudo cargar ${path} (HTTP ${res.status})`;
+            const lang = guessLang(path);
+            const model = monaco.editor.createModel(text, lang);
+            monacoEditor.setModel(model);
+            monacoModel = model;
+        }
+
+        function buildTree(nodes) {
+            const ignore = ['.git/', 'build/', '.dart_tool/', '.idea/', '.vscode/', 'node_modules/'];
+            const filtered = nodes.filter(n => {
+                return !ignore.some(ig => n.path.startsWith(ig)) && (n.type === 'blob' || n.type === 'tree');
+            });
+
+            const root = {};
+            for (const n of filtered) {
+                const parts = n.path.split('/');
+                let cur = root;
+                parts.forEach((seg, idx) => {
+                    cur.children = cur.children || {};
+                    cur.children[seg] = cur.children[seg] || { name: seg, path: parts.slice(0, idx + 1).join('/'), type: (idx === parts.length - 1 ? n.type : 'tree') };
+                    cur = cur.children[seg];
+                });
+            }
+            return root.children || {};
+        }
+
+        function renderTree(container, nodeMap, depth = 0, filter = '') {
+            container.innerHTML = '';
+            const entries = Object.values(nodeMap).sort((a, b) => {
+                if (a.type !== b.type) return a.type === 'tree' ? -1 : 1;
+                return a.name.localeCompare(b.name);
+            });
+
+            for (const item of entries) {
+                const matches = !filter || item.path.toLowerCase().includes(filter);
+                if (!matches && item.type === 'blob') continue;
+
+                const li = document.createElement('li');
+                const row = document.createElement('div');
+                row.className = `row ${item.type === 'tree' ? 'dir' : 'file'}`;
+                if (depth) row.style.paddingLeft = `${8 + depth * 10}px`;
+
+                if (item.type === 'tree') {
+                    const chev = document.createElement('span');
+                    chev.className = 'chev';
+                    chev.textContent = '▸';
+                    row.prepend(chev);
+
+                    const name = document.createElement('span');
+                    name.textContent = item.name;
+                    row.appendChild(name);
+
+                    const childrenUl = document.createElement('ul');
+                    childrenUl.className = 'indent';
+                    childrenUl.style.display = 'none';
+
+                    row.onclick = () => {
+                        const open = childrenUl.style.display !== 'none';
+                        childrenUl.style.display = open ? 'none' : 'block';
+                        chev.textContent = open ? '▸' : '▾';
+                    };
+
+                    li.appendChild(row);
+                    if (item.children) renderTree(childrenUl, item.children, depth + 1, filter);
+                    li.appendChild(childrenUl);
+                } else {
+                    row.textContent = item.name;
+                    row.onclick = () => loadFile(item.path);
+                    li.appendChild(row);
+                }
+                container.appendChild(li);
+            }
+        }
+
+        async function bootstrap() {
+            // Crea editor oscuro
+            await new Promise(resolve => {
+                require(['vs/editor/editor.main'], function () {
+                    monacoEditor = monaco.editor.create(document.getElementById('editor'), {
+                        value: '',
+                        language: 'plaintext',
+                        readOnly: true,
+                        automaticLayout: true,
+                        wordWrap: 'on',
+                        minimap: { enabled: true },
+                        theme: 'vs-dark'
+                    });
+                    resolve();
+                });
+            });
+
+            // Carga árbol del repo
+            const api = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+            const res = await fetch(api);
+            if (!res.ok) {
+                document.getElementById('tree').innerHTML = `<li>Error al cargar el árbol (HTTP ${res.status})</li>`;
+                return;
+            }
+            const json = await res.json();
+            const nodes = json.tree || [];
+            const map = buildTree(nodes);
+
+            renderTree(treeEl, map, 0, '');
+
+            // Filtro
+            filterEl.addEventListener('input', () => {
+                const q = filterEl.value.trim().toLowerCase();
+                renderTree(treeEl, map, 0, q);
+            });
+
+            // Archivo por defecto
+            const prefer = ['lib/main.dart', 'lib/app.dart', 'pubspec.yaml', 'README.md'];
+            const allFiles = nodes.filter(n => n.type === 'blob').map(n => n.path);
+            const first = prefer.find(p => allFiles.includes(p)) || allFiles.find(p => p.endsWith('.dart') || p.endsWith('.yaml') || p.endsWith('.md'));
+            if (first) loadFile(first);
+        }
+
+        bootstrap();
+    </script>
+</body>
+
+</html>
