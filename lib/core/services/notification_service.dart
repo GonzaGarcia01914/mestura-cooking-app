@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'dart:io' show Platform;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tzdata;
 
@@ -43,6 +45,13 @@ class NotificationService {
     );
 
     await _plugin.initialize(settings);
+
+    // Android 13+: solicita permiso de notificaciones si es necesario
+    try {
+      final androidImpl = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      await androidImpl?.requestNotificationsPermission();
+    } catch (_) {}
     _initialized = true;
   }
 
@@ -99,22 +108,47 @@ class NotificationService {
     required String title,
     required String body,
     int? id,
+    bool preferExact = true,
   }) async {
     await init();
     final notifId = id ?? Random().nextInt(1 << 31);
     final tzWhen = tz.TZDateTime.from(when, tz.local);
-    await _plugin.zonedSchedule(
-      notifId,
-      title,
-      body,
-      tzWhen,
-      _notificationDetails(),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      payload: 'timer',
-      matchDateTimeComponents: null,
-    );
+    try {
+      await _plugin.zonedSchedule(
+        notifId,
+        title,
+        body,
+        tzWhen,
+        _notificationDetails(),
+        androidScheduleMode:
+            preferExact ? AndroidScheduleMode.exactAllowWhileIdle : AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: 'timer',
+        matchDateTimeComponents: null,
+      );
+    } catch (e) {
+      final msg = e.toString();
+      final needsExactPerm = msg.contains('exact_alarms_not_permitted');
+      if (needsExactPerm && preferExact) {
+        // Intenta abrir ajustes para conceder "Alarms & reminders" y reenviar inexacto
+        await openExactAlarmsSettings();
+        try {
+          await _plugin.zonedSchedule(
+            notifId,
+            title,
+            body,
+            tzWhen,
+            _notificationDetails(),
+            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime,
+            payload: 'timer',
+            matchDateTimeComponents: null,
+          );
+        } catch (_) {}
+      }
+    }
     return notifId;
   }
 
@@ -141,5 +175,16 @@ class NotificationService {
 
   static Future<void> cancelOngoingCountdown() async {
     await _plugin.cancel(_ongoingId);
+  }
+
+  static Future<void> openExactAlarmsSettings() async {
+    if (!Platform.isAndroid) return;
+    // Android 12+: abre la pantalla "Alarms & reminders"
+    const intent = AndroidIntent(
+      action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
+    );
+    try {
+      await intent.launch();
+    } catch (_) {}
   }
 }

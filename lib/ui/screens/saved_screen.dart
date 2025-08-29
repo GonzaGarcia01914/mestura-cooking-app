@@ -5,6 +5,8 @@ import '../../l10n/app_localizations.dart';
 import '../../core/services/storage_service.dart';
 import '../../models/recipe.dart';
 import 'recipe_screen.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../core/services/share_recipe_service.dart';
 
 // Design system
 import '../widgets/app_scaffold.dart';
@@ -49,6 +51,62 @@ class _SavedScreenState extends State<SavedScreen> {
     setState(() {
       _recipes = saved;
     });
+  }
+
+  String _composeShareText(AppLocalizations s, String title, String link) {
+    // Intenta usar el string generado si existe; si no, fallback localizado simple
+    try {
+      final dyn = s as dynamic;
+      final fn = dyn.shareCookedText as dynamic;
+      if (fn is Function) {
+        final res = fn(title, link);
+        if (res is String) return res;
+      }
+    } catch (_) {}
+    final code = Localizations.localeOf(context).languageCode;
+    switch (code) {
+      case 'es':
+        return '¡Acabo de cocinar "$title"! Prueba la app: $link';
+      case 'pt':
+        return 'Acabei de cozinhar "$title"! Experimente o app: $link';
+      case 'fr':
+        return 'Je viens de cuisiner "$title" ! Essaie l\'app : $link';
+      case 'de':
+        return 'Ich habe gerade "$title" gekocht! Probier die App aus: $link';
+      case 'it':
+        return 'Ho appena cucinato "$title"! Prova l\'app: $link';
+      case 'pl':
+        return 'Właśnie ugotowałem "$title"! Wypróbuj aplikację: $link';
+      case 'ru':
+        return 'Я только что приготовил(а) "$title"! Попробуй приложение: $link';
+      case 'ja':
+        return '「$title」を作りました！ アプリを試してね: $link';
+      case 'ko':
+        return '방금 "$title"를 만들었어요! 앱을 사용해 보세요: $link';
+      case 'zh':
+        return '我刚刚做了"$title"！来试试这个应用：$link';
+      default:
+        return 'I just cooked "$title"! Try the app: $link';
+    }
+  }
+
+  Future<void> _shareSaved(RecipeModel recipe) async {
+    final s = AppLocalizations.of(context)!;
+    try {
+      Uri? link;
+      try {
+        link = await ShareRecipeService.createShareLink(recipe);
+      } catch (_) {
+        link = Uri.parse('https://play.google.com/store/apps/details?id=com.gonzalogarcia.mestura');
+      }
+      final text = _composeShareText(s, recipe.title, link.toString());
+      await Share.share(text, subject: s.shareButton);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al compartir: $e')),
+      );
+    }
   }
 
   String? _normalizeImageUrl(String? raw) {
@@ -125,14 +183,33 @@ class _SavedScreenState extends State<SavedScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      recipe.title,
+                    RichText(
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      text: TextSpan(
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                        children: [
+                          TextSpan(text: recipe.title),
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: InkWell(
+                                onTap: () => _shareSaved(recipe),
+                                customBorder: const CircleBorder(),
+                                child: const Icon(
+                                  Icons.share,
+                                  size: 18,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -146,14 +223,12 @@ class _SavedScreenState extends State<SavedScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              SizedBox(
+              const SizedBox(
                 height: 76,
-                child: const Center(
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 24,
-                    color: Colors.orange,
-                  ),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 24,
+                  color: Colors.orange,
                 ),
               ),
             ],

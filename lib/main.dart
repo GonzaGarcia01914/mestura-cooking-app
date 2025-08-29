@@ -68,44 +68,39 @@ Future<String?> _loadSavedLocale() async {
 }
 
 Future<void> main() async {
-  // Asegura binding y configura manejadores de error
-  WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(() async {
+    // Asegura binding y configura manejadores de error (MISMA ZONA que runApp)
+    WidgetsFlutterBinding.ensureInitialized();
 
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.dumpErrorToConsole(details);
-  };
+    FlutterError.onError = (FlutterErrorDetails details) {
+      FlutterError.dumpErrorToConsole(details);
+    };
 
-  // Inicializaciones previas a runApp (en paralelo para reducir el tiempo de arranque)
-  await Future.wait([
-    _initFirebase(),
-    _initAds(),
-    NotificationService.init(),
-  ]);
+    // Inicializaciones previas a runApp (en paralelo para reducir el tiempo de arranque)
+    await Future.wait([
+      _initFirebase(),
+      _initAds(),
+      NotificationService.init(),
+    ]);
 
-  final savedLocale = await _loadSavedLocale();
-  final initialLocale = _initialLocale(savedLocale);
+    final savedLocale = await _loadSavedLocale();
+    final initialLocale = _initialLocale(savedLocale);
 
-  // Ejecuta la app dentro de una zona protegida
-  runZonedGuarded(
-    () {
-      runApp(
-        ProviderScope(
-          overrides: [
-            // En Riverpod 2, StateProvider.overrideWith espera devolver el estado (Locale)
-            localeProvider.overrideWith((ref) => initialLocale),
-          ],
-          child: const MyApp(),
-        ),
-      );
-      // Inicializa escucha de Dynamic Links
-      // No depende de Provider; usa navigatorKey global
-      // ignore: discarded_futures
-      DeepLinkService.init();
-    },
-    (error, stack) {
-      debugPrint('Uncaught zone error: $error');
-    },
-  );
+    runApp(
+      ProviderScope(
+        overrides: [
+          localeProvider.overrideWith((ref) => initialLocale),
+        ],
+        child: const MyApp(),
+      ),
+    );
+
+    // Inicializa escucha de Dynamic Links
+    // ignore: discarded_futures
+    DeepLinkService.init();
+  }, (error, stack) {
+    debugPrint('Uncaught zone error: $error');
+  });
 }
 
 Locale _initialLocale(String? saved) {

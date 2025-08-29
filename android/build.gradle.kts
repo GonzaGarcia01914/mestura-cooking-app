@@ -49,10 +49,17 @@ subprojects {
     // (evitamos "sourceCompatibility has been finalized")
 }
 
-// Silenciar warnings por opciones obsoletas (-source/-target 8) en dependencias de terceros
+// Silenciar warnings de compilación en dependencias de terceros (plugins)
 subprojects {
     tasks.withType<JavaCompile>().configureEach {
-        options.compilerArgs.addAll(listOf("-Xlint:-options", "-Xlint:-deprecation"))
+        options.compilerArgs.addAll(
+            listOf(
+                "-Xlint:none",          // desactiva recomendaciones
+                "-Xlint:-options",      // oculta avisos de opciones obsoletas
+                "-Xlint:-deprecation",  // oculta avisos por APIs deprecadas
+                "-Xlint:-unchecked"     // oculta avisos de operaciones unchecked
+            )
+        )
     }
 }
 

@@ -1,10 +1,19 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import '../../models/recipe.dart';
 
 class ShareRecipeService {
-  static final _firestore = FirebaseFirestore.instance;
+  static const String _dbId = 'recipes-share'; // ajusta aquí si cambias el ID
+  static FirebaseFirestore get _firestore {
+    try {
+      final app = Firebase.app();
+      return FirebaseFirestore.instanceFor(app: app, databaseId: _dbId);
+    } catch (_) {
+      return FirebaseFirestore.instance; // fallback a (default)
+    }
+  }
 
   // Configura tu dominio de Dynamic Links en Firebase Console
   // Usaremos un deep link con esquema personalizado: mestura://recipe?id=...

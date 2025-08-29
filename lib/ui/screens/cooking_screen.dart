@@ -258,20 +258,45 @@ class _CookingScreenState extends State<CookingScreen> with WidgetsBindingObserv
       final photo = await picker.pickImage(source: ImageSource.camera, imageQuality: 85);
       if (photo == null) return;
       final s = AppLocalizations.of(context)!;
-      // Genera un Dynamic Link que contiene la receta compartida
-      final shareUri = await ShareRecipeService.createShareLink(widget.recipe);
+      Uri? shareUri;
+      try {
+        shareUri = await ShareRecipeService.createShareLink(widget.recipe);
+      } catch (_) {
+        // Fallback si Firestore no está habilitado o falla
+        shareUri = Uri.parse('https://play.google.com/store/apps/details?id=com.gonzalogarcia.mestura');
+      }
       final text = s.shareCookedText(widget.recipe.title, shareUri.toString());
-      await Share.shareXFiles([XFile(photo.path)], text: text, subject: s.shareButton);
-    } catch (_) {}
+      await Future.delayed(const Duration(milliseconds: 150));
+      await Share.shareXFiles(
+        [XFile(photo.path, mimeType: 'image/jpeg')],
+        text: text,
+        subject: s.shareButton,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al compartir: $e')),
+      );
+    }
   }
 
   Future<void> _shareTextOnly() async {
     try {
       final s = AppLocalizations.of(context)!;
-      final shareUri = await ShareRecipeService.createShareLink(widget.recipe);
+      Uri? shareUri;
+      try {
+        shareUri = await ShareRecipeService.createShareLink(widget.recipe);
+      } catch (_) {
+        shareUri = Uri.parse('https://play.google.com/store/apps/details?id=com.gonzalogarcia.mestura');
+      }
       final text = s.shareCookedText(widget.recipe.title, shareUri.toString());
       await Share.share(text, subject: s.shareButton);
-    } catch (_) {}
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al compartir: $e')),
+      );
+    }
   }
 
   Future<void> _saveRecipeFromCooking() async {
