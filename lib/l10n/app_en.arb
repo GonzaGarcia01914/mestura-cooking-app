@@ -20,7 +20,6 @@
   "skillStandard": "Standard",
   "skillElevated": "Elevated",
   "skillAny": "Any",
-  
   "searchButton": "Generate recipe",
   "surpriseButton": "Surprise me",
   "ingredientsTitle": "Ingredients",
@@ -80,7 +79,6 @@
   "preferencesSave": "Save preferences",
   "preferencesClear": "Clear all",
   "preferencesSaved": "Preferences saved!",
-  
   "prefVegan": "Vegan",
   "prefVegetarian": "Vegetarian",
   "prefVegetarianOvo": "Vegetarian (ovo)",
@@ -100,7 +98,6 @@
   "prefSpicyMedium": "Medium spicy",
   "prefSpicyHigh": "High spicy",
   "prefOrganic": "Organic",
-
   "prefGlutenFree": "Gluten-free",
   "prefLowFodmap": "Low FODMAP",
   "prefLowSodium": "Low sodium",
@@ -109,7 +106,6 @@
   "prefLowPurine": "Low purines",
   "prefLowOxalatePotassium": "Low oxalates / potassium",
   "prefLactoseFree": "Lactose-free",
-
   "allergenGluten": "Gluten",
   "allergenCrustaceans": "Crustaceans",
   "allergenEggs": "Eggs",
@@ -124,14 +120,12 @@
   "allergenSulphites": "Sulphites",
   "allergenLupin": "Lupin",
   "allergenMolluscs": "Molluscs",
-
   "prefHalal": "Halal",
   "prefKosher": "Kosher",
   "prefHindu": "Hindu (often avoids beef)",
   "prefJain": "Jain (no roots; strict vegetarian)",
   "prefBuddhist": "Buddhist (varies by region)",
   "prefLentFasting": "Lent / fasting (no meat certain days)",
-
   "startCookingButton": "Start cooking",
   "finalizeButton": "Finish",
   "cookingSheetTitle": "Recipe completed!",
@@ -139,28 +133,37 @@
   "cookingSheetShareNoPhoto": "Share without photo",
   "cookingSheetSaveRecipe": "Save recipe",
   "cookingSheetGoHome": "Close and go to Home",
-
   "timerStartTooltip": "Start",
   "timerPauseTooltip": "Pause",
   "timerResumeTooltip": "Resume",
   "timerDiscardTooltip": "Discard",
-
   "timerDoneTitle": "Time's up!",
   "timerDoneBody": "The cooking step has finished.",
-
   "cookingNotificationTitle": "Cooking: {title}",
   "@cookingNotificationTitle": {
-    "placeholders": {"title": {"type": "String"}}
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   },
   "cookingOngoingBody": "Step {step} • countdown",
   "@cookingOngoingBody": {
-    "placeholders": {"step": {"type": "String"}}
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
   },
   "shareCookedText": "I just cooked \"{title}\"! Try the app: {link}",
   "@shareCookedText": {
     "placeholders": {
-      "title": {"type": "String"},
-      "link": {"type": "String"}
+      "title": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
     }
   },
   "shoppingMenu": "Shopping list",
