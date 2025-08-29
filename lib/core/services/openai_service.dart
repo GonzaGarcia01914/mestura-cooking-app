@@ -76,6 +76,12 @@ class OpenAIService {
   // ----- API pública ---------------------------------------------------------
 
   Future<bool> isFood(String query) async {
+    if (kIsWeb) {
+      const enabled = bool.fromEnvironment('ENABLE_FIREBASE_WEB', defaultValue: false);
+      if (!enabled) {
+        throw Exception('Firebase no está configurado para Web. Configura ENABLE_FIREBASE_WEB=true y las credenciales en GitHub Actions.');
+      }
+    }
     final trimmed = query.trim();
     if (trimmed.isEmpty) return false;
 
@@ -105,6 +111,12 @@ class OpenAIService {
     bool includeMacros = false, // ⭐ nuevo
     int? maxCaloriesKcal, // ⭐ nuevo
   }) async {
+    if (kIsWeb) {
+      const enabled = bool.fromEnvironment('ENABLE_FIREBASE_WEB', defaultValue: false);
+      if (!enabled) {
+        throw Exception('Firebase no está configurado para Web. Activa ENABLE_FIREBASE_WEB y variables en el workflow.');
+      }
+    }
     final trimmed = query.trim();
     if (trimmed.isEmpty) {
       throw Exception('Query is empty.');

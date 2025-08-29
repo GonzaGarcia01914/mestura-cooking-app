@@ -9,16 +9,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'core/services/ad_service.dart';
-import 'app.dart';
-import 'core/providers.dart';
-import 'core/services/notification_service.dart';
-import 'core/services/deeplink_service.dart';
+import 'package:mestura/core/services/ad_service.dart';
+import 'package:mestura/app.dart';
+import 'package:mestura/core/providers.dart';
+import 'package:mestura/core/services/notification_service.dart';
+import 'package:mestura/core/services/deeplink_service.dart';
 
 Future<void> _initFirebase() async {
   // Web path: configurable via --dart-define to avoid blank page when not configured
   if (kIsWeb) {
-    const enableWeb = bool.fromEnvironment('ENABLE_FIREBASE_WEB', defaultValue: false);
+    const enableWeb = bool.fromEnvironment(
+      'ENABLE_FIREBASE_WEB',
+      defaultValue: false,
+    );
     if (!enableWeb) {
       debugPrint('[FB] Web init skipped (ENABLE_FIREBASE_WEB=false)');
       return;
@@ -26,11 +29,26 @@ Future<void> _initFirebase() async {
 
     const apiKey = String.fromEnvironment('FIREBASE_API_KEY', defaultValue: '');
     const appId = String.fromEnvironment('FIREBASE_APP_ID', defaultValue: '');
-    const messagingSenderId = String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID', defaultValue: '');
-    const projectId = String.fromEnvironment('FIREBASE_PROJECT_ID', defaultValue: '');
-    const authDomain = String.fromEnvironment('FIREBASE_AUTH_DOMAIN', defaultValue: '');
-    const storageBucket = String.fromEnvironment('FIREBASE_STORAGE_BUCKET', defaultValue: '');
-    const measurementId = String.fromEnvironment('FIREBASE_MEASUREMENT_ID', defaultValue: '');
+    const messagingSenderId = String.fromEnvironment(
+      'FIREBASE_MESSAGING_SENDER_ID',
+      defaultValue: '',
+    );
+    const projectId = String.fromEnvironment(
+      'FIREBASE_PROJECT_ID',
+      defaultValue: '',
+    );
+    const authDomain = String.fromEnvironment(
+      'FIREBASE_AUTH_DOMAIN',
+      defaultValue: '',
+    );
+    const storageBucket = String.fromEnvironment(
+      'FIREBASE_STORAGE_BUCKET',
+      defaultValue: '',
+    );
+    const measurementId = String.fromEnvironment(
+      'FIREBASE_MEASUREMENT_ID',
+      defaultValue: '',
+    );
 
     if ([apiKey, appId, messagingSenderId, projectId].any((e) => e.isEmpty)) {
       debugPrint('[FB] Missing web config. Skipping Firebase init.');
@@ -49,7 +67,10 @@ Future<void> _initFirebase() async {
       ),
     );
 
-    const siteKey = String.fromEnvironment('FIREBASE_RECAPTCHA_KEY', defaultValue: '');
+    const siteKey = String.fromEnvironment(
+      'FIREBASE_RECAPTCHA_KEY',
+      defaultValue: '',
+    );
     if (siteKey.isNotEmpty) {
       await FirebaseAppCheck.instance.activate(
         webProvider: ReCaptchaV3Provider(siteKey),
@@ -67,10 +88,12 @@ Future<void> _initFirebase() async {
     }
     return;
   }
+
   await Firebase.initializeApp();
 
   final o = Firebase.app().options;
-  debugPrint('[FB] project=${o.projectId} appId=${o.appId} apiKey=${o.apiKey}');
+  // Avoid logging apiKey value in production
+  debugPrint('[FB] project=${o.projectId} appId=${o.appId}');
 
   // App Check: Debug en desarrollo, automático en release.
   await FirebaseAppCheck.instance.activate(
@@ -101,7 +124,6 @@ Future<void> _initFirebase() async {
 
 Future<void> _initAds() async {
   if (kIsWeb) return; // Google Mobile Ads no soportado en web
-  // ⚠️ Cambia/añade tus device IDs de test si necesitas
   await MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(
       testDeviceIds: const ['462F30F4A2A3772D5AD31DF0C6EC32B6'],
@@ -119,42 +141,43 @@ Future<String?> _loadSavedLocale() async {
 }
 
 Future<void> main() async {
-  runZonedGuarded(() async {
-    // Asegura binding y configura manejadores de error (MISMA ZONA que runApp)
-    WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(
+    () async {
+      // Asegura binding y configura manejadores de error (MISMA ZONA que runApp)
+      WidgetsFlutterBinding.ensureInitialized();
 
-    FlutterError.onError = (FlutterErrorDetails details) {
-      FlutterError.dumpErrorToConsole(details);
-    };
+      FlutterError.onError = (FlutterErrorDetails details) {
+        FlutterError.dumpErrorToConsole(details);
+      };
 
-    // Inicializaciones en segundo plano para no bloquear el arranque (especialmente en web)
-    unawaited(_initFirebase());
-    unawaited(_initAds());
-    if (!kIsWeb) {
-      // ignore: discarded_futures
-      unawaited(NotificationService.init());
-    }
+      // Inicializaciones en segundo plano para no bloquear el arranque (especialmente en web)
+      unawaited(_initFirebase());
+      unawaited(_initAds());
+      if (!kIsWeb) {
+        // ignore: discarded_futures
+        unawaited(NotificationService.init());
+      }
 
-    final savedLocale = await _loadSavedLocale();
-    final initialLocale = _initialLocale(savedLocale);
+      final savedLocale = await _loadSavedLocale();
+      final initialLocale = _initialLocale(savedLocale);
 
-    runApp(
-      ProviderScope(
-        overrides: [
-          localeProvider.overrideWith((ref) => initialLocale),
-        ],
-        child: const MyApp(),
-      ),
-    );
+      runApp(
+        ProviderScope(
+          overrides: [localeProvider.overrideWith((ref) => initialLocale)],
+          child: const MyApp(),
+        ),
+      );
 
-    // Inicializa escucha de Dynamic Links (no aplica en web)
-    if (!kIsWeb) {
-      // ignore: discarded_futures
-      DeepLinkService.init();
-    }
-  }, (error, stack) {
-    debugPrint('Uncaught zone error: $error');
-  });
+      // Inicializa escucha de Dynamic Links (no aplica en web)
+      if (!kIsWeb) {
+        // ignore: discarded_futures
+        DeepLinkService.init();
+      }
+    },
+    (error, stack) {
+      debugPrint('Uncaught zone error: $error');
+    },
+  );
 }
 
 Locale _initialLocale(String? saved) {

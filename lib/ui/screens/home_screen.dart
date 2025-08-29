@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mestura/ui/widgets/glass_alert.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/providers.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 //import '../../core/navigation/run_with_loading.dart';
 
 import '../../core/services/ad_service.dart';
@@ -524,7 +525,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       bool adClosed = true;
       Future<bool>? adFuture;
-      if (await AdGate.shouldShowThisTime()) {
+      if (!kIsWeb && await AdGate.shouldShowThisTime()) {
         adClosed = false;
         adFuture = AdService.instance.showIfAvailable().whenComplete(() {
           adClosed = true;

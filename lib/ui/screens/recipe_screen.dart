@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
@@ -217,7 +218,7 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
       // ¿Anuncio?
       bool adClosed = true;
       Future<bool>? adFuture;
-      if (await AdGate.shouldShowThisTime()) {
+      if (!kIsWeb && await AdGate.shouldShowThisTime()) {
         adClosed = false;
         adFuture = AdService.instance.showIfAvailable().whenComplete(() {
           adClosed = true;
