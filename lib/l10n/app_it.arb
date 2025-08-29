@@ -9,6 +9,17 @@
   "includeMacros": "Includi macro (stimate)",
   "includeMacrosSubtitle": "Aggiunge calorie e macro per porzione.",
   "reset": "Reimposta",
+  "timeAvailable": "Tempo disponibile",
+  "timeUnder15": "< 15 min",
+  "time30": "30 min",
+  "time60": "1 h",
+  "time120": "2 h",
+  "timeNoLimit": "Senza limite",
+  "skillLevel": "Livello di abilità",
+  "skillBasic": "Base",
+  "skillStandard": "Standard",
+  "skillElevated": "Avanzato",
+  "skillAny": "Qualsiasi",
   "searchButton": "Genera ricetta",
   "surpriseButton": "Sorprendimi",
   "ingredientsTitle": "Ingredienti",
@@ -118,5 +129,26 @@
   "prefHindu": "Indù (spesso evita manzo)",
   "prefJain": "Jain (senza radici; vegetariano stretto)",
   "prefBuddhist": "Buddista (varia per regione)",
-  "prefLentFasting": "Quaresima / digiuno (niente carne certi giorni)"
+  "prefLentFasting": "Quaresima / digiuno (niente carne certi giorni)",
+
+  "startCookingButton": "Inizia a cucinare",
+  "finalizeButton": "Fine",
+  "cookingSheetTitle": "Ricetta completata!",
+  "cookingSheetTakePhotoShare": "Scatta foto e condividi",
+  "cookingSheetShareNoPhoto": "Condividi senza foto",
+  "cookingSheetSaveRecipe": "Salva ricetta",
+  "cookingSheetGoHome": "Chiudi e vai alla Home",
+
+  "timerStartTooltip": "Avvia",
+  "timerPauseTooltip": "Pausa",
+  "timerResumeTooltip": "Riprendi",
+  "timerDiscardTooltip": "Annulla",
+
+  "timerDoneTitle": "Tempo scaduto!",
+  "timerDoneBody": "Il passaggio di cottura è terminato.",
+
+  "cookingNotificationTitle": "In cottura: {title}",
+  "cookingOngoingBody": "Passo {step} • conto alla rovescia"
+  ,
+  "shareCookedText": "Ho appena cucinato \"{title}\"! Prova l'app: {link}"
 }

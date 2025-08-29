@@ -17,6 +17,10 @@ class OpenAIService {
   FirebaseFunctions _fx(String region) =>
       FirebaseFunctions.instanceFor(region: region);
 
+  // Advanced options set from UI
+  int? timeLimitMinutes;
+  String? skillLevel; // 'basic' | 'standard' | 'elevated'
+
   // ----- Infra común ---------------------------------------------------------
 
   Future<void> _ensureAuth() async {
@@ -127,6 +131,13 @@ class OpenAIService {
       if (maxCaloriesKcal != null) 'maxCaloriesKcal': maxCaloriesKcal, // ⭐
     };
     payload['preferences'] = prefs.toJson();
+    // Inject advanced options if set via UI
+    if (timeLimitMinutes != null) {
+      payload['timeLimitMinutes'] = timeLimitMinutes;
+    }
+    if (skillLevel != null && skillLevel!.trim().isNotEmpty) {
+      payload['skillLevel'] = skillLevel!.trim();
+    }
 
     dynamic data;
     try {

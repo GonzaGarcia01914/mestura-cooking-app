@@ -36,6 +36,39 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reset => '重置';
 
   @override
+  String get timeAvailable => '可用时间';
+
+  @override
+  String get timeUnder15 => '< 15 分钟';
+
+  @override
+  String get time30 => '30 分钟';
+
+  @override
+  String get time60 => '1 小时';
+
+  @override
+  String get time120 => '2 小时';
+
+  @override
+  String get timeNoLimit => '不限';
+
+  @override
+  String get skillLevel => '技能水平';
+
+  @override
+  String get skillBasic => '基础';
+
+  @override
+  String get skillStandard => '标准';
+
+  @override
+  String get skillElevated => '高级';
+
+  @override
+  String get skillAny => '任意';
+
+  @override
   String get searchButton => '生成食谱';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get prefLentFasting => '斋期/禁食（特定日不吃肉)';
+
+  @override
+  String get startCookingButton => '开始烹饪';
+
+  @override
+  String get finalizeButton => '完成';
+
+  @override
+  String get cookingSheetTitle => '食谱完成！';
+
+  @override
+  String get cookingSheetTakePhotoShare => '拍照并分享';
+
+  @override
+  String get cookingSheetSaveRecipe => '保存食谱';
+
+  @override
+  String get cookingSheetGoHome => '关闭并返回主页';
+
+  @override
+  String get timerStartTooltip => '开始';
+
+  @override
+  String get timerPauseTooltip => '暂停';
+
+  @override
+  String get timerResumeTooltip => '继续';
+
+  @override
+  String get timerDiscardTooltip => '丢弃';
+
+  @override
+  String get timerDoneTitle => '时间到！';
+
+  @override
+  String get timerDoneBody => '该烹饪步骤已完成。';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return '烹饪中：$title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return '第 $step 步 • 倒计时';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return '我刚刚做了\"$title\"！来试试这个应用：$link';
+  }
 }

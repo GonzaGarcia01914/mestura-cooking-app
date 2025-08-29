@@ -36,6 +36,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reset => 'Reset';
 
   @override
+  String get timeAvailable => 'Time available';
+
+  @override
+  String get timeUnder15 => '< 15 min';
+
+  @override
+  String get time30 => '30 min';
+
+  @override
+  String get time60 => '1 h';
+
+  @override
+  String get time120 => '2 h';
+
+  @override
+  String get timeNoLimit => 'No limit';
+
+  @override
+  String get skillLevel => 'Skill level';
+
+  @override
+  String get skillBasic => 'Basic';
+
+  @override
+  String get skillStandard => 'Standard';
+
+  @override
+  String get skillElevated => 'Elevated';
+
+  @override
+  String get skillAny => 'Any';
+
+  @override
   String get searchButton => 'Generate recipe';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get prefLentFasting => 'Lent / fasting (no meat certain days)';
+
+  @override
+  String get startCookingButton => 'Start cooking';
+
+  @override
+  String get finalizeButton => 'Finish';
+
+  @override
+  String get cookingSheetTitle => 'Recipe completed!';
+
+  @override
+  String get cookingSheetTakePhotoShare => 'Take photo and share';
+
+  @override
+  String get cookingSheetSaveRecipe => 'Save recipe';
+
+  @override
+  String get cookingSheetGoHome => 'Close and go to Home';
+
+  @override
+  String get timerStartTooltip => 'Start';
+
+  @override
+  String get timerPauseTooltip => 'Pause';
+
+  @override
+  String get timerResumeTooltip => 'Resume';
+
+  @override
+  String get timerDiscardTooltip => 'Discard';
+
+  @override
+  String get timerDoneTitle => 'Time\'s up!';
+
+  @override
+  String get timerDoneBody => 'The cooking step has finished.';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return 'Cooking: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return 'Step $step • countdown';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return 'I just cooked \"$title\"! Try the app: $link';
+  }
 }

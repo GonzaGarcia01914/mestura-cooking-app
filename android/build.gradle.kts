@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.api.tasks.compile.JavaCompile
 
 allprojects {
     repositories {
@@ -46,6 +47,13 @@ subprojects {
 
     // ⚠️ No reconfigurar aquí tareas JavaCompile ni el módulo :app
     // (evitamos "sourceCompatibility has been finalized")
+}
+
+// Silenciar warnings por opciones obsoletas (-source/-target 8) en dependencias de terceros
+subprojects {
+    tasks.withType<JavaCompile>().configureEach {
+        options.compilerArgs.addAll(listOf("-Xlint:-options", "-Xlint:-deprecation"))
+    }
 }
 
 tasks.register<Delete>("clean") {

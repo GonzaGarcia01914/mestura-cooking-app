@@ -1,0 +1,40 @@
+﻿import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+
+import '../../models/recipe.dart';
+import 'preferences_service.dart';
+import '../../models/preferences.dart';
+
+class OpenAIService {
+  // RegiÃ³n preferida (donde DESPLEGASTE). Cambia si es otra.
+  static const String _primaryRegion = 'europe-west1';
+  static const String _fallbackRegion = 'us-central1'; // retry si NOT_FOUND
+
+  FirebaseFunctions _fx(String region) =>
+      FirebaseFunctions.instanceFor(region: region);
+
+  // ----- Infra comÃºn ---------------------------------------------------------
+
+  Future<void> _ensureAuth() async {
+    // 1) Asegura usuario
+    final auth = FirebaseAuth.instance;
+    if (auth.currentUser == null) {
+      await auth.signInAnonymously();
+    }
+    // Avoid forcing token refresh on every call; let Firebase cache handle it
+    await auth.currentUser!.getIdToken();
+
+    // 2) Asegura App Check (fuerza obtener token vÃ¡lido)
+    try {
+      // Try without forcing refresh first; fallback once if needed
+      await FirebaseAppCheck.instance.getToken(false);
+    } catch (e) {
+      debugPrint('[AppCheck] getToken error: $e');
+      // Si falla, reintenta una vez tras breve espera
+      await Future.delayed(const Duration(milliseconds: 400));
+      await FirebaseAppCheck.instance.getToken(true);
+    }

@@ -9,6 +9,17 @@
   "includeMacros": "매크로 포함 (추정)",
   "includeMacrosSubtitle": "1인분당 칼로리와 매크로를 추가합니다.",
   "reset": "초기화",
+  "timeAvailable": "사용 가능한 시간",
+  "timeUnder15": "< 15분",
+  "time30": "30분",
+  "time60": "1시간",
+  "time120": "2시간",
+  "timeNoLimit": "제한 없음",
+  "skillLevel": "숙련도",
+  "skillBasic": "기초",
+  "skillStandard": "일반",
+  "skillElevated": "고급",
+  "skillAny": "무관",
 
   "searchButton": "레시피 생성",
   "surpriseButton": "랜덤 추천",
@@ -120,5 +131,26 @@
   "prefHindu": "힌두교(소고기 기피)",
   "prefJain": "자이나교(뿌리채소 금지; 엄격 채식)",
   "prefBuddhist": "불교(지역에 따라 다름)",
-  "prefLentFasting": "사순절/금식(특정일 고기 금지)"
+  "prefLentFasting": "사순절/금식(특정일 고기 금지)",
+
+  "startCookingButton": "요리 시작",
+  "finalizeButton": "완료",
+  "cookingSheetTitle": "레시피 완료!",
+  "cookingSheetTakePhotoShare": "사진 찍어 공유",
+  "cookingSheetShareNoPhoto": "사진 없이 공유",
+  "cookingSheetSaveRecipe": "레시피 저장",
+  "cookingSheetGoHome": "닫고 홈으로 이동",
+
+  "timerStartTooltip": "시작",
+  "timerPauseTooltip": "일시정지",
+  "timerResumeTooltip": "재개",
+  "timerDiscardTooltip": "취소",
+
+  "timerDoneTitle": "시간 종료!",
+  "timerDoneBody": "조리 단계가 완료되었습니다.",
+
+  "cookingNotificationTitle": "요리 중: {title}",
+  "cookingOngoingBody": "단계 {step} • 카운트다운"
+  ,
+  "shareCookedText": "방금 \"{title}\"를 만들었어요! 앱을 사용해 보세요: {link}"
 }

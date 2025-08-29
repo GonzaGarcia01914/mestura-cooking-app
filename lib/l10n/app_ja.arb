@@ -9,6 +9,17 @@
   "includeMacros": "マクロを含める（推定）",
   "includeMacrosSubtitle": "1人分のカロリーとマクロを追加します。",
   "reset": "リセット",
+  "timeAvailable": "利用可能な時間",
+  "timeUnder15": "< 15 分",
+  "time30": "30 分",
+  "time60": "1 時間",
+  "time120": "2 時間",
+  "timeNoLimit": "制限なし",
+  "skillLevel": "スキルレベル",
+  "skillBasic": "初級",
+  "skillStandard": "標準",
+  "skillElevated": "上級",
+  "skillAny": "指定なし",
 
   "searchButton": "レシピを生成",
   "surpriseButton": "おまかせ",
@@ -121,6 +132,27 @@
   "prefHindu": "ヒンドゥー（牛肉を避けることが多い）",
   "prefJain": "ジャイナ（根菜なし・厳格な菜食）",
   "prefBuddhist": "仏教（地域により異なる）",
-  "prefLentFasting": "四旬節/断食（一部の日は肉なし）"
+  "prefLentFasting": "四旬節/断食（一部の日は肉なし）",
+
+  "startCookingButton": "料理を開始",
+  "finalizeButton": "完了",
+  "cookingSheetTitle": "レシピ完了！",
+  "cookingSheetTakePhotoShare": "写真を撮って共有",
+  "cookingSheetShareNoPhoto": "写真なしで共有",
+  "cookingSheetSaveRecipe": "レシピを保存",
+  "cookingSheetGoHome": "閉じてホームへ",
+
+  "timerStartTooltip": "開始",
+  "timerPauseTooltip": "一時停止",
+  "timerResumeTooltip": "再開",
+  "timerDiscardTooltip": "破棄",
+
+  "timerDoneTitle": "時間です！",
+  "timerDoneBody": "調理のステップが終了しました。",
+
+  "cookingNotificationTitle": "調理中: {title}",
+  "cookingOngoingBody": "ステップ {step} • カウントダウン"
+  ,
+  "shareCookedText": "\"{title}\"を作りました！ アプリを試してね: {link}"
 }
 

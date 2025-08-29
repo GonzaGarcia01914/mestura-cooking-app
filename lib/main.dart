@@ -12,6 +12,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'core/services/ad_service.dart';
 import 'app.dart';
 import 'core/providers.dart';
+import 'core/services/notification_service.dart';
+import 'core/services/deeplink_service.dart';
 
 Future<void> _initFirebase() async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -74,7 +76,11 @@ Future<void> main() async {
   };
 
   // Inicializaciones previas a runApp (en paralelo para reducir el tiempo de arranque)
-  await Future.wait([_initFirebase(), _initAds()]);
+  await Future.wait([
+    _initFirebase(),
+    _initAds(),
+    NotificationService.init(),
+  ]);
 
   final savedLocale = await _loadSavedLocale();
   final initialLocale = _initialLocale(savedLocale);
@@ -91,6 +97,10 @@ Future<void> main() async {
           child: const MyApp(),
         ),
       );
+      // Inicializa escucha de Dynamic Links
+      // No depende de Provider; usa navigatorKey global
+      // ignore: discarded_futures
+      DeepLinkService.init();
     },
     (error, stack) {
       debugPrint('Uncaught zone error: $error');

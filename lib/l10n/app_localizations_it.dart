@@ -36,6 +36,39 @@ class AppLocalizationsIt extends AppLocalizations {
   String get reset => 'Reimposta';
 
   @override
+  String get timeAvailable => 'Tempo disponibile';
+
+  @override
+  String get timeUnder15 => '< 15 min';
+
+  @override
+  String get time30 => '30 min';
+
+  @override
+  String get time60 => '1 h';
+
+  @override
+  String get time120 => '2 h';
+
+  @override
+  String get timeNoLimit => 'Senza limite';
+
+  @override
+  String get skillLevel => 'Livello di abilità';
+
+  @override
+  String get skillBasic => 'Base';
+
+  @override
+  String get skillStandard => 'Standard';
+
+  @override
+  String get skillElevated => 'Avanzato';
+
+  @override
+  String get skillAny => 'Qualsiasi';
+
+  @override
   String get searchButton => 'Genera ricetta';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get prefLentFasting => 'Quaresima / digiuno (niente carne certi giorni)';
+
+  @override
+  String get startCookingButton => 'Inizia a cucinare';
+
+  @override
+  String get finalizeButton => 'Fine';
+
+  @override
+  String get cookingSheetTitle => 'Ricetta completata!';
+
+  @override
+  String get cookingSheetTakePhotoShare => 'Scatta foto e condividi';
+
+  @override
+  String get cookingSheetSaveRecipe => 'Salva ricetta';
+
+  @override
+  String get cookingSheetGoHome => 'Chiudi e vai alla Home';
+
+  @override
+  String get timerStartTooltip => 'Avvia';
+
+  @override
+  String get timerPauseTooltip => 'Pausa';
+
+  @override
+  String get timerResumeTooltip => 'Riprendi';
+
+  @override
+  String get timerDiscardTooltip => 'Annulla';
+
+  @override
+  String get timerDoneTitle => 'Tempo scaduto!';
+
+  @override
+  String get timerDoneBody => 'Il passaggio di cottura è terminato.';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return 'In cottura: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return 'Passo $step • conto alla rovescia';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return 'Ho appena cucinato \"$title\"! Prova l\'app: $link';
+  }
 }

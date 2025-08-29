@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mestura/ui/widgets/glass_alert.dart';
 import '../../l10n/app_localizations.dart';
@@ -17,8 +17,7 @@ import '../style/app_style.dart';
 import 'recipe_screen.dart';
 import 'loading_screen.dart';
 
-final homeLoadingProvider =
-    StateProvider.autoDispose<bool>((ref) => false);
+final homeLoadingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -33,13 +32,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _servings = 2;
   int? _maxCalories;
   bool _countMacros = false;
+  int? _timeLimitMinutes; // nuevo: tiempo disponible (minutos)
+  String? _skillLevel; // nuevo: nivel de habilidad: basic|standard|elevated
 
   // Opacidad del logo controlada por scroll (sin AnimationController)
-  static const double _threshold = 160.0; // píxeles para ocultar completamente
+  static const double _threshold =
+      160.0; // pÃƒÂ­xeles para ocultar completamente
   final ValueNotifier<double> _logoOpacity = ValueNotifier<double>(1.0);
-  // Ajuste de sensibilidad del fade: mayor = desaparición más lenta
+  // Ajuste de sensibilidad del fade: mayor = desapariciÃƒÂ³n mÃƒÂ¡s lenta
   static const double _fadeThreshold = 220.0;
-
 
   Future<void> _showErrorDialog(String rawMessage) async {
     if (!mounted) return;
@@ -95,7 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.dispose();
   }
 
-  // Calcula la opacidad según el scroll.
+  // Calcula la opacidad segÃƒÂºn el scroll.
   // Usa "umbral efectivo" = min(_threshold, maxScrollExtent) para que SIEMPRE pueda llegar a 0.
   void _recomputeLogoOpacity() {
     if (!_homeScrollCtrl.hasClients) {
@@ -106,7 +107,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final pixels = pos.pixels;
     final max = pos.maxScrollExtent;
 
-    final double effective = (max > 0 && max < _fadeThreshold) ? max : _fadeThreshold;
+    final double effective =
+        (max > 0 && max < _fadeThreshold) ? max : _fadeThreshold;
 
     double t = effective <= 0 ? 0.0 : (pixels / effective);
     if (max > 0 && max < _fadeThreshold && pixels >= max - 0.5) {
@@ -118,6 +120,363 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if ((_logoOpacity.value - v).abs() > 0.001) {
       _logoOpacity.value = v;
     }
+  }
+
+  Future<void> _openAdvancedOptionsDialog() async {
+    final s = AppLocalizations.of(context)!;
+    // Copia local para permitir Cancelar sin guardar
+    int tmpServings = _servings;
+    int? tmpMaxCalories = _maxCalories;
+    bool tmpCountMacros = _countMacros;
+    int? tmpTime = _timeLimitMinutes;
+    String? tmpSkill = _skillLevel;
+
+    // Snapshot original para saber si hay cambios
+    final int origServings = _servings;
+    final int? origMaxCalories = _maxCalories;
+    final bool origCountMacros = _countMacros;
+    final int? origTime = _timeLimitMinutes;
+    final String? origSkill = _skillLevel;
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, sbSet) {
+            return AlertDialog(
+              title: Text(s.advancedOptions),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Invitados
+                    Row(
+                      children: [
+                        Text(
+                          s.numberOfGuests,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            sbSet(() {
+                              tmpServings = (tmpServings - 1);
+                              if (tmpServings < 1) tmpServings = 1;
+                            });
+                          },
+                          icon: const Icon(Icons.remove_circle_outline),
+                        ),
+                        Text(
+                          '$tmpServings',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            sbSet(() {
+                              tmpServings = (tmpServings + 1);
+                              if (tmpServings > 12) tmpServings = 12;
+                            });
+                          },
+                          icon: const Icon(Icons.add_circle_outline),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    // CalorÃ­as mÃ¡x. (por raciÃ³n)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                s.maxCalories,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              Text(
+                                s.perServing,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).hintColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed:
+                              () => sbSet(() {
+                                final v = (tmpMaxCalories ?? 600) - 50;
+                                tmpMaxCalories = v < 200 ? 200 : v;
+                              }),
+                          icon: const Icon(Icons.remove_circle_outline),
+                        ),
+                        Text(
+                          tmpMaxCalories == null
+                              ? '-'
+                              : '${tmpMaxCalories} kcal',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        IconButton(
+                          onPressed:
+                              () => sbSet(() {
+                                final v = (tmpMaxCalories ?? 600) + 50;
+                                tmpMaxCalories = v > 1500 ? 1500 : v;
+                              }),
+                          icon: const Icon(Icons.add_circle_outline),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Macros
+                    SwitchListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      value: tmpCountMacros,
+                      onChanged: (v) => sbSet(() => tmpCountMacros = v),
+                      title: Text(s.includeMacros),
+                      subtitle: Text(
+                        s.includeMacrosSubtitle,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+
+                    // Tiempo disponible (expandible)
+                    const SizedBox(height: 8),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceVariant.withOpacity(0.25),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Theme(
+                        data: Theme.of(
+                          context,
+                        ).copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          tilePadding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          childrenPadding: const EdgeInsets.fromLTRB(
+                            12,
+                            0,
+                            12,
+                            12,
+                          ),
+                          title: Text(
+                            s.timeAvailable,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          children: [
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: [
+                                _TimeChip(
+                                  label: s.timeUnder15,
+                                  selected: tmpTime == 15,
+                                  onTap: () => sbSet(() => tmpTime = 15),
+                                ),
+                                _TimeChip(
+                                  label: s.time30,
+                                  selected: tmpTime == 30,
+                                  onTap: () => sbSet(() => tmpTime = 30),
+                                ),
+                                _TimeChip(
+                                  label: s.time60,
+                                  selected: tmpTime == 60,
+                                  onTap: () => sbSet(() => tmpTime = 60),
+                                ),
+                                _TimeChip(
+                                  label: s.time120,
+                                  selected: tmpTime == 120,
+                                  onTap: () => sbSet(() => tmpTime = 120),
+                                ),
+                                _TimeChip(
+                                  label: s.timeNoLimit,
+                                  selected: tmpTime == null,
+                                  onTap: () => sbSet(() => tmpTime = null),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Nivel de habilidad (expandible)
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceVariant.withOpacity(0.25),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Theme(
+                        data: Theme.of(
+                          context,
+                        ).copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          tilePadding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          childrenPadding: const EdgeInsets.fromLTRB(
+                            12,
+                            0,
+                            12,
+                            12,
+                          ),
+                          title: Text(
+                            s.skillLevel,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          children: [
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: [
+                                _SkillChip(
+                                  label: s.skillBasic,
+                                  selected: tmpSkill == 'basic',
+                                  onTap: () => sbSet(() => tmpSkill = 'basic'),
+                                ),
+                                _SkillChip(
+                                  label: s.skillStandard,
+                                  selected: tmpSkill == 'standard',
+                                  onTap:
+                                      () => sbSet(() => tmpSkill = 'standard'),
+                                ),
+                                _SkillChip(
+                                  label: s.skillElevated,
+                                  selected: tmpSkill == 'elevated',
+                                  onTap:
+                                      () => sbSet(() => tmpSkill = 'elevated'),
+                                ),
+                                _SkillChip(
+                                  label: s.skillAny,
+                                  selected: tmpSkill == null,
+                                  onTap: () => sbSet(() => tmpSkill = null),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Reset full-width button (only when there are changes)
+                    const SizedBox(height: 12),
+                    Builder(
+                      builder: (_) {
+                        final hasChanges =
+                            !(tmpServings == origServings &&
+                                tmpMaxCalories == origMaxCalories &&
+                                tmpCountMacros == origCountMacros &&
+                                tmpTime == origTime &&
+                                tmpSkill == origSkill);
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 220),
+                          switchInCurve: Curves.easeOutCubic,
+                          switchOutCurve: Curves.easeInCubic,
+                          transitionBuilder:
+                              (child, anim) => FadeTransition(
+                                opacity: anim,
+                                child: SizeTransition(
+                                  sizeFactor: anim,
+                                  axisAlignment: -1.0,
+                                  child: child,
+                                ),
+                              ),
+                          child:
+                              hasChanges
+                                  ? SizedBox(
+                                    key: const ValueKey('reset-visible'),
+                                    width: double.infinity,
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        sbSet(() {
+                                          tmpServings = 2;
+                                          tmpMaxCalories = null;
+                                          tmpCountMacros = false;
+                                          tmpTime = null;
+                                          tmpSkill = null;
+                                        });
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 18,
+                                          vertical: 12,
+                                        ),
+                                        foregroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
+                                        side: BorderSide(
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
+                                          width: 1.6,
+                                        ),
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      child: Text(s.reset),
+                                    ),
+                                  )
+                                  : const SizedBox(
+                                    key: ValueKey('reset-hidden'),
+                                    height: 0,
+                                  ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _servings = tmpServings;
+                      _maxCalories = tmpMaxCalories;
+                      _countMacros = tmpCountMacros;
+                      _timeLimitMinutes = tmpTime;
+                      _skillLevel = tmpSkill;
+                    });
+                    Navigator.of(ctx).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text('Aceptar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _generateRecipe() async {
@@ -149,6 +508,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       );
       loadingShown = true;
+
+      // Set advanced options on the service
+      openAI.timeLimitMinutes = _timeLimitMinutes;
+      openAI.skillLevel = _skillLevel;
 
       final recipeFuture = openAI.generateRecipe(
         query,
@@ -302,179 +665,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onSubmitted: (_) => _generateRecipe(),
               ),
               const SizedBox(height: 16),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant.withOpacity(0.3),
-                  ),
-                ),
-                child: Theme(
-                  data: Theme.of(
-                    context,
-                  ).copyWith(dividerColor: Colors.transparent),
-                  child: ExpansionTile(
-                    tilePadding: const EdgeInsets.symmetric(horizontal: 12),
-                    childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                    title: Text(
-                      s.advancedOptions,
-                      style: Theme.of(context).textTheme.titleMedium,
+              // Advanced options in dialog
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _openAdvancedOptionsDialog,
+                  icon: const Icon(Icons.tune),
+                  label: Text(s.advancedOptions),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-
-                    // Mantiene la posición al expandir / y fuerza mostrar logo al colapsar
-                    onExpansionChanged: (expanded) {
-                      if (expanded && _homeScrollCtrl.hasClients) {
-                        final keep = _homeScrollCtrl.offset;
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (mounted && _homeScrollCtrl.hasClients) {
-                            _homeScrollCtrl.jumpTo(keep);
-                            _recomputeLogoOpacity();
-                          }
-                        });
-                      } else {
-                        // 🔴 Cambio mínimo: al colapsar, muestra el logo sí o sí.
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (!mounted) return;
-                          _logoOpacity.value = 1.0;
-                        });
-                      }
-                    },
-
-                    children: [
-                      // --- Invitados ---
-                      Row(
-                        children: [
-                          Text(
-                            s.numberOfGuests,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _servings = (_servings - 1);
-                                if (_servings < 1) _servings = 1;
-                              });
-                            },
-                            icon: const Icon(Icons.remove_circle_outline),
-                          ),
-                          Text(
-                            '$_servings',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w700),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _servings = (_servings + 1);
-                                if (_servings > 12) _servings = 12;
-                              });
-                            },
-                            icon: const Icon(Icons.add_circle_outline),
-                          ),
-                        ],
-                      ),
-
-                      // --- Calorías máx. (por ración) ---
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  s.maxCalories,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  s.perServing,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context).hintColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            onPressed:
-                                () => setState(() {
-                                  final v = (_maxCalories ?? 600) - 50;
-                                  _maxCalories = v < 200 ? 200 : v;
-                                }),
-                            icon: const Icon(Icons.remove_circle_outline),
-                          ),
-                          Text(
-                            _maxCalories == null ? '—' : '${_maxCalories} kcal',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w700),
-                          ),
-                          IconButton(
-                            onPressed:
-                                () => setState(() {
-                                  final v = (_maxCalories ?? 600) + 50;
-                                  _maxCalories = v > 1500 ? 1500 : v;
-                                }),
-                            icon: const Icon(Icons.add_circle_outline),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-
-                      // --- Macros ---
-                      SwitchListTile(
-                        dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        value: _countMacros,
-                        onChanged: (v) => setState(() => _countMacros = v),
-                        title: Text(s.includeMacros),
-                        subtitle: Text(
-                          s.includeMacrosSubtitle,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-
-                      // --- Botón Restablecer ---
-                      const SizedBox(height: 8),
-                      Center(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              _servings = 2;
-                              _maxCalories = null;
-                              _countMacros = false;
-                            });
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 10,
-                            ),
-                            foregroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            side: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 1.6,
-                            ),
-                            shape: const StadiumBorder(),
-                          ),
-                          child: Text(s.reset),
-                        ),
-                      ),
-                    ],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
 
               const SizedBox(height: 12),
-              // Restringe los rebuilds del 
-              // botón a los cambios de loading únicamente
+              // Restringe los rebuilds del
+              // botÃƒÂ³n a los cambios de loading ÃƒÂºnicamente
               Consumer(
                 builder: (context, ref, _) {
                   final loading = ref.watch(homeLoadingProvider);
@@ -493,6 +705,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _TimeChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _TimeChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+}
+
+class _SkillChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _SkillChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

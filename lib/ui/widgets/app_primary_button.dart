@@ -7,11 +7,15 @@ class AppPrimaryButton extends StatelessWidget {
     required this.onPressed,
     required this.child,
     this.loading = false,
+    this.backgroundColor,
+    this.foregroundColor,
   });
 
   final VoidCallback? onPressed;
   final Widget child;
   final bool loading;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,8 @@ class AppPrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: loading ? null : onPressed,
         style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(style.radius),

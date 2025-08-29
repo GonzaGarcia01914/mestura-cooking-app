@@ -36,6 +36,39 @@ class AppLocalizationsGn extends AppLocalizations {
   String get reset => 'Moñepyrũjey';
 
   @override
+  String get timeAvailable => 'Aravo oĩva';
+
+  @override
+  String get timeUnder15 => '< 15 aravoʼi';
+
+  @override
+  String get time30 => '30 aravoʼi';
+
+  @override
+  String get time60 => '1 aravo';
+
+  @override
+  String get time120 => '2 aravo';
+
+  @override
+  String get timeNoLimit => 'Ndaipóri límite';
+
+  @override
+  String get skillLevel => 'Nivel de katupyry';
+
+  @override
+  String get skillBasic => 'Mbaʼevegua';
+
+  @override
+  String get skillStandard => 'Estándar';
+
+  @override
+  String get skillElevated => 'Ipukuve';
+
+  @override
+  String get skillAny => 'Oimeraẽva';
+
+  @override
   String get searchButton => 'Moheñói receta';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsGn extends AppLocalizations {
 
   @override
   String get prefLentFasting => 'Cuaresma / ayuno (ara\'i sa\'isa\'i so\'o\'ỹre)';
+
+  @override
+  String get startCookingButton => 'Eñepyrũ emo’ã';
+
+  @override
+  String get finalizeButton => 'Mbopaha';
+
+  @override
+  String get cookingSheetTitle => 'Oĩma pe receta!';
+
+  @override
+  String get cookingSheetTakePhotoShare => 'Eipe’a ta’ãnga ha emoherakuã';
+
+  @override
+  String get cookingSheetSaveRecipe => 'Eñongatu receta';
+
+  @override
+  String get cookingSheetGoHome => 'Emboty ha eho óga';
+
+  @override
+  String get timerStartTooltip => 'Eñepyrũ';
+
+  @override
+  String get timerPauseTooltip => 'Mombyta';
+
+  @override
+  String get timerResumeTooltip => 'Mbojevy';
+
+  @override
+  String get timerDiscardTooltip => 'Heja';
+
+  @override
+  String get timerDoneTitle => 'Opa ára!';
+
+  @override
+  String get timerDoneBody => 'Pe paso oĩma.';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return 'Oñembosako’i: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return 'Paso $step • arajere';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return 'Ambojy ko’ág̃a \"$title\"! Eiporu pe app: $link';
+  }
 }

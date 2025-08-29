@@ -36,6 +36,39 @@ class AppLocalizationsRu extends AppLocalizations {
   String get reset => 'Сбросить';
 
   @override
+  String get timeAvailable => 'Доступное время';
+
+  @override
+  String get timeUnder15 => '< 15 мин';
+
+  @override
+  String get time30 => '30 мин';
+
+  @override
+  String get time60 => '1 ч';
+
+  @override
+  String get time120 => '2 ч';
+
+  @override
+  String get timeNoLimit => 'Без ограничений';
+
+  @override
+  String get skillLevel => 'Уровень навыков';
+
+  @override
+  String get skillBasic => 'Базовый';
+
+  @override
+  String get skillStandard => 'Стандартный';
+
+  @override
+  String get skillElevated => 'Продвинутый';
+
+  @override
+  String get skillAny => 'Любой';
+
+  @override
   String get searchButton => 'Сгенерировать рецепт';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get prefLentFasting => 'Пост / воздержание (в некоторые дни без мяса)';
+
+  @override
+  String get startCookingButton => 'Начать готовить';
+
+  @override
+  String get finalizeButton => 'Завершить';
+
+  @override
+  String get cookingSheetTitle => 'Рецепт готов!';
+
+  @override
+  String get cookingSheetTakePhotoShare => 'Сделать фото и поделиться';
+
+  @override
+  String get cookingSheetSaveRecipe => 'Сохранить рецепт';
+
+  @override
+  String get cookingSheetGoHome => 'Закрыть и на главную';
+
+  @override
+  String get timerStartTooltip => 'Старт';
+
+  @override
+  String get timerPauseTooltip => 'Пауза';
+
+  @override
+  String get timerResumeTooltip => 'Продолжить';
+
+  @override
+  String get timerDiscardTooltip => 'Отменить';
+
+  @override
+  String get timerDoneTitle => 'Время вышло!';
+
+  @override
+  String get timerDoneBody => 'Шаг приготовления завершён.';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return 'Готовим: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return 'Шаг $step • обратный отсчёт';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return 'Я только что приготовил(а) \"$title\"! Попробуй приложение: $link';
+  }
 }

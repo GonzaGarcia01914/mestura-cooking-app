@@ -132,8 +132,8 @@ exports.isFood = onCall(commonOpts, async (req) => {
             body: JSON.stringify(body),
         });
         if (!r.ok) {
-            const t = await r.text().catch(() => "");
-            throw new HttpsError("internal", `OpenAI chat failed: ${r.status} ${t}`);
+            const errText = await r.text().catch(() => "");
+            throw new HttpsError("internal", `OpenAI chat failed: ${r.status} ${errText}`);
         }
         const data = await r.json();
         const content = String(data?.choices?.[0]?.message?.content ?? "").trim().toLowerCase();
@@ -159,6 +159,12 @@ exports.generateRecipe = onCall(commonOpts, async (req) => {
         const generateImage = Boolean(req.data?.generateImage);
         const imageSize = String(req.data?.imageSize ?? "1024x1024");
 
+        // New: time and skill options
+        const tlmRaw = req.data?.timeLimitMinutes;
+        const timeLimitMinutes = tlmRaw != null ? parseInt(tlmRaw, 10) : null;
+        const skillRaw = String(req.data?.skillLevel ?? "").trim().toLowerCase();
+        const skillLevel = ["basic", "standard", "elevated"].includes(skillRaw) ? skillRaw : "";
+
         // NUEVO: opciones de nutrición
         const includeMacros = Boolean(req.data?.includeMacros);
         const maxCaloriesKcal =
@@ -173,6 +179,8 @@ exports.generateRecipe = onCall(commonOpts, async (req) => {
         }
 
         const sysLang = resolveSysLang(language);
+        // Translator helper must be defined BEFORE any use
+        const translate = (en, es) => (sysLang === 'Spanish' ? es : en);
 
         // Prompt del sistema
         const nutritionRule = includeMacros
@@ -197,6 +205,25 @@ Set "nutrition" to null.
                 ? `Ensure estimated calories per serving are <= ${maxCaloriesKcal}. If needed, adjust the recipe realistically (portion sizes/ingredients) to meet this limit.`
                 : "";
 
+        const timeRule = Number.isFinite(timeLimitMinutes) && timeLimitMinutes > 0
+            ? translate(
+                `Total time (prep + cooking) must be <= ${timeLimitMinutes} minutes. Choose realistic techniques and ingredient prep to fit the limit; if the requested dish cannot fit, propose a similar authentic dish that does.`,
+                `El tiempo total (preparación + cocción) debe ser <= ${timeLimitMinutes} minutos. Elige técnicas y preparación realistas para ajustarte al límite; si el plato solicitado no cabe, propone uno similar y auténtico que sí.`
+              )
+            : "";
+
+        const skillRule = skillLevel === 'basic'
+            ? translate(
+                'Assume a beginner cook: avoid advanced techniques, keep steps simple and explicit, mention basic tips when needed.',
+                'Asume un cocinero principiante: evita técnicas avanzadas, mantén pasos simples y explícitos, menciona consejos básicos cuando sea necesario.'
+              )
+            : skillLevel === 'elevated'
+                ? translate(
+                    'Assume an advanced cook: allow sophisticated techniques and finishing; be precise yet concise; keep it practical.',
+                    'Asume un nivel avanzado: permite técnicas y acabados más sofisticados; sé preciso pero conciso; mantén la receta práctica.'
+                  )
+                : ""; // standard or not set
+
         // Preferences handling
         const prefs = req.data?.preferences || {};
         const asArray = (v) => (Array.isArray(v) ? v : []);
@@ -209,7 +236,7 @@ Set "nutrition" to null.
             disliked: asArray(prefs.disliked_ingredients),
         };
 
-        const t = (en, es) => (sysLang === 'Spanish' ? es : en);
+        const t = translate; // alias for backward compatibility
         function describePrefs() {
             const lines = [];
             if (pref.diet.length) {
@@ -310,6 +337,8 @@ When the user gives just ingredients, pick a real, recognizable dish that those 
 Scale ingredient amounts and instructions for exactly ${servings} servings.
 ${nutritionRule}
 ${caloriesRule}
+ ${timeRule}
+ ${skillRule}
  ${describePrefs()}
 `.trim();
 
@@ -338,8 +367,8 @@ ${caloriesRule}
             body: JSON.stringify(chatBody),
         });
         if (!chatRes.ok) {
-            const t = await chatRes.text().catch(() => "");
-            throw new HttpsError("internal", `OpenAI chat failed: ${chatRes.status} ${t}`);
+            const errText = await chatRes.text().catch(() => "");
+            throw new HttpsError("internal", `OpenAI chat failed: ${chatRes.status} ${errText}`);
         }
         const chatData = await chatRes.json();
         const raw = String(chatData?.choices?.[0]?.message?.content ?? "");
@@ -393,8 +422,8 @@ ${caloriesRule}
                         image = maybeUrl;
                     }
                 } else {
-                    const t = await imgRes.text().catch(() => "");
-                    console.warn("[images] generation failed:", imgRes.status, t);
+                    const errText = await imgRes.text().catch(() => "");
+                    console.warn("[images] generation failed:", imgRes.status, errText);
                 }
             } catch (e) {
                 console.warn("[images] error:", e);

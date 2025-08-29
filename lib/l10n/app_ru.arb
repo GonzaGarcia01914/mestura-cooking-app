@@ -9,6 +9,17 @@
   "includeMacros": "Добавить макросы (оценочно)",
   "includeMacrosSubtitle": "Добавляет калории и макросы на порцию.",
   "reset": "Сбросить",
+  "timeAvailable": "Доступное время",
+  "timeUnder15": "< 15 мин",
+  "time30": "30 мин",
+  "time60": "1 ч",
+  "time120": "2 ч",
+  "timeNoLimit": "Без ограничений",
+  "skillLevel": "Уровень навыков",
+  "skillBasic": "Базовый",
+  "skillStandard": "Стандартный",
+  "skillElevated": "Продвинутый",
+  "skillAny": "Любой",
   "searchButton": "Сгенерировать рецепт",
   "surpriseButton": "Удиви меня",
   "ingredientsTitle": "Ингредиенты",
@@ -114,5 +125,26 @@
   "prefHindu": "Индуизм (часто без говядины)",
   "prefJain": "Джайнизм (без корнеплодов; строгий вегетарианец)",
   "prefBuddhist": "Буддизм (зависит от региона)",
-  "prefLentFasting": "Пост / воздержание (в некоторые дни без мяса)"
+  "prefLentFasting": "Пост / воздержание (в некоторые дни без мяса)",
+
+  "startCookingButton": "Начать готовить",
+  "finalizeButton": "Завершить",
+  "cookingSheetTitle": "Рецепт готов!",
+  "cookingSheetTakePhotoShare": "Сделать фото и поделиться",
+  "cookingSheetShareNoPhoto": "Поделиться без фото",
+  "cookingSheetSaveRecipe": "Сохранить рецепт",
+  "cookingSheetGoHome": "Закрыть и на главную",
+
+  "timerStartTooltip": "Старт",
+  "timerPauseTooltip": "Пауза",
+  "timerResumeTooltip": "Продолжить",
+  "timerDiscardTooltip": "Отменить",
+
+  "timerDoneTitle": "Время вышло!",
+  "timerDoneBody": "Шаг приготовления завершён.",
+
+  "cookingNotificationTitle": "Готовим: {title}",
+  "cookingOngoingBody": "Шаг {step} • обратный отсчёт"
+  ,
+  "shareCookedText": "Я только что приготовил(а) \"{title}\"! Попробуй приложение: {link}"
 }

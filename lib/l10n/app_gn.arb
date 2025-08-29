@@ -9,6 +9,17 @@
   "includeMacros": "Emoĩ macros (jeipapapyréva)",
   "includeMacrosSubtitle": "Omoĩ kaloria ha macros peteĩ tembi'upehẽme.",
   "reset": "Moñepyrũjey",
+  "timeAvailable": "Aravo oĩva",
+  "timeUnder15": "< 15 aravoʼi",
+  "time30": "30 aravoʼi",
+  "time60": "1 aravo",
+  "time120": "2 aravo",
+  "timeNoLimit": "Ndaipóri límite",
+  "skillLevel": "Nivel de katupyry",
+  "skillBasic": "Mbaʼevegua",
+  "skillStandard": "Estándar",
+  "skillElevated": "Ipukuve",
+  "skillAny": "Oimeraẽva",
 
   "searchButton": "Moheñói receta",
   "surpriseButton": "Mbojurujáke cheve",
@@ -121,6 +132,27 @@
   "prefHindu": "Hindú (avei no'u mbrare'ỹre heta jey)",
   "prefJain": "Jain (aniho raíz; vegetariano estricto)",
   "prefBuddhist": "Budista (oiko región rehe)",
-  "prefLentFasting": "Cuaresma / ayuno (ara'i sa'isa'i so'o'ỹre)"
+  "prefLentFasting": "Cuaresma / ayuno (ara'i sa'isa'i so'o'ỹre)",
+
+  "startCookingButton": "Eñepyrũ emo’ã",
+  "finalizeButton": "Mbopaha",
+  "cookingSheetTitle": "Oĩma pe receta!",
+  "cookingSheetTakePhotoShare": "Eipe’a ta’ãnga ha emoherakuã",
+  "cookingSheetShareNoPhoto": "Emoherakuã ta’ãnga’ỹre",
+  "cookingSheetSaveRecipe": "Eñongatu receta",
+  "cookingSheetGoHome": "Emboty ha eho óga",
+
+  "timerStartTooltip": "Eñepyrũ",
+  "timerPauseTooltip": "Mombyta",
+  "timerResumeTooltip": "Mbojevy",
+  "timerDiscardTooltip": "Heja",
+
+  "timerDoneTitle": "Opa ára!",
+  "timerDoneBody": "Pe paso oĩma.",
+
+  "cookingNotificationTitle": "Oñembosako’i: {title}",
+  "cookingOngoingBody": "Paso {step} • arajere"
+  ,
+  "shareCookedText": "Ambojy ko’ág̃a \"{title}\"! Eiporu pe app: {link}"
 }
 

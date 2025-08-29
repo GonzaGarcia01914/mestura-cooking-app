@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/preferences_service.dart';
 import '../../models/preferences.dart';
@@ -18,10 +19,12 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   final _scrollCtrl = ScrollController();
   double _appBarTint = 0.0;
   final _prefsService = PreferencesService();
+  Timer? _saveDebounce;
 
   // Local in-memory state
   FoodPreferences _prefs = const FoodPreferences();
   final TextEditingController _dislikedInput = TextEditingController();
+  static const int _maxDisliked = 15;
 
   // Options
   static const dietOptions = [
@@ -205,13 +208,64 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     setState(() => _prefs = p);
   }
 
-  void _toggle(List<String> list, String value) {
+  void _togglePref(String sectionKey, String value) {
     setState(() {
-      if (list.contains(value)) {
-        list.remove(value);
-      } else {
-        list.add(value);
+      List<String> updated;
+      switch (sectionKey) {
+        case 'diet':
+          updated = List<String>.from(_prefs.diet);
+          if (updated.contains(value)) {
+            updated.remove(value);
+          } else {
+            updated.add(value);
+          }
+          _prefs = _prefs.copyWith(diet: updated);
+          break;
+        case 'medical':
+          updated = List<String>.from(_prefs.medical);
+          if (updated.contains(value)) {
+            updated.remove(value);
+          } else {
+            updated.add(value);
+          }
+          _prefs = _prefs.copyWith(medical: updated);
+          break;
+        case 'allergens':
+          updated = List<String>.from(_prefs.allergensAvoid);
+          if (updated.contains(value)) {
+            updated.remove(value);
+          } else {
+            updated.add(value);
+          }
+          _prefs = _prefs.copyWith(allergensAvoid: updated);
+          break;
+        case 'intolerances':
+          updated = List<String>.from(_prefs.intolerances);
+          if (updated.contains(value)) {
+            updated.remove(value);
+          } else {
+            updated.add(value);
+          }
+          _prefs = _prefs.copyWith(intolerances: updated);
+          break;
+        case 'religion':
+          updated = List<String>.from(_prefs.religion);
+          if (updated.contains(value)) {
+            updated.remove(value);
+          } else {
+            updated.add(value);
+          }
+          _prefs = _prefs.copyWith(religion: updated);
+          break;
       }
+    });
+    _scheduleSave();
+  }
+
+  void _scheduleSave() {
+    _saveDebounce?.cancel();
+    _saveDebounce = Timer(const Duration(milliseconds: 600), () async {
+      await _prefsService.save(_prefs);
     });
   }
 
@@ -260,6 +314,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   void dispose() {
     _scrollCtrl.dispose();
     _dislikedInput.dispose();
+    _saveDebounce?.cancel();
     super.dispose();
   }
 
@@ -267,6 +322,24 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top + 72 + 8;
     final s = AppLocalizations.of(context)!;
+
+    Widget _countBadge(int count) {
+      if (count <= 0) return const SizedBox.shrink();
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.redAccent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          '$count',
+          style: Theme.of(context)
+              .textTheme
+              .labelSmall
+              ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+        ),
+      );
+    }
 
     Widget chipGroup(
       String sectionKey,
@@ -283,6 +356,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
       else if (sectionKey == 'religion')
         title = s.preferencesSectionReligion;
 
+      final count = stateList.length;
+
       return FrostedContainer(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: Theme(
@@ -291,11 +366,20 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             initiallyExpanded: false,
             tilePadding: const EdgeInsets.symmetric(horizontal: 8),
             childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
-            title: Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                _countBadge(count),
+              ],
             ),
             children: [
               Wrap(
@@ -307,7 +391,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                       return FilterChip(
                         label: Text(_optionLabel(s, k)),
                         selected: selected,
-                        onSelected: (_) => _toggle(stateList, k),
+                        onSelected: (_) => _togglePref(sectionKey, k),
                       );
                     }).toList(),
               ),
@@ -319,6 +403,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
 
     return AppScaffold(
       extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: true,
       appBar: AppTopBar(
         title: Text(s.preferencesTitle),
         leading: const BackButton(),
@@ -346,6 +431,13 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             chipGroup('religion', religionOptions, _prefs.religion),
             const SizedBox(height: 12),
 
+            /*
+            === Ingredientes no deseados (deshabilitado temporalmente) ===
+            La siguiente sección de entrada y el listado expandible de
+            ingredientes no deseados se comenta por simplicidad.
+            Para reactivarlo, descomenta este bloque completo.
+
+            // Input for unwanted ingredients
             FrostedContainer(
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               child: Column(
@@ -358,32 +450,23 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      ..._prefs.dislikedIngredients.map(
-                        (e) => InputChip(
-                          label: Text(e),
-                          onDeleted: () {
-                            setState(
-                              () => _prefs.dislikedIngredients.remove(e),
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        width: 260,
-                        child: TextField(
-                          controller: _dislikedInput,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            hintText: s.preferencesAddIngredientPlaceholder,
-                            border: const OutlineInputBorder(),
-                          ),
-                          onSubmitted: (v) {
-                            final t = v.trim();
+                  SizedBox(
+                    width: 260,
+                    child: TextField(
+                      controller: _dislikedInput,
+                      textInputAction: TextInputAction.done,
+                      scrollPadding: const EdgeInsets.only(bottom: 120),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        hintText: s.preferencesAddIngredientPlaceholder,
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            final t = _dislikedInput.text.trim();
                             if (t.isEmpty) return;
+                            if (_prefs.dislikedIngredients.length >= _maxDisliked) return;
+                            if (_prefs.dislikedIngredients.any((e) => e.toLowerCase() == t.toLowerCase())) return;
                             setState(() {
                               _prefs.dislikedIngredients.add(t);
                               _dislikedInput.clear();
@@ -391,11 +474,71 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                           },
                         ),
                       ),
-                    ],
+                      onSubmitted: (v) {
+                        final t = v.trim();
+                        if (t.isEmpty) return;
+                        if (_prefs.dislikedIngredients.length >= _maxDisliked) return;
+                        if (_prefs.dislikedIngredients.any((e) => e.toLowerCase() == t.toLowerCase())) return;
+                        setState(() {
+                          _prefs.dislikedIngredients.add(t);
+                          _dislikedInput.clear();
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
+
+            const SizedBox(height: 12),
+
+            // Expandable list of unwanted ingredients (hidden if empty)
+            if (_prefs.dislikedIngredients.isNotEmpty)
+              FrostedContainer(
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
+                child: Theme(
+                  data:
+                      Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    initiallyExpanded: false,
+                    tilePadding: const EdgeInsets.symmetric(horizontal: 8),
+                    childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            s.preferencesDisliked,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        _countBadge(_prefs.dislikedIngredients.length),
+                      ],
+                    ),
+                    children: [
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _prefs.dislikedIngredients
+                            .map(
+                              (e) => InputChip(
+                                label: Text(e),
+                                onDeleted: () {
+                                  setState(() =>
+                                      _prefs.dislikedIngredients.remove(e));
+                                },
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            */
 
             const SizedBox(height: 16),
             Row(
@@ -404,27 +547,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   child: OutlinedButton(
                     onPressed: _clear,
                     child: Text(s.preferencesClear),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _save,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 14,
-                      ),
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          s.preferencesSave,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],

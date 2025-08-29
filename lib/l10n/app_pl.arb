@@ -9,6 +9,17 @@
   "includeMacros": "Uwzględnij makroskładniki (szacunkowo)",
   "includeMacrosSubtitle": "Dodaje kalorie i makro na porcję.",
   "reset": "Resetuj",
+  "timeAvailable": "Dostępny czas",
+  "timeUnder15": "< 15 min",
+  "time30": "30 min",
+  "time60": "1 h",
+  "time120": "2 h",
+  "timeNoLimit": "Bez limitu",
+  "skillLevel": "Poziom umiejętności",
+  "skillBasic": "Podstawowy",
+  "skillStandard": "Standardowy",
+  "skillElevated": "Zaawansowany",
+  "skillAny": "Dowolny",
 
   "searchButton": "Generuj przepis",
   "surpriseButton": "Zaskocz mnie",
@@ -119,5 +130,26 @@
   "prefHindu": "Hinduskie (często bez wołowiny)",
   "prefJain": "Dżinijskie (bez korzeni; ścisły wegetarianizm)",
   "prefBuddhist": "Buddyjskie (zależnie od regionu)",
-  "prefLentFasting": "Post / Wielki Post (bez mięsa w niektóre dni)"
+  "prefLentFasting": "Post / Wielki Post (bez mięsa w niektóre dni)",
+
+  "startCookingButton": "Zacznij gotować",
+  "finalizeButton": "Zakończ",
+  "cookingSheetTitle": "Przepis ukończony!",
+  "cookingSheetTakePhotoShare": "Zrób zdjęcie i udostępnij",
+  "cookingSheetShareNoPhoto": "Udostępnij bez zdjęcia",
+  "cookingSheetSaveRecipe": "Zapisz przepis",
+  "cookingSheetGoHome": "Zamknij i przejdź do ekranu głównego",
+
+  "timerStartTooltip": "Start",
+  "timerPauseTooltip": "Pauza",
+  "timerResumeTooltip": "Wznów",
+  "timerDiscardTooltip": "Odrzuć",
+
+  "timerDoneTitle": "Koniec czasu!",
+  "timerDoneBody": "Krok gotowania został zakończony.",
+
+  "cookingNotificationTitle": "Gotowanie: {title}",
+  "cookingOngoingBody": "Krok {step} • odliczanie"
+  ,
+  "shareCookedText": "Właśnie ugotowałem \"{title}\"! Wypróbuj aplikację: {link}"
 }

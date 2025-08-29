@@ -9,6 +9,17 @@
   "includeMacros": "包含宏量营养（估算）",
   "includeMacrosSubtitle": "每份添加卡路里和宏量营养。",
   "reset": "重置",
+  "timeAvailable": "可用时间",
+  "timeUnder15": "< 15 分钟",
+  "time30": "30 分钟",
+  "time60": "1 小时",
+  "time120": "2 小时",
+  "timeNoLimit": "不限",
+  "skillLevel": "技能水平",
+  "skillBasic": "基础",
+  "skillStandard": "标准",
+  "skillElevated": "高级",
+  "skillAny": "任意",
 
   "searchButton": "生成食谱",
   "surpriseButton": "给我惊喜",
@@ -121,6 +132,27 @@
   "prefHindu": "印度教（常不食牛肉）",
   "prefJain": "耆那教（不食根茎；严格素食）",
   "prefBuddhist": "佛教（因地区而异）",
-  "prefLentFasting": "斋期/禁食（特定日不吃肉)"
+  "prefLentFasting": "斋期/禁食（特定日不吃肉)",
+
+  "startCookingButton": "开始烹饪",
+  "finalizeButton": "完成",
+  "cookingSheetTitle": "食谱完成！",
+  "cookingSheetTakePhotoShare": "拍照并分享",
+  "cookingSheetShareNoPhoto": "不带照片分享",
+  "cookingSheetSaveRecipe": "保存食谱",
+  "cookingSheetGoHome": "关闭并返回主页",
+
+  "timerStartTooltip": "开始",
+  "timerPauseTooltip": "暂停",
+  "timerResumeTooltip": "继续",
+  "timerDiscardTooltip": "丢弃",
+
+  "timerDoneTitle": "时间到！",
+  "timerDoneBody": "该烹饪步骤已完成。",
+
+  "cookingNotificationTitle": "烹饪中：{title}",
+  "cookingOngoingBody": "第 {step} 步 • 倒计时"
+  ,
+  "shareCookedText": "我刚刚做了\"{title}\"！来试试这个应用：{link}"
 }
 

@@ -36,6 +36,39 @@ class AppLocalizationsKo extends AppLocalizations {
   String get reset => '초기화';
 
   @override
+  String get timeAvailable => '사용 가능한 시간';
+
+  @override
+  String get timeUnder15 => '< 15분';
+
+  @override
+  String get time30 => '30분';
+
+  @override
+  String get time60 => '1시간';
+
+  @override
+  String get time120 => '2시간';
+
+  @override
+  String get timeNoLimit => '제한 없음';
+
+  @override
+  String get skillLevel => '숙련도';
+
+  @override
+  String get skillBasic => '기초';
+
+  @override
+  String get skillStandard => '일반';
+
+  @override
+  String get skillElevated => '고급';
+
+  @override
+  String get skillAny => '무관';
+
+  @override
   String get searchButton => '레시피 생성';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get prefLentFasting => '사순절/금식(특정일 고기 금지)';
+
+  @override
+  String get startCookingButton => '요리 시작';
+
+  @override
+  String get finalizeButton => '완료';
+
+  @override
+  String get cookingSheetTitle => '레시피 완료!';
+
+  @override
+  String get cookingSheetTakePhotoShare => '사진 찍어 공유';
+
+  @override
+  String get cookingSheetSaveRecipe => '레시피 저장';
+
+  @override
+  String get cookingSheetGoHome => '닫고 홈으로 이동';
+
+  @override
+  String get timerStartTooltip => '시작';
+
+  @override
+  String get timerPauseTooltip => '일시정지';
+
+  @override
+  String get timerResumeTooltip => '재개';
+
+  @override
+  String get timerDiscardTooltip => '취소';
+
+  @override
+  String get timerDoneTitle => '시간 종료!';
+
+  @override
+  String get timerDoneBody => '조리 단계가 완료되었습니다.';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return '요리 중: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return '단계 $step • 카운트다운';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return '방금 \"$title\"를 만들었어요! 앱을 사용해 보세요: $link';
+  }
 }

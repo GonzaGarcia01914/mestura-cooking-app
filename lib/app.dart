@@ -9,6 +9,7 @@ import 'ui/screens/settings_screen.dart';
 import 'ui/screens/preferences_screen.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers.dart';
+import 'core/navigation.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -20,6 +21,7 @@ class App extends ConsumerWidget {
       title: 'Mestura',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
+      navigatorKey: appNavigatorKey,
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [

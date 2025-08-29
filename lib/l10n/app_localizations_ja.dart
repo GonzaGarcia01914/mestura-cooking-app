@@ -36,6 +36,39 @@ class AppLocalizationsJa extends AppLocalizations {
   String get reset => 'リセット';
 
   @override
+  String get timeAvailable => '利用可能な時間';
+
+  @override
+  String get timeUnder15 => '< 15 分';
+
+  @override
+  String get time30 => '30 分';
+
+  @override
+  String get time60 => '1 時間';
+
+  @override
+  String get time120 => '2 時間';
+
+  @override
+  String get timeNoLimit => '制限なし';
+
+  @override
+  String get skillLevel => 'スキルレベル';
+
+  @override
+  String get skillBasic => '初級';
+
+  @override
+  String get skillStandard => '標準';
+
+  @override
+  String get skillElevated => '上級';
+
+  @override
+  String get skillAny => '指定なし';
+
+  @override
   String get searchButton => 'レシピを生成';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get prefLentFasting => '四旬節/断食（一部の日は肉なし）';
+
+  @override
+  String get startCookingButton => '料理を開始';
+
+  @override
+  String get finalizeButton => '完了';
+
+  @override
+  String get cookingSheetTitle => 'レシピ完了！';
+
+  @override
+  String get cookingSheetTakePhotoShare => '写真を撮って共有';
+
+  @override
+  String get cookingSheetSaveRecipe => 'レシピを保存';
+
+  @override
+  String get cookingSheetGoHome => '閉じてホームへ';
+
+  @override
+  String get timerStartTooltip => '開始';
+
+  @override
+  String get timerPauseTooltip => '一時停止';
+
+  @override
+  String get timerResumeTooltip => '再開';
+
+  @override
+  String get timerDiscardTooltip => '破棄';
+
+  @override
+  String get timerDoneTitle => '時間です！';
+
+  @override
+  String get timerDoneBody => '調理のステップが終了しました。';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return '調理中: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return 'ステップ $step • カウントダウン';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return '\"$title\"を作りました！ アプリを試してね: $link';
+  }
 }

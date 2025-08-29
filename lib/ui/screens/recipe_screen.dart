@@ -9,6 +9,7 @@ import '../../core/services/ad_gate.dart';
 import '../../core/services/ad_service.dart';
 import '../../core/services/storage_service.dart';
 import 'loading_screen.dart';
+import 'cooking_screen.dart';
 
 // Design system
 import '../widgets/app_scaffold.dart';
@@ -482,6 +483,21 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
             ],
 
             const SizedBox(height: 20),
+
+            // Nuevo: botón para modo cocina paso a paso
+            AppPrimaryButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => CookingScreen(recipe: widget.recipe),
+                  ),
+                );
+              },
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              child: Text(s.startCookingButton),
+            ),
+            const SizedBox(height: 10),
 
             AppPrimaryButton(
               loading: _loading,

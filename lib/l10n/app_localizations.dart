@@ -169,6 +169,72 @@ abstract class AppLocalizations {
   /// **'Reset'**
   String get reset;
 
+  /// No description provided for @timeAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Time available'**
+  String get timeAvailable;
+
+  /// No description provided for @timeUnder15.
+  ///
+  /// In en, this message translates to:
+  /// **'< 15 min'**
+  String get timeUnder15;
+
+  /// No description provided for @time30.
+  ///
+  /// In en, this message translates to:
+  /// **'30 min'**
+  String get time30;
+
+  /// No description provided for @time60.
+  ///
+  /// In en, this message translates to:
+  /// **'1 h'**
+  String get time60;
+
+  /// No description provided for @time120.
+  ///
+  /// In en, this message translates to:
+  /// **'2 h'**
+  String get time120;
+
+  /// No description provided for @timeNoLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'No limit'**
+  String get timeNoLimit;
+
+  /// No description provided for @skillLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill level'**
+  String get skillLevel;
+
+  /// No description provided for @skillBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get skillBasic;
+
+  /// No description provided for @skillStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get skillStandard;
+
+  /// No description provided for @skillElevated.
+  ///
+  /// In en, this message translates to:
+  /// **'Elevated'**
+  String get skillElevated;
+
+  /// No description provided for @skillAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get skillAny;
+
   /// No description provided for @searchButton.
   ///
   /// In en, this message translates to:
@@ -804,6 +870,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lent / fasting (no meat certain days)'**
   String get prefLentFasting;
+
+  /// No description provided for @startCookingButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start cooking'**
+  String get startCookingButton;
+
+  /// No description provided for @finalizeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finalizeButton;
+
+  /// No description provided for @cookingSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe completed!'**
+  String get cookingSheetTitle;
+
+  /// No description provided for @cookingSheetTakePhotoShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo and share'**
+  String get cookingSheetTakePhotoShare;
+
+  /// No description provided for @cookingSheetSaveRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Save recipe'**
+  String get cookingSheetSaveRecipe;
+
+  /// No description provided for @cookingSheetGoHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Close and go to Home'**
+  String get cookingSheetGoHome;
+
+  /// No description provided for @timerStartTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get timerStartTooltip;
+
+  /// No description provided for @timerPauseTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get timerPauseTooltip;
+
+  /// No description provided for @timerResumeTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get timerResumeTooltip;
+
+  /// No description provided for @timerDiscardTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get timerDiscardTooltip;
+
+  /// No description provided for @timerDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s up!'**
+  String get timerDoneTitle;
+
+  /// No description provided for @timerDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The cooking step has finished.'**
+  String get timerDoneBody;
+
+  /// No description provided for @cookingNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking: {title}'**
+  String cookingNotificationTitle(String title);
+
+  /// No description provided for @cookingOngoingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} • countdown'**
+  String cookingOngoingBody(String step);
+
+  /// No description provided for @shareCookedText.
+  ///
+  /// In en, this message translates to:
+  /// **'I just cooked \"{title}\"! Try the app: {link}'**
+  String shareCookedText(String title, String link);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

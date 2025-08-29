@@ -9,6 +9,17 @@
   "includeMacros": "Inclure les macros (estimées)",
   "includeMacrosSubtitle": "Ajoute les calories et macros par portion.",
   "reset": "Réinitialiser",
+  "timeAvailable": "Temps disponible",
+  "timeUnder15": "< 15 min",
+  "time30": "30 min",
+  "time60": "1 h",
+  "time120": "2 h",
+  "timeNoLimit": "Sans limite",
+  "skillLevel": "Niveau de compétence",
+  "skillBasic": "Basique",
+  "skillStandard": "Standard",
+  "skillElevated": "Élevé",
+  "skillAny": "N’importe lequel",
 
   "searchButton": "Générer une recette",
   "surpriseButton": "Surprends-moi",
@@ -119,5 +130,26 @@
   "prefHindu": "Hindou (évite souvent le bœuf)",
   "prefJain": "Jaïn (sans racines; végétarien strict)",
   "prefBuddhist": "Bouddhiste (selon la région)",
-  "prefLentFasting": "Carême / jeûne (certains jours sans viande)"
+  "prefLentFasting": "Carême / jeûne (certains jours sans viande)",
+
+  "startCookingButton": "Commencer à cuisiner",
+  "finalizeButton": "Terminer",
+  "cookingSheetTitle": "Recette terminée !",
+  "cookingSheetTakePhotoShare": "Prendre une photo et partager",
+  "cookingSheetShareNoPhoto": "Partager sans photo",
+  "cookingSheetSaveRecipe": "Enregistrer la recette",
+  "cookingSheetGoHome": "Fermer et aller à l'accueil",
+
+  "timerStartTooltip": "Démarrer",
+  "timerPauseTooltip": "Pause",
+  "timerResumeTooltip": "Reprendre",
+  "timerDiscardTooltip": "Annuler",
+
+  "timerDoneTitle": "Temps écoulé !",
+  "timerDoneBody": "L'étape de cuisson est terminée.",
+
+  "cookingNotificationTitle": "En cuisine : {title}",
+  "cookingOngoingBody": "Étape {step} • compte à rebours"
+  ,
+  "shareCookedText": "Je viens de cuisiner \"{title}\" ! Essaie l'app : {link}"
 }

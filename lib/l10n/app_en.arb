@@ -9,6 +9,17 @@
   "includeMacros": "Include macros (estimated)",
   "includeMacrosSubtitle": "Adds calories & macros per serving.",
   "reset": "Reset",
+  "timeAvailable": "Time available",
+  "timeUnder15": "< 15 min",
+  "time30": "30 min",
+  "time60": "1 h",
+  "time120": "2 h",
+  "timeNoLimit": "No limit",
+  "skillLevel": "Skill level",
+  "skillBasic": "Basic",
+  "skillStandard": "Standard",
+  "skillElevated": "Elevated",
+  "skillAny": "Any",
   
   "searchButton": "Generate recipe",
   "surpriseButton": "Surprise me",
@@ -119,5 +130,37 @@
   "prefHindu": "Hindu (often avoids beef)",
   "prefJain": "Jain (no roots; strict vegetarian)",
   "prefBuddhist": "Buddhist (varies by region)",
-  "prefLentFasting": "Lent / fasting (no meat certain days)"
+  "prefLentFasting": "Lent / fasting (no meat certain days)",
+
+  "startCookingButton": "Start cooking",
+  "finalizeButton": "Finish",
+  "cookingSheetTitle": "Recipe completed!",
+  "cookingSheetTakePhotoShare": "Take photo and share",
+  "cookingSheetShareNoPhoto": "Share without photo",
+  "cookingSheetSaveRecipe": "Save recipe",
+  "cookingSheetGoHome": "Close and go to Home",
+
+  "timerStartTooltip": "Start",
+  "timerPauseTooltip": "Pause",
+  "timerResumeTooltip": "Resume",
+  "timerDiscardTooltip": "Discard",
+
+  "timerDoneTitle": "Time's up!",
+  "timerDoneBody": "The cooking step has finished.",
+
+  "cookingNotificationTitle": "Cooking: {title}",
+  "@cookingNotificationTitle": {
+    "placeholders": {"title": {"type": "String"}}
+  },
+  "cookingOngoingBody": "Step {step} • countdown",
+  "@cookingOngoingBody": {
+    "placeholders": {"step": {"type": "String"}}
+  },
+  "shareCookedText": "I just cooked \"{title}\"! Try the app: {link}",
+  "@shareCookedText": {
+    "placeholders": {
+      "title": {"type": "String"},
+      "link": {"type": "String"}
+    }
+  }
 }

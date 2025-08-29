@@ -36,6 +36,39 @@ class AppLocalizationsPt extends AppLocalizations {
   String get reset => 'Redefinir';
 
   @override
+  String get timeAvailable => 'Tempo disponível';
+
+  @override
+  String get timeUnder15 => '< 15 min';
+
+  @override
+  String get time30 => '30 min';
+
+  @override
+  String get time60 => '1 h';
+
+  @override
+  String get time120 => '2 h';
+
+  @override
+  String get timeNoLimit => 'Sem limite';
+
+  @override
+  String get skillLevel => 'Nível de habilidade';
+
+  @override
+  String get skillBasic => 'Básico';
+
+  @override
+  String get skillStandard => 'Padrão';
+
+  @override
+  String get skillElevated => 'Avançado';
+
+  @override
+  String get skillAny => 'Qualquer';
+
+  @override
   String get searchButton => 'Gerar receita';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get prefLentFasting => 'Quaresma / jejum (sem carne em certos dias)';
+
+  @override
+  String get startCookingButton => 'Começar a cozinhar';
+
+  @override
+  String get finalizeButton => 'Finalizar';
+
+  @override
+  String get cookingSheetTitle => 'Receita concluída!';
+
+  @override
+  String get cookingSheetTakePhotoShare => 'Tirar foto e compartilhar';
+
+  @override
+  String get cookingSheetSaveRecipe => 'Salvar receita';
+
+  @override
+  String get cookingSheetGoHome => 'Fechar e ir para a tela inicial';
+
+  @override
+  String get timerStartTooltip => 'Iniciar';
+
+  @override
+  String get timerPauseTooltip => 'Pausar';
+
+  @override
+  String get timerResumeTooltip => 'Retomar';
+
+  @override
+  String get timerDiscardTooltip => 'Descartar';
+
+  @override
+  String get timerDoneTitle => 'Tempo esgotado!';
+
+  @override
+  String get timerDoneBody => 'A etapa de cozimento terminou.';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return 'Cozinhando: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return 'Etapa $step • contagem regressiva';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return 'Acabei de cozinhar \"$title\"! Experimente o app: $link';
+  }
 }

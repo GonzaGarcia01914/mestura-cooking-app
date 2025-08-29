@@ -36,6 +36,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reset => 'Restablecer';
 
   @override
+  String get timeAvailable => 'Tiempo disponible';
+
+  @override
+  String get timeUnder15 => '< 15 min';
+
+  @override
+  String get time30 => '30 min';
+
+  @override
+  String get time60 => '1 h';
+
+  @override
+  String get time120 => '2 h';
+
+  @override
+  String get timeNoLimit => 'Sin límite';
+
+  @override
+  String get skillLevel => 'Nivel de habilidad';
+
+  @override
+  String get skillBasic => 'Básico';
+
+  @override
+  String get skillStandard => 'Estándar';
+
+  @override
+  String get skillElevated => 'Elevado';
+
+  @override
+  String get skillAny => 'Cualquiera';
+
+  @override
   String get searchButton => 'Generar receta';
 
   @override
@@ -352,4 +385,55 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get prefLentFasting => 'Cuaresma / ayuno (sin carne ciertos días)';
+
+  @override
+  String get startCookingButton => 'Empezar a cocinar';
+
+  @override
+  String get finalizeButton => 'Finalizar';
+
+  @override
+  String get cookingSheetTitle => '¡Receta completada!';
+
+  @override
+  String get cookingSheetTakePhotoShare => 'Tomar foto y compartir';
+
+  @override
+  String get cookingSheetSaveRecipe => 'Guardar receta';
+
+  @override
+  String get cookingSheetGoHome => 'Cerrar e ir a inicio';
+
+  @override
+  String get timerStartTooltip => 'Iniciar';
+
+  @override
+  String get timerPauseTooltip => 'Pausar';
+
+  @override
+  String get timerResumeTooltip => 'Reanudar';
+
+  @override
+  String get timerDiscardTooltip => 'Descartar';
+
+  @override
+  String get timerDoneTitle => '¡Tiempo cumplido!';
+
+  @override
+  String get timerDoneBody => 'El paso de la receta ha terminado.';
+
+  @override
+  String cookingNotificationTitle(String title) {
+    return 'Cocinando: $title';
+  }
+
+  @override
+  String cookingOngoingBody(String step) {
+    return 'Paso $step • cuenta atrás';
+  }
+
+  @override
+  String shareCookedText(String title, String link) {
+    return '¡Acabo de cocinar \"$title\"! Prueba la app: $link';
+  }
 }
