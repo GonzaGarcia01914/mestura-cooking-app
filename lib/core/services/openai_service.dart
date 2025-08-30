@@ -38,9 +38,13 @@ class OpenAIService {
       await FirebaseAppCheck.instance.getToken(false);
     } catch (e) {
       debugPrint('[AppCheck] getToken error: $e');
-      // Si falla, reintenta una vez tras breve espera
-      await Future.delayed(const Duration(milliseconds: 400));
-      await FirebaseAppCheck.instance.getToken(true);
+      // Si falla, reintenta una vez tras breve espera, pero no bloquea si vuelve a fallar
+      try {
+        await Future.delayed(const Duration(milliseconds: 400));
+        await FirebaseAppCheck.instance.getToken(true);
+      } catch (e2) {
+        debugPrint('[AppCheck] getToken(force) error: $e2 (continuando sin App Check)');
+      }
     }
   }
 
