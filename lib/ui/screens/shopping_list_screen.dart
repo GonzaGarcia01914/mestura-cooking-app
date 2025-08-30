@@ -6,6 +6,7 @@ import '../widgets/frosted_container.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/shopping_list_service.dart';
 import '../../models/shopping_item.dart';
+import '../responsive.dart';
 
 class ShoppingListScreen extends StatefulWidget {
   const ShoppingListScreen({super.key});
@@ -87,13 +88,16 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
           duration: const Duration(milliseconds: 180),
           curve: Curves.easeOut,
           padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
+            left: Responsive.hPadding(context),
+            right: Responsive.hPadding(context),
             top: topPad,
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: SingleChildScrollView(
-          child: Column(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FrostedContainer(
@@ -174,6 +178,8 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                   ),
                 ),
             ],
+          ),
+        ),
           ),
         ),
       ),

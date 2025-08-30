@@ -12,6 +12,7 @@ import '../../core/services/share_recipe_service.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/app_top_bar.dart';
 import '../widgets/frosted_container.dart';
+import '../responsive.dart';
 
 class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
@@ -131,6 +132,8 @@ class _SavedScreenState extends State<SavedScreen> {
     final s = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final topPad = MediaQuery.of(context).padding.top + 72 + 8;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= Responsive.tabletBreakpoint;
 
     Widget emptyState() {
       final vh = MediaQuery.of(context).size.height;
@@ -140,7 +143,12 @@ class _SavedScreenState extends State<SavedScreen> {
       return ListView(
         controller: _scrollCtrl,
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
+        padding: EdgeInsets.fromLTRB(
+          Responsive.hPadding(context),
+          topPad,
+          Responsive.hPadding(context),
+          24,
+        ),
         children: [
           SizedBox(
             height: contentHeight,
@@ -239,10 +247,55 @@ class _SavedScreenState extends State<SavedScreen> {
       );
     }
 
+    Widget grid() => GridView.builder(
+          padding: EdgeInsets.fromLTRB(
+            Responsive.hPadding(context),
+            topPad,
+            Responsive.hPadding(context),
+            24,
+          ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: screenWidth >= Responsive.desktopBreakpoint ? 3 : 2,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 2.6,
+          ),
+          itemCount: _recipes.length,
+          itemBuilder: (ctx, i) {
+            final recipe = _recipes[i];
+            final imageUrl = _normalizeImageUrl(recipe.image);
+            return Dismissible(
+              key: ValueKey('grid-${recipe.title}-$i'),
+              direction: DismissDirection.startToEnd,
+              background: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                child: const Icon(Icons.delete, color: Colors.white, size: 28),
+              ),
+              onDismissed: (_) {
+                setState(() {
+                  final removed = _recipes.removeAt(i);
+                  StorageService().deleteRecipe(removed.title);
+                });
+              },
+              child: recipeCard(recipe, imageUrl),
+            );
+          },
+        );
+
     Widget list() => AnimatedList(
       key: _listKey,
       controller: _scrollCtrl,
-      padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
+      padding: EdgeInsets.fromLTRB(
+        Responsive.hPadding(context),
+        topPad,
+        Responsive.hPadding(context),
+        24,
+      ),
       initialItemCount: _recipes.length,
       itemBuilder: (_, i, animation) {
         final recipe = _recipes[i];
@@ -323,7 +376,7 @@ class _SavedScreenState extends State<SavedScreen> {
           duration: const Duration(milliseconds: 220),
           switchInCurve: Curves.easeOutCubic,
           switchOutCurve: Curves.easeInCubic,
-          child: _recipes.isEmpty ? emptyState() : list(),
+          child: _recipes.isEmpty ? emptyState() : (isTablet ? grid() : list()),
         ),
       ),
     );

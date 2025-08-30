@@ -17,6 +17,7 @@ import '../widgets/app_scaffold.dart';
 import '../widgets/glass_alert.dart';
 import '../widgets/app_top_bar.dart';
 import '../widgets/app_primary_button.dart';
+import '../responsive.dart';
 import '../widgets/frosted_container.dart';
 
 class RecipeScreen extends ConsumerStatefulWidget {
@@ -341,8 +342,14 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
       ),
       body: SingleChildScrollView(
         controller: _scrollCtrl,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
+        padding: EdgeInsets.symmetric(
+          horizontal: Responsive.hPadding(context),
+          vertical: 16,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top + 72 + 8),
@@ -387,60 +394,79 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
 
             const SizedBox(height: 20),
 
-            // Ingredientes
-            FrostedContainer(
-              borderRadius: const BorderRadius.all(Radius.circular(14)),
-              child: Column(
+            // Ingredientes y Pasos: en tablets/desktop, dos columnas.
+            Builder(builder: (context) {
+              final isWide = MediaQuery.of(context).size.width >= Responsive.tabletBreakpoint;
+              final ingredientsWidget = FrostedContainer(
+                borderRadius: const BorderRadius.all(Radius.circular(14)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      s.ingredientsTitle,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      ingredients.length,
+                      (i) => CheckboxListTile(
+                        value: _checked[i],
+                        onChanged: (val) => setState(() => _checked[i] = val ?? true),
+                        title: Text(ingredients[i]),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+
+              final stepsWidget = FrostedContainer(
+                borderRadius: const BorderRadius.all(Radius.circular(14)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      s.stepsTitle,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      steps.length,
+                      (i) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text('${i + 1}. ${steps[i]}'),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+
+              if (!isWide) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ingredientsWidget,
+                    const SizedBox(height: 16),
+                    stepsWidget,
+                  ],
+                );
+              }
+
+              return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    s.ingredientsTitle,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  ...List.generate(
-                    ingredients.length,
-                    (i) => CheckboxListTile(
-                      value: _checked[i],
-                      onChanged:
-                          (val) => setState(() => _checked[i] = val ?? true),
-                      title: Text(ingredients[i]),
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                  ),
+                  Expanded(child: ingredientsWidget),
+                  const SizedBox(width: 16),
+                  Expanded(child: stepsWidget),
                 ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Pasos
-            FrostedContainer(
-              borderRadius: const BorderRadius.all(Radius.circular(14)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    s.stepsTitle,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  ...List.generate(
-                    steps.length,
-                    (i) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text('${i + 1}. ${steps[i]}'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+              );
+            }),
 
             // Dentro del Column principal, tras el contenedor de pasos:
             if (widget.recipe.nutrition != null) ...[
@@ -553,6 +579,8 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
 
             const SizedBox(height: 24),
           ],
+        ),
+          ),
         ),
       ),
     );

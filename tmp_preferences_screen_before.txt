@@ -7,7 +7,6 @@ import '../widgets/app_scaffold.dart';
 import '../widgets/app_top_bar.dart';
 import '../widgets/frosted_container.dart';
 import '../widgets/glass_alert.dart';
-import '../responsive.dart';
 
 class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
@@ -413,16 +412,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
       ),
       body: SingleChildScrollView(
         controller: _scrollCtrl,
-        padding: EdgeInsets.fromLTRB(
-          Responsive.hPadding(context),
-          topPad,
-          Responsive.hPadding(context),
-          24,
-        ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-            child: Column(
+        padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
@@ -563,9 +554,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             const SizedBox(height: 16),
           ],
         ),
-          ),
-        ),
       ),
     );
   }
 }
+

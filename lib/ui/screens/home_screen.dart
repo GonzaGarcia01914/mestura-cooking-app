@@ -15,6 +15,7 @@ import '../widgets/app_drawer.dart';
 import '../widgets/app_primary_button.dart';
 import '../widgets/app_top_bar.dart';
 import '../style/app_style.dart';
+import '../responsive.dart';
 import 'recipe_screen.dart';
 import 'loading_screen.dart';
 
@@ -640,10 +641,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           controller: _homeScrollCtrl,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: EdgeInsets.symmetric(
-            horizontal: 25,
+            horizontal: Responsive.hPadding(context),
             vertical: style.padding.vertical * 1.5,
           ),
-          child: Column(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+              child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 50),
@@ -711,6 +715,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const SizedBox(height: 8),
             ],
+              ),
+            ),
           ),
         ),
       ),

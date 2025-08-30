@@ -8,6 +8,7 @@ import '../../core/providers.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/app_top_bar.dart';
 import '../widgets/frosted_container.dart';
+import '../responsive.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -95,36 +96,46 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
       body: SingleChildScrollView(
         controller: _scrollCtrl,
-        padding: EdgeInsets.fromLTRB(20, topPad, 20, 24),
-        child: FrostedContainer(
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
-          child: Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              tilePadding: const EdgeInsets.symmetric(horizontal: 8),
-              childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
-              title: Text(
-                s.languageSettingLabel,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
-              ),
-              subtitle: Text(_languages[_selected] ?? _selected),
-              children: [
-                ..._languages.entries.map(
-                  (entry) => RadioListTile<String>(
-                    value: entry.key,
-                    groupValue: _selected,
-                    onChanged: (lang) {
-                      if (lang != null) _changeLanguage(lang);
-                    },
-                    title: Text(entry.value),
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
+        padding: EdgeInsets.fromLTRB(
+          20, // keep small margin top-left for large titles
+          topPad,
+          20,
+          24,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            child: FrostedContainer(
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+              child: Theme(
+                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  tilePadding: const EdgeInsets.symmetric(horizontal: 8),
+                  childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+                  title: Text(
+                    s.languageSettingLabel,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
                   ),
+                  subtitle: Text(_languages[_selected] ?? _selected),
+                  children: [
+                    ..._languages.entries.map(
+                      (entry) => RadioListTile<String>(
+                        value: entry.key,
+                        groupValue: _selected,
+                        onChanged: (lang) {
+                          if (lang != null) _changeLanguage(lang);
+                        },
+                        title: Text(entry.value),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
