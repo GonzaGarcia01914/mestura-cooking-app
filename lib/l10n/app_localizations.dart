@@ -163,6 +163,18 @@ abstract class AppLocalizations {
   /// **'Adds calories & macros per serving.'**
   String get includeMacrosSubtitle;
 
+  /// No description provided for @useShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate from shopping list'**
+  String get useShoppingList;
+
+  /// No description provided for @useShoppingListSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use mostly edible items from your shopping list.'**
+  String get useShoppingListSubtitle;
+
   /// No description provided for @reset.
   ///
   /// In en, this message translates to:
@@ -510,6 +522,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get dialogOk;
+
+  /// No description provided for @shoppingNoEdibleItems.
+  ///
+  /// In en, this message translates to:
+  /// **'No edible items found in your shopping list.'**
+  String get shoppingNoEdibleItems;
 
   /// No description provided for @preferencesMenu.
   ///
@@ -996,6 +1014,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get shoppingRemoveTooltip;
+
+  /// No description provided for @shoppingEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shopping list is empty'**
+  String get shoppingEmpty;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

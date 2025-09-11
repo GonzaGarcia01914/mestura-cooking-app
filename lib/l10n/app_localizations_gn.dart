@@ -33,6 +33,12 @@ class AppLocalizationsGn extends AppLocalizations {
   String get includeMacrosSubtitle => 'Omoĩ kaloria ha macros peteĩ tembi\'upehẽme.';
 
   @override
+  String get useShoppingList => 'Generar desde lista de la compra';
+
+  @override
+  String get useShoppingListSubtitle => 'Usa principalmente elementos comestibles de tu lista de la compra.';
+
+  @override
   String get reset => 'Moñepyrũjey';
 
   @override
@@ -205,6 +211,9 @@ class AppLocalizationsGn extends AppLocalizations {
 
   @override
   String get dialogOk => 'Moneĩ';
+
+  @override
+  String get shoppingNoEdibleItems => 'No se han encontrado elementos comestibles en tu lista de la compra.';
 
   @override
   String get preferencesMenu => 'Preferencias alimenticias';
@@ -454,4 +463,7 @@ class AppLocalizationsGn extends AppLocalizations {
 
   @override
   String get shoppingRemoveTooltip => 'Eliminar';
+
+  @override
+  String get shoppingEmpty => 'Lista de la compra vacía';
 }

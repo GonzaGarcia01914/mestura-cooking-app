@@ -33,6 +33,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get includeMacrosSubtitle => '1人分のカロリーとマクロを追加します。';
 
   @override
+  String get useShoppingList => '買い物リストから生成';
+
+  @override
+  String get useShoppingListSubtitle => '買い物リストの食べられる項目を主に使用します。';
+
+  @override
   String get reset => 'リセット';
 
   @override
@@ -205,6 +211,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get dialogOk => 'OK';
+
+  @override
+  String get shoppingNoEdibleItems => '買い物リストに食べられる項目が見つかりません。';
 
   @override
   String get preferencesMenu => '食事の好み';
@@ -454,4 +463,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get shoppingRemoveTooltip => '削除';
+
+  @override
+  String get shoppingEmpty => '買い物リストは空です';
 }

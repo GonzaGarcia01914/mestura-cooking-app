@@ -33,6 +33,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get includeMacrosSubtitle => 'Добавляет калории и макросы на порцию.';
 
   @override
+  String get useShoppingList => 'Генерировать из списка покупок';
+
+  @override
+  String get useShoppingListSubtitle => 'Использовать в основном съедобные позиции из списка покупок.';
+
+  @override
   String get reset => 'Сбросить';
 
   @override
@@ -205,6 +211,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get dialogOk => 'ОК';
+
+  @override
+  String get shoppingNoEdibleItems => 'В списке покупок не найдено съедобных позиций.';
 
   @override
   String get preferencesMenu => 'Пищевые предпочтения';
@@ -454,4 +463,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shoppingRemoveTooltip => 'Удалить';
+
+  @override
+  String get shoppingEmpty => 'Ваш список покупок пуст';
 }

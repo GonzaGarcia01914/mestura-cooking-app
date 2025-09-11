@@ -6,6 +6,7 @@
   "shoppingAddPlaceholder": "Añadir artículo",
   "shoppingAddTooltip": "Añadir",
   "shoppingRemoveTooltip": "Eliminar",
+  "shoppingEmpty": "Lista de la compra vacía",
   "homePrompt": "Mba'épa reipota?",
   "advancedOptions": "Jeporavorã iporãvéva",
   "numberOfGuests": "Mboy oútava",
@@ -73,6 +74,9 @@
   "dialogErrorTitle": "Ha'ehína...",
   "dialogOk": "Moneĩ"
 ,
+  "useShoppingList": "Generar desde lista de la compra",
+  "useShoppingListSubtitle": "Usa principalmente elementos comestibles de tu lista de la compra.",
+  "shoppingNoEdibleItems": "No se han encontrado elementos comestibles en tu lista de la compra.",
   "preferencesMenu": "Preferencias alimenticias",
   "preferencesTitle": "Preferencias alimenticias",
   "preferencesSubtitle": "Ojeipuru ombopersonalisapa haguã recetas",

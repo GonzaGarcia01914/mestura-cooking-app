@@ -33,6 +33,12 @@ class AppLocalizationsPl extends AppLocalizations {
   String get includeMacrosSubtitle => 'Dodaje kalorie i makro na porcję.';
 
   @override
+  String get useShoppingList => 'Generuj z listy zakupów';
+
+  @override
+  String get useShoppingListSubtitle => 'Używaj głównie jadalnych pozycji z listy zakupów.';
+
+  @override
   String get reset => 'Resetuj';
 
   @override
@@ -205,6 +211,9 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get dialogOk => 'OK';
+
+  @override
+  String get shoppingNoEdibleItems => 'Brak jadalnych pozycji na liście zakupów.';
 
   @override
   String get preferencesMenu => 'Preferencje żywieniowe';
@@ -454,4 +463,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get shoppingRemoveTooltip => 'Usuń';
+
+  @override
+  String get shoppingEmpty => 'Twoja lista zakupów jest pusta';
 }

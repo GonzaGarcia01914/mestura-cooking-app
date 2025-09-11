@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../../core/services/ad_service.dart';
 import '../../core/services/ad_gate.dart';
+import '../../core/services/shopping_list_service.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/app_title.dart';
 import '../widgets/app_text_field.dart';
@@ -36,6 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _countMacros = false;
   int? _timeLimitMinutes; // nuevo: tiempo disponible (minutos)
   String? _skillLevel; // nuevo: nivel de habilidad: basic|standard|elevated
+  bool _useShoppingList = false; // nuevo: generar desde la lista de la compra
 
   // Opacidad del logo controlada por scroll (sin AnimationController)
   static const double _threshold =
@@ -132,6 +134,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     bool tmpCountMacros = _countMacros;
     int? tmpTime = _timeLimitMinutes;
     String? tmpSkill = _skillLevel;
+    bool tmpUseShopping = _useShoppingList;
 
     // Snapshot original para saber si hay cambios
     final int origServings = _servings;
@@ -244,6 +247,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       title: Text(s.includeMacros),
                       subtitle: Text(
                         s.includeMacrosSubtitle,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+
+                    // Generar desde lista de la compra
+                    const SizedBox(height: 8),
+                    SwitchListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      value: tmpUseShopping,
+                      onChanged: (v) => sbSet(() => tmpUseShopping = v),
+                      title: Text(s.useShoppingList),
+                      subtitle: Text(
+                        s.useShoppingListSubtitle,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
@@ -382,7 +399,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 tmpMaxCalories == origMaxCalories &&
                                 tmpCountMacros == origCountMacros &&
                                 tmpTime == origTime &&
-                                tmpSkill == origSkill);
+                                tmpSkill == origSkill &&
+                                tmpUseShopping == _useShoppingList);
                         return AnimatedSwitcher(
                           duration: const Duration(milliseconds: 220),
                           switchInCurve: Curves.easeOutCubic,
@@ -455,6 +473,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       _countMacros = tmpCountMacros;
                       _timeLimitMinutes = tmpTime;
                       _skillLevel = tmpSkill;
+                      _useShoppingList = tmpUseShopping;
                     });
                     Navigator.of(ctx).pop();
                   },
@@ -481,7 +500,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _generateRecipe() async {
     final query = _controller.text.trim();
-    if (query.isEmpty || ref.read(homeLoadingProvider)) return;
+    if ((query.isEmpty && !_useShoppingList) || ref.read(homeLoadingProvider)) return;
 
     ref.read(homeLoadingProvider.notifier).state = true;
     final languageCode = Localizations.localeOf(context).languageCode;
@@ -489,9 +508,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final openAI = ref.read(openAIServiceProvider);
 
     try {
-      final isFood = await openAI.isFood(query);
-      if (!isFood) {
-        throw Exception(s.inappropriateInput);
+      // Si no se usa la lista de la compra, valida que la entrada sea comestible
+      if (!_useShoppingList) {
+        final isFood = await openAI.isFood(query);
+        if (!isFood) {
+          throw Exception(s.inappropriateInput);
+        }
       }
       if (!mounted) return;
       ref.read(homeLoadingProvider.notifier).state = false;
@@ -513,13 +535,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       openAI.timeLimitMinutes = _timeLimitMinutes;
       openAI.skillLevel = _skillLevel;
 
+      // Si esta activado "usar lista de la compra", filtramos solo los items comestibles
+      String effectiveQuery = query;
+      List<String>? restrictions;
+      if (_useShoppingList) {
+        final items = await ShoppingListService().load();
+        // Normaliza textos y elimina duplicados
+        final texts = items
+            .map((e) => e.text.trim())
+            .where((t) => t.isNotEmpty)
+            .toList();
+        final lowerSeen = <String>{};
+        final unique = <String>[];
+        for (final t in texts) {
+          final l = t.toLowerCase();
+          if (lowerSeen.add(l)) unique.add(t);
+        }
+
+        // Verifica comestibilidad por item
+        final checks = await Future.wait(unique.map(openAI.isFood));
+        final edible = <String>[];
+        final inedible = <String>[];
+        for (var i = 0; i < unique.length; i++) {
+          (checks[i] ? edible : inedible).add(unique[i]);
+        }
+
+        if (edible.isEmpty) {
+          throw Exception(s.shoppingNoEdibleItems);
+        }
+
+        // Limita a ~12 ingredientes para no saturar el prompt
+        final topEdible = edible.take(12).toList();
+        final listSegment = topEdible.join(', ');
+        final prefixEs =
+            'Usa principalmente estos ingredientes de mi lista de la compra: ';
+        final prefixEn =
+            'Use mostly these ingredients from my shopping list: ';
+        final prefix = languageCode == 'es' ? prefixEs : prefixEn;
+        final complementEs =
+            ' Si faltan ingredientes clave, complementa con basicos de despensa.';
+        final complementEn =
+            ' If key items are missing, complement with pantry staples.';
+        final complement = languageCode == 'es' ? complementEs : complementEn;
+        final base = query.isEmpty
+            ? (languageCode == 'es' ? 'Sugerencia de receta' : 'Recipe idea')
+            : query;
+        effectiveQuery = '$base. $prefix$listSegment.$complement';
+
+        // Evita explicitamente usar elementos no comestibles
+        if (inedible.isNotEmpty) {
+          restrictions = inedible;
+        }
+      }
+
       final recipeFuture = openAI.generateRecipe(
-        query,
+        effectiveQuery,
         language: languageCode,
         generateImage: false,
         servings: _servings,
         includeMacros: _countMacros,
         maxCaloriesKcal: _maxCalories,
+        restrictions: restrictions,
       );
 
       bool adClosed = true;

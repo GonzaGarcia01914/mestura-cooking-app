@@ -33,6 +33,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get includeMacrosSubtitle => '每份添加卡路里和宏量营养。';
 
   @override
+  String get useShoppingList => '从购物清单生成';
+
+  @override
+  String get useShoppingListSubtitle => '优先使用购物清单中可食用的项目。';
+
+  @override
   String get reset => '重置';
 
   @override
@@ -205,6 +211,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dialogOk => '好的';
+
+  @override
+  String get shoppingNoEdibleItems => '在你的购物清单中未找到可食用的项目。';
 
   @override
   String get preferencesMenu => '饮食偏好';
@@ -454,4 +463,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get shoppingRemoveTooltip => '删除';
+
+  @override
+  String get shoppingEmpty => '你的购物清单为空';
 }

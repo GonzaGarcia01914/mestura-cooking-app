@@ -33,6 +33,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get includeMacrosSubtitle => '1인분당 칼로리와 매크로를 추가합니다.';
 
   @override
+  String get useShoppingList => '장보기 목록에서 생성';
+
+  @override
+  String get useShoppingListSubtitle => '장보기 목록의 먹을 수 있는 항목을 주로 사용합니다.';
+
+  @override
   String get reset => '초기화';
 
   @override
@@ -205,6 +211,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get dialogOk => '확인';
+
+  @override
+  String get shoppingNoEdibleItems => '장보기 목록에서 먹을 수 있는 항목을 찾지 못했습니다.';
 
   @override
   String get preferencesMenu => '식단 선호';
@@ -454,4 +463,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shoppingRemoveTooltip => '삭제';
+
+  @override
+  String get shoppingEmpty => '쇼핑 목록이 비어 있습니다';
 }
