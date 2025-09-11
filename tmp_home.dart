@@ -17,8 +17,7 @@ import 'package:mestura/ui/style/app_style.dart';
 import 'package:mestura/ui/screens/recipe_screen.dart';
 import 'package:mestura/ui/screens/loading_screen.dart';
 
-final homeLoadingProvider =
-    StateProvider.autoDispose<bool>((ref) => false);
+final homeLoadingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -41,7 +40,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final ValueNotifier<double> _logoOpacity = ValueNotifier<double>(1.0);
   // Ajuste de sensibilidad del fade: mayor = desapariciÃ³n mÃ¡s lenta
   static const double _fadeThreshold = 220.0;
-
 
   Future<void> _showErrorDialog(String rawMessage) async {
     if (!mounted) return;
@@ -108,7 +106,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final pixels = pos.pixels;
     final max = pos.maxScrollExtent;
 
-    final double effective = (max > 0 && max < _fadeThreshold) ? max : _fadeThreshold;
+    final double effective =
+        (max > 0 && max < _fadeThreshold) ? max : _fadeThreshold;
 
     double t = effective <= 0 ? 0.0 : (pixels / effective);
     if (max > 0 && max < _fadeThreshold && pixels >= max - 0.5) {
@@ -417,7 +416,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             icon: const Icon(Icons.remove_circle_outline),
                           ),
                           Text(
-                            _maxCalories == null ? 'â€”' : '${_maxCalories} kcal',
+                            _maxCalories == null ? 'â€”' : '$_maxCalories kcal',
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w700),
                           ),
@@ -508,12 +507,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           _TimeChip(
                             label: '2 h',
                             selected: _timeLimitMinutes == 120,
-                            onTap: () => setState(() => _timeLimitMinutes = 120),
+                            onTap:
+                                () => setState(() => _timeLimitMinutes = 120),
                           ),
                           _TimeChip(
                             label: 'Sin lÃ­mite',
                             selected: _timeLimitMinutes == null,
-                            onTap: () => setState(() => _timeLimitMinutes = null),
+                            onTap:
+                                () => setState(() => _timeLimitMinutes = null),
                           ),
                         ],
                       ),
@@ -540,12 +541,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           _SkillChip(
                             label: 'EstÃ¡ndar',
                             selected: _skillLevel == 'standard',
-                            onTap: () => setState(() => _skillLevel = 'standard'),
+                            onTap:
+                                () => setState(() => _skillLevel = 'standard'),
                           ),
                           _SkillChip(
                             label: 'Elevado',
                             selected: _skillLevel == 'elevated',
-                            onTap: () => setState(() => _skillLevel = 'elevated'),
+                            onTap:
+                                () => setState(() => _skillLevel = 'elevated'),
                           ),
                           _SkillChip(
                             label: 'Cualquiera',
@@ -560,7 +563,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
 
               const SizedBox(height: 12),
-              // Restringe los rebuilds del 
+              // Restringe los rebuilds del
               // botÃ³n a los cambios de loading Ãºnicamente
               Consumer(
                 builder: (context, ref, _) {
@@ -588,7 +591,11 @@ class _TimeChip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  const _TimeChip({required this.label, required this.selected, required this.onTap});
+  const _TimeChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -605,7 +612,11 @@ class _SkillChip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  const _SkillChip({required this.label, required this.selected, required this.onTap});
+  const _SkillChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

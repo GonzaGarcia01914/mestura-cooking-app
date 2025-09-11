@@ -17,7 +17,7 @@ class DeepLinkService {
     await _handleInitialLink();
     _sub?.cancel();
     _sub = _appLinks!.uriLinkStream.listen((uri) {
-      if (uri != null) _handleLink(uri);
+      _handleLink(uri);
     }, onError: (_) {});
   }
 
@@ -34,14 +34,20 @@ class DeepLinkService {
   static Future<void> _handleLink(Uri link) async {
     try {
       // Admitimos esquemas personalizados: mestura://recipe?id=...
-      final isRecipe = (link.scheme == 'mestura' && link.host == 'recipe') ||
-          (link.scheme == 'https' && link.host.contains('mestura') && link.path == '/recipe');
+      final isRecipe =
+          (link.scheme == 'mestura' && link.host == 'recipe') ||
+          (link.scheme == 'https' &&
+              link.host.contains('mestura') &&
+              link.path == '/recipe');
       if (isRecipe && link.queryParameters['id'] != null) {
         final id = link.queryParameters['id']!;
-        final RecipeModel? recipe = await ShareRecipeService.fetchSharedRecipeById(id);
+        final RecipeModel? recipe =
+            await ShareRecipeService.fetchSharedRecipeById(id);
         if (recipe != null) {
           final nav = appNavigatorKey.currentState;
-          nav?.push(MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)));
+          nav?.push(
+            MaterialPageRoute(builder: (_) => RecipeScreen(recipe: recipe)),
+          );
         }
       }
     } catch (_) {

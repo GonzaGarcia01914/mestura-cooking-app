@@ -135,8 +135,9 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
     final s = raw.trim();
     if (s.isEmpty) return null;
     final l = s.toLowerCase();
-    if (l == 'null' || l == 'none' || l == 'n/a' || l == 'na' || l == '-')
+    if (l == 'null' || l == 'none' || l == 'n/a' || l == 'na' || l == '-') {
       return null;
+    }
     final uri = Uri.tryParse(s);
     if (uri == null) return null;
     final scheme = uri.scheme.toLowerCase();
@@ -348,238 +349,245 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            constraints: BoxConstraints(
+              maxWidth: Responsive.maxContentWidth(context),
+            ),
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: MediaQuery.of(context).padding.top + 72 + 8),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: MediaQuery.of(context).padding.top + 72 + 8),
 
-            // Imagen opcional (solo cuando ya está lista)
-            if (_showHeaderImage && _headerImageUrl != null) ...[
-              FrostedContainer(
-                padding: EdgeInsets.zero,
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(16)),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: CachedNetworkImage(
-                      imageUrl: _headerImageUrl!,
-                      fit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 200),
-                      errorWidget: (_, __, ___) {
-                        if (_showHeaderImage) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (mounted) {
-                              setState(() => _showHeaderImage = false);
+                // Imagen opcional (solo cuando ya está lista)
+                if (_showHeaderImage && _headerImageUrl != null) ...[
+                  FrostedContainer(
+                    padding: EdgeInsets.zero,
+                    borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: CachedNetworkImage(
+                          imageUrl: _headerImageUrl!,
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(milliseconds: 200),
+                          errorWidget: (_, __, ___) {
+                            if (_showHeaderImage) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (mounted) {
+                                  setState(() => _showHeaderImage = false);
+                                }
+                              });
                             }
-                          });
-                        }
-                        return const SizedBox.shrink();
-                      },
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-
-            Text(
-              widget.recipe.title,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                height: 1.2,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Ingredientes y Pasos: en tablets/desktop, dos columnas.
-            Builder(builder: (context) {
-              final isWide = MediaQuery.of(context).size.width >= Responsive.tabletBreakpoint;
-              final ingredientsWidget = FrostedContainer(
-                borderRadius: const BorderRadius.all(Radius.circular(14)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      s.ingredientsTitle,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ...List.generate(
-                      ingredients.length,
-                      (i) => CheckboxListTile(
-                        value: _checked[i],
-                        onChanged: (val) => setState(() => _checked[i] = val ?? true),
-                        title: Text(ingredients[i]),
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-
-              final stepsWidget = FrostedContainer(
-                borderRadius: const BorderRadius.all(Radius.circular(14)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      s.stepsTitle,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ...List.generate(
-                      steps.length,
-                      (i) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text('${i + 1}. ${steps[i]}'),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-
-              if (!isWide) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ingredientsWidget,
-                    const SizedBox(height: 16),
-                    stepsWidget,
-                  ],
-                );
-              }
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: ingredientsWidget),
-                  const SizedBox(width: 16),
-                  Expanded(child: stepsWidget),
+                  const SizedBox(height: 16),
                 ],
-              );
-            }),
 
-            // Dentro del Column principal, tras el contenedor de pasos:
-            if (widget.recipe.nutrition != null) ...[
-              const SizedBox(height: 16),
-              FrostedContainer(
-                borderRadius: const BorderRadius.all(Radius.circular(14)),
-                child: Theme(
-                  data: Theme.of(
-                    context,
-                  ).copyWith(dividerColor: Colors.transparent),
-                  child: ExpansionTile(
-                    tilePadding: const EdgeInsets.symmetric(horizontal: 8),
-                    childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
-                    title: Text(
-                      s.nutritionFactsTitle,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(s.nutritionPerServing),
-                    children: [
-                      _NutritionRow(
-                        label: s.nutritionCalories,
-                        value:
-                            widget.recipe.nutrition!.caloriesKcal != null
-                                ? '${widget.recipe.nutrition!.caloriesKcal} kcal'
-                                : '—',
-                      ),
-                      _NutritionRow(
-                        label: s.nutritionProtein,
-                        value:
-                            widget.recipe.nutrition!.proteinG != null
-                                ? '${widget.recipe.nutrition!.proteinG!.toStringAsFixed(1)} g'
-                                : '—',
-                      ),
-                      _NutritionRow(
-                        label: s.nutritionCarbs,
-                        value:
-                            widget.recipe.nutrition!.carbsG != null
-                                ? '${widget.recipe.nutrition!.carbsG!.toStringAsFixed(1)} g'
-                                : '—',
-                      ),
-                      _NutritionRow(
-                        label: s.nutritionFat,
-                        value:
-                            widget.recipe.nutrition!.fatG != null
-                                ? '${widget.recipe.nutrition!.fatG!.toStringAsFixed(1)} g'
-                                : '—',
-                      ),
-                      if (widget.recipe.nutrition!.fiberG != null)
-                        _NutritionRow(
-                          label: s.nutritionFiber,
-                          value:
-                              '${widget.recipe.nutrition!.fiberG!.toStringAsFixed(1)} g',
-                        ),
-                      if (widget.recipe.nutrition!.sugarG != null)
-                        _NutritionRow(
-                          label: s.nutritionSugar,
-                          value:
-                              '${widget.recipe.nutrition!.sugarG!.toStringAsFixed(1)} g',
-                        ),
-                      if (widget.recipe.nutrition!.sodiumMg != null)
-                        _NutritionRow(
-                          label: s.nutritionSodium,
-                          value:
-                              '${widget.recipe.nutrition!.sodiumMg!.toStringAsFixed(0)} mg',
-                        ),
-                    ],
+                Text(
+                  widget.recipe.title,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    height: 1.2,
                   ),
                 ),
-              ),
-            ],
 
-            const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-            // Nuevo: botón para modo cocina paso a paso (verde destacado)
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => CookingScreen(recipe: widget.recipe),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                // Ingredientes y Pasos: en tablets/desktop, dos columnas.
+                Builder(
+                  builder: (context) {
+                    final isWide =
+                        MediaQuery.of(context).size.width >=
+                        Responsive.tabletBreakpoint;
+                    final ingredientsWidget = FrostedContainer(
+                      borderRadius: const BorderRadius.all(Radius.circular(14)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            s.ingredientsTitle,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          ...List.generate(
+                            ingredients.length,
+                            (i) => CheckboxListTile(
+                              value: _checked[i],
+                              onChanged:
+                                  (val) =>
+                                      setState(() => _checked[i] = val ?? true),
+                              title: Text(ingredients[i]),
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                              controlAffinity: ListTileControlAffinity.leading,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    final stepsWidget = FrostedContainer(
+                      borderRadius: const BorderRadius.all(Radius.circular(14)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            s.stepsTitle,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          ...List.generate(
+                            steps.length,
+                            (i) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text('${i + 1}. ${steps[i]}'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (!isWide) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ingredientsWidget,
+                          const SizedBox(height: 16),
+                          stepsWidget,
+                        ],
+                      );
+                    }
+
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: ingredientsWidget),
+                        const SizedBox(width: 16),
+                        Expanded(child: stepsWidget),
+                      ],
+                    );
+                  },
                 ),
-                child: Text(_startCookingLabel(s)),
-              ),
+
+                // Dentro del Column principal, tras el contenedor de pasos:
+                if (widget.recipe.nutrition != null) ...[
+                  const SizedBox(height: 16),
+                  FrostedContainer(
+                    borderRadius: const BorderRadius.all(Radius.circular(14)),
+                    child: Theme(
+                      data: Theme.of(
+                        context,
+                      ).copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        tilePadding: const EdgeInsets.symmetric(horizontal: 8),
+                        childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+                        title: Text(
+                          s.nutritionFactsTitle,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        subtitle: Text(s.nutritionPerServing),
+                        children: [
+                          _NutritionRow(
+                            label: s.nutritionCalories,
+                            value:
+                                widget.recipe.nutrition!.caloriesKcal != null
+                                    ? '${widget.recipe.nutrition!.caloriesKcal} kcal'
+                                    : '—',
+                          ),
+                          _NutritionRow(
+                            label: s.nutritionProtein,
+                            value:
+                                widget.recipe.nutrition!.proteinG != null
+                                    ? '${widget.recipe.nutrition!.proteinG!.toStringAsFixed(1)} g'
+                                    : '—',
+                          ),
+                          _NutritionRow(
+                            label: s.nutritionCarbs,
+                            value:
+                                widget.recipe.nutrition!.carbsG != null
+                                    ? '${widget.recipe.nutrition!.carbsG!.toStringAsFixed(1)} g'
+                                    : '—',
+                          ),
+                          _NutritionRow(
+                            label: s.nutritionFat,
+                            value:
+                                widget.recipe.nutrition!.fatG != null
+                                    ? '${widget.recipe.nutrition!.fatG!.toStringAsFixed(1)} g'
+                                    : '—',
+                          ),
+                          if (widget.recipe.nutrition!.fiberG != null)
+                            _NutritionRow(
+                              label: s.nutritionFiber,
+                              value:
+                                  '${widget.recipe.nutrition!.fiberG!.toStringAsFixed(1)} g',
+                            ),
+                          if (widget.recipe.nutrition!.sugarG != null)
+                            _NutritionRow(
+                              label: s.nutritionSugar,
+                              value:
+                                  '${widget.recipe.nutrition!.sugarG!.toStringAsFixed(1)} g',
+                            ),
+                          if (widget.recipe.nutrition!.sodiumMg != null)
+                            _NutritionRow(
+                              label: s.nutritionSodium,
+                              value:
+                                  '${widget.recipe.nutrition!.sodiumMg!.toStringAsFixed(0)} mg',
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+
+                const SizedBox(height: 20),
+
+                // Nuevo: botón para modo cocina paso a paso (verde destacado)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => CookingScreen(recipe: widget.recipe),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: Text(_startCookingLabel(s)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                AppPrimaryButton(
+                  loading: _loading,
+                  onPressed: _rewriteRecipe,
+                  child: Text(s.rewriteButton),
+                ),
+                const SizedBox(height: 10),
+
+                if (!_isSaved)
+                  OutlinedButton.icon(
+                    onPressed: _saveRecipe,
+                    icon: const Icon(Icons.bookmark_add),
+                    label: Text(s.saveButton),
+                  ),
+
+                const SizedBox(height: 24),
+              ],
             ),
-            const SizedBox(height: 10),
-
-            AppPrimaryButton(
-              loading: _loading,
-              onPressed: _rewriteRecipe,
-              child: Text(s.rewriteButton),
-            ),
-            const SizedBox(height: 10),
-
-            if (!_isSaved)
-              OutlinedButton.icon(
-                onPressed: _saveRecipe,
-                icon: const Icon(Icons.bookmark_add),
-                label: Text(s.saveButton),
-              ),
-
-            const SizedBox(height: 24),
-          ],
-        ),
           ),
         ),
       ),

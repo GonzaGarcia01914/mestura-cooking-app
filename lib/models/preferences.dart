@@ -23,36 +23,36 @@ class FoodPreferences {
     List<String>? intolerances,
     List<String>? dislikedIngredients,
   }) => FoodPreferences(
-        diet: diet ?? this.diet,
-        religion: religion ?? this.religion,
-        medical: medical ?? this.medical,
-        allergensAvoid: allergensAvoid ?? this.allergensAvoid,
-        intolerances: intolerances ?? this.intolerances,
-        dislikedIngredients: dislikedIngredients ?? this.dislikedIngredients,
-      );
+    diet: diet ?? this.diet,
+    religion: religion ?? this.religion,
+    medical: medical ?? this.medical,
+    allergensAvoid: allergensAvoid ?? this.allergensAvoid,
+    intolerances: intolerances ?? this.intolerances,
+    dislikedIngredients: dislikedIngredients ?? this.dislikedIngredients,
+  );
 
   Map<String, dynamic> toJson() => {
-        'diet': diet,
-        'religion': religion,
-        'medical': medical,
-        'allergens_avoid': allergensAvoid,
-        'intolerances': intolerances,
-        'disliked_ingredients': dislikedIngredients,
-      };
+    'diet': diet,
+    'religion': religion,
+    'medical': medical,
+    'allergens_avoid': allergensAvoid,
+    'intolerances': intolerances,
+    'disliked_ingredients': dislikedIngredients,
+  };
 
   factory FoodPreferences.fromJson(Map<String, dynamic>? json) {
     if (json == null) return const FoodPreferences();
-    List<String> _ls(dynamic v) => (v is List)
-        ? v.where((e) => e != null).map((e) => e.toString()).toList()
-        : const <String>[];
+    List<String> ls(dynamic v) =>
+        (v is List)
+            ? v.where((e) => e != null).map((e) => e.toString()).toList()
+            : const <String>[];
     return FoodPreferences(
-      diet: _ls(json['diet']),
-      religion: _ls(json['religion']),
-      medical: _ls(json['medical']),
-      allergensAvoid: _ls(json['allergens_avoid']),
-      intolerances: _ls(json['intolerances']),
-      dislikedIngredients: _ls(json['disliked_ingredients']),
+      diet: ls(json['diet']),
+      religion: ls(json['religion']),
+      medical: ls(json['medical']),
+      allergensAvoid: ls(json['allergens_avoid']),
+      intolerances: ls(json['intolerances']),
+      dislikedIngredients: ls(json['disliked_ingredients']),
     );
   }
 }
-

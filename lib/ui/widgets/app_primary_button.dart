@@ -27,15 +27,17 @@ class AppPrimaryButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: loading ? null : onPressed,
-        style: this.style ?? ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          foregroundColor: foregroundColor,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(appStyle.radius),
-          ),
-          elevation: appStyle.elevation,
-        ),
+        style:
+            style ??
+            ElevatedButton.styleFrom(
+              backgroundColor: backgroundColor,
+              foregroundColor: foregroundColor,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(appStyle.radius),
+              ),
+              elevation: appStyle.elevation,
+            ),
         child:
             loading
                 ? const SizedBox(

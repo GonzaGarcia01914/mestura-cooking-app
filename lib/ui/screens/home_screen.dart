@@ -219,9 +219,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           icon: const Icon(Icons.remove_circle_outline),
                         ),
                         Text(
-                          tmpMaxCalories == null
-                              ? '-'
-                              : '${tmpMaxCalories} kcal',
+                          tmpMaxCalories == null ? '-' : '$tmpMaxCalories kcal',
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w700),
                         ),
@@ -256,7 +254,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       decoration: BoxDecoration(
                         color: Theme.of(
                           context,
-                        ).colorScheme.surfaceVariant.withOpacity(0.25),
+                        ).colorScheme.surfaceContainerHighest.withOpacity(0.25),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Theme(
@@ -320,7 +318,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       decoration: BoxDecoration(
                         color: Theme.of(
                           context,
-                        ).colorScheme.surfaceVariant.withOpacity(0.25),
+                        ).colorScheme.surfaceContainerHighest.withOpacity(0.25),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Theme(
@@ -646,75 +644,77 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+              constraints: BoxConstraints(
+                maxWidth: Responsive.maxContentWidth(context),
+              ),
               child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 50),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 50),
 
-              // LOGO con fade por scroll (sin colapso)
-              Center(
-                child: ValueListenableBuilder<double>(
-                  valueListenable: _logoOpacity,
-                  builder:
-                      (_, op, child) => IgnorePointer(
-                        ignoring: op <= 0.01,
-                        child: Opacity(opacity: op, child: child),
+                  // LOGO con fade por scroll (sin colapso)
+                  Center(
+                    child: ValueListenableBuilder<double>(
+                      valueListenable: _logoOpacity,
+                      builder:
+                          (_, op, child) => IgnorePointer(
+                            ignoring: op <= 0.01,
+                            child: Opacity(opacity: op, child: child),
+                          ),
+                      child: Image.asset(
+                        'assets/images/logo_sin_fondo.png',
+                        height: 300,
+                        fit: BoxFit.contain,
                       ),
-                  child: Image.asset(
-                    'assets/images/logo_sin_fondo.png',
-                    height: 300,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-
-              AppTitle(s.homePrompt),
-              const SizedBox(height: 16),
-
-              AppTextField(
-                controller: _controller,
-                hintText: s.homePrompt,
-                onSubmitted: (_) => _generateRecipe(),
-              ),
-              const SizedBox(height: 16),
-              // Advanced options in dialog
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: _openAdvancedOptionsDialog,
-                  icon: const Icon(Icons.tune),
-                  label: Text(s.advancedOptions),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ),
-              ),
 
-              const SizedBox(height: 12),
-              // Restringe los rebuilds del
-              // botÃƒÂ³n a los cambios de loading ÃƒÂºnicamente
-              Consumer(
-                builder: (context, ref, _) {
-                  final loading = ref.watch(homeLoadingProvider);
-                  return AppPrimaryButton(
-                    loading: loading,
-                    onPressed: _generateRecipe,
-                    child: Text(
-                      s.searchButton,
-                      style: const TextStyle(fontSize: 16),
+                  AppTitle(s.homePrompt),
+                  const SizedBox(height: 16),
+
+                  AppTextField(
+                    controller: _controller,
+                    hintText: s.homePrompt,
+                    onSubmitted: (_) => _generateRecipe(),
+                  ),
+                  const SizedBox(height: 16),
+                  // Advanced options in dialog
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _openAdvancedOptionsDialog,
+                      icon: const Icon(Icons.tune),
+                      label: Text(s.advancedOptions),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-            ],
+                  ),
+
+                  const SizedBox(height: 12),
+                  // Restringe los rebuilds del
+                  // botÃƒÂ³n a los cambios de loading ÃƒÂºnicamente
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final loading = ref.watch(homeLoadingProvider);
+                      return AppPrimaryButton(
+                        loading: loading,
+                        onPressed: _generateRecipe,
+                        child: Text(
+                          s.searchButton,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
             ),
           ),

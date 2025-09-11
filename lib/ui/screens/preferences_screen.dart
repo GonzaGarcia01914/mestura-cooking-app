@@ -324,7 +324,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     final topPad = MediaQuery.of(context).padding.top + 72 + 8;
     final s = AppLocalizations.of(context)!;
 
-    Widget _countBadge(int count) {
+    Widget countBadge(int count) {
       if (count <= 0) return const SizedBox.shrink();
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -334,10 +334,10 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
         child: Text(
           '$count',
-          style: Theme.of(context)
-              .textTheme
-              .labelSmall
-              ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       );
     }
@@ -348,9 +348,9 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
       List<String> stateList,
     ) {
       String title = s.preferencesSectionDiet;
-      if (sectionKey == 'medical')
+      if (sectionKey == 'medical') {
         title = s.preferencesSectionMedical;
-      else if (sectionKey == 'allergens')
+      } else if (sectionKey == 'allergens')
         title = s.preferencesSectionAllergens;
       else if (sectionKey == 'intolerances')
         title = s.preferencesSectionIntolerances;
@@ -372,14 +372,13 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                 Expanded(
                   child: Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                _countBadge(count),
+                countBadge(count),
               ],
             ),
             children: [
@@ -421,26 +420,28 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              s.preferencesSubtitle,
-              style: Theme.of(context).textTheme.bodyMedium,
+            constraints: BoxConstraints(
+              maxWidth: Responsive.maxContentWidth(context),
             ),
-            const SizedBox(height: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  s.preferencesSubtitle,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 12),
 
-            chipGroup('diet', dietOptions, _prefs.diet),
-            const SizedBox(height: 12),
-            chipGroup('medical', medicalOptions, _prefs.medical),
-            const SizedBox(height: 12),
-            chipGroup('allergens', allergenOptions, _prefs.allergensAvoid),
-            const SizedBox(height: 12),
-            chipGroup('religion', religionOptions, _prefs.religion),
-            const SizedBox(height: 12),
+                chipGroup('diet', dietOptions, _prefs.diet),
+                const SizedBox(height: 12),
+                chipGroup('medical', medicalOptions, _prefs.medical),
+                const SizedBox(height: 12),
+                chipGroup('allergens', allergenOptions, _prefs.allergensAvoid),
+                const SizedBox(height: 12),
+                chipGroup('religion', religionOptions, _prefs.religion),
+                const SizedBox(height: 12),
 
-            /*
+                /*
             === Ingredientes no deseados (deshabilitado temporalmente) ===
             La siguiente sección de entrada y el listado expandible de
             ingredientes no deseados se comenta por simplicidad.
@@ -548,21 +549,20 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                 ),
               ),
             */
-
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _clear,
-                    child: Text(s.preferencesClear),
-                  ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _clear,
+                        child: Text(s.preferencesClear),
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 16),
               ],
             ),
-            const SizedBox(height: 16),
-          ],
-        ),
           ),
         ),
       ),

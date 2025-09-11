@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AdGate {
   static const _key = 'recipe_generation_count';
-  static const every = 3;
+  static const every = 2;
 
   static Future<void> registerAction() async {
     final prefs = await SharedPreferences.getInstance();
