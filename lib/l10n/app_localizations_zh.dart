@@ -12,31 +12,43 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => 'Mestura';
 
   @override
-  String get homePrompt => '想做什么？';
+  String get shoppingMenu => '购物清单';
+
+  @override
+  String get shoppingTitle => '购物清单';
+
+  @override
+  String get shoppingAddPlaceholder => '添加项目';
+
+  @override
+  String get shoppingAddTooltip => '添加';
+
+  @override
+  String get shoppingRemoveTooltip => '删除';
+
+  @override
+  String get shoppingEmpty => '购物清单为空';
+
+  @override
+  String get homePrompt => '想吃点什么？';
 
   @override
   String get advancedOptions => '高级选项';
 
   @override
-  String get numberOfGuests => '用餐人数';
+  String get numberOfGuests => '就餐人数';
 
   @override
-  String get maxCalories => '最大卡路里';
+  String get maxCalories => '最高热量';
 
   @override
   String get perServing => '（每份）';
 
   @override
-  String get includeMacros => '包含宏量营养（估算）';
+  String get includeMacros => '包含宏量营养素（估算）';
 
   @override
-  String get includeMacrosSubtitle => '每份添加卡路里和宏量营养。';
-
-  @override
-  String get useShoppingList => '从购物清单生成';
-
-  @override
-  String get useShoppingListSubtitle => '优先使用购物清单中可食用的项目。';
+  String get includeMacrosSubtitle => '每份添加热量和宏量营养素。';
 
   @override
   String get reset => '重置';
@@ -60,16 +72,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timeNoLimit => '不限';
 
   @override
-  String get skillLevel => '技能水平';
+  String get skillLevel => '烹饪水平';
 
   @override
   String get skillBasic => '基础';
 
   @override
-  String get skillStandard => '标准';
+  String get skillStandard => '常规';
 
   @override
-  String get skillElevated => '高级';
+  String get skillElevated => '进阶';
 
   @override
   String get skillAny => '任意';
@@ -78,16 +90,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get searchButton => '生成食谱';
 
   @override
-  String get surpriseButton => '给我惊喜';
+  String get surpriseButton => '给我个惊喜';
 
   @override
-  String get ingredientsTitle => '食材';
+  String get ingredientsTitle => '配料';
 
   @override
   String get stepsTitle => '步骤';
 
   @override
-  String get rewriteButton => '去除所选食材重新生成';
+  String get rewriteButton => '去除已删除食材后重写';
 
   @override
   String get savedTitle => '已保存的食谱';
@@ -96,10 +108,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noSavedRecipes => '你还没有保存任何食谱';
 
   @override
-  String get filterTips => '提示';
+  String get filterTips => '小贴士';
 
   @override
-  String get filterIngredients => '食材';
+  String get filterIngredients => '配料';
 
   @override
   String get filterDate => '日期';
@@ -108,7 +120,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get saveButton => '保存';
 
   @override
-  String get savedConfirmation => '食谱已保存！';
+  String get savedConfirmation => '已保存食谱！';
 
   @override
   String get shareButton => '分享';
@@ -141,28 +153,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeDark => '深色';
 
   @override
-  String get inappropriateInput => '你的输入不适合用于食谱，请尝试其他想法。';
+  String get inappropriateInput => '你的请求不适合生成食谱。试试其他想法。';
 
   @override
-  String get loadingMessage => '正在生成食谱...';
+  String get loadingMessage => '正在烹饪食谱…';
 
   @override
-  String get loadingTip1 => '提示：试试烟熏香料以增加层次。';
+  String get loadingTip1 => '提示：试试烟熏风味的香料，味道更深。';
 
   @override
-  String get loadingTip2 => '提示：香料炒30秒能激发香气。';
+  String get loadingTip2 => '提示：将香料干炒 30 秒以激发香气。';
 
   @override
   String get loadingTip3 => '提示：保留煮食的水以调整质地。';
 
   @override
-  String get loadingTip4 => '提示：少许酸味（柠檬/醋）能提亮任何菜肴。';
+  String get loadingTip4 => '提示：加一点酸（柠檬/醋）能提亮任何菜肴。';
 
   @override
-  String get loadingTip5 => '提示：分层加盐，而不是最后一次加完。';
+  String get loadingTip5 => '提示：分层加盐，不要一次加完。';
 
   @override
-  String get loadingStagePreparing => '准备中';
+  String get loadingStagePreparing => '准备';
 
   @override
   String get loadingStageMixing => '混合';
@@ -177,7 +189,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loadingStagePlating => '装盘';
 
   @override
-  String get nutritionFactsTitle => '营养成分（约）';
+  String get nutritionFactsTitle => '营养信息（约）';
 
   @override
   String get nutritionPerServing => '每份';
@@ -195,7 +207,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nutritionFat => '脂肪';
 
   @override
-  String get nutritionFiber => '纤维';
+  String get nutritionFiber => '膳食纤维';
 
   @override
   String get nutritionSugar => '糖';
@@ -204,13 +216,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nutritionSodium => '钠';
 
   @override
-  String get dialogDoneTitle => '完成!';
+  String get dialogDoneTitle => '完成！';
 
   @override
   String get dialogErrorTitle => '哎呀…';
 
   @override
-  String get dialogOk => '好的';
+  String get dialogOk => '明白了';
+
+  @override
+  String get useShoppingList => '从购物清单生成';
+
+  @override
+  String get useShoppingListSubtitle => '主要使用购物清单中的可食用项目。';
 
   @override
   String get shoppingNoEdibleItems => '在你的购物清单中未找到可食用的项目。';
@@ -222,13 +240,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get preferencesTitle => '饮食偏好';
 
   @override
-  String get preferencesSubtitle => '用于个性化推荐菜谱';
+  String get preferencesSubtitle => '用于个性化食谱';
 
   @override
   String get preferencesSectionDiet => '饮食';
 
   @override
-  String get preferencesSectionMedical => '医疗';
+  String get preferencesSectionMedical => '医疗相关';
 
   @override
   String get preferencesSectionAllergens => '需避免的过敏原';
@@ -243,16 +261,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get preferencesDisliked => '不喜欢的食材';
 
   @override
-  String get preferencesAddIngredientPlaceholder => '添加食材并按回车键';
+  String get preferencesAddIngredientPlaceholder => '添加食材并按 Enter';
 
   @override
   String get preferencesSave => '保存偏好';
 
   @override
-  String get preferencesClear => '清除所有';
+  String get preferencesClear => '清除全部';
 
   @override
-  String get preferencesSaved => '已保存偏好设置！';
+  String get preferencesSaved => '偏好已保存！';
 
   @override
   String get prefVegan => '纯素';
@@ -315,7 +333,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get prefGlutenFree => '无麸质';
 
   @override
-  String get prefLowFodmap => '低FODMAP';
+  String get prefLowFodmap => '低 FODMAP';
 
   @override
   String get prefLowSodium => '低钠';
@@ -330,7 +348,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get prefLowPurine => '低嘌呤';
 
   @override
-  String get prefLowOxalatePotassium => '低草酸/钾';
+  String get prefLowOxalatePotassium => '低草酸盐 / 钾';
 
   @override
   String get prefLactoseFree => '不含乳糖';
@@ -345,7 +363,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get allergenEggs => '鸡蛋';
 
   @override
-  String get allergenFish => '鱼';
+  String get allergenFish => '鱼类';
 
   @override
   String get allergenPeanuts => '花生';
@@ -384,16 +402,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get prefKosher => '犹太洁食';
 
   @override
-  String get prefHindu => '印度教（常不食牛肉）';
+  String get prefHindu => '印度教（常避免牛肉）';
 
   @override
-  String get prefJain => '耆那教（不食根茎；严格素食）';
+  String get prefJain => '耆那教（不吃根茎；严格素食）';
 
   @override
   String get prefBuddhist => '佛教（因地区而异）';
 
   @override
-  String get prefLentFasting => '斋期/禁食（特定日不吃肉)';
+  String get prefLentFasting => '四旬期 / 斋戒（部分日子不吃肉）';
 
   @override
   String get startCookingButton => '开始烹饪';
@@ -414,7 +432,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cookingSheetSaveRecipe => '保存食谱';
 
   @override
-  String get cookingSheetGoHome => '关闭并返回主页';
+  String get cookingSheetGoHome => '关闭并返回首页';
 
   @override
   String get timerStartTooltip => '开始';
@@ -426,44 +444,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timerResumeTooltip => '继续';
 
   @override
-  String get timerDiscardTooltip => '丢弃';
+  String get timerDiscardTooltip => '放弃';
 
   @override
   String get timerDoneTitle => '时间到！';
 
   @override
-  String get timerDoneBody => '该烹饪步骤已完成。';
+  String get timerDoneBody => '该步骤已完成。';
 
   @override
-  String cookingNotificationTitle(String title) {
+  String cookingNotificationTitle(Object title) {
     return '烹饪中：$title';
   }
 
   @override
-  String cookingOngoingBody(String step) {
-    return '第 $step 步 • 倒计时';
+  String cookingOngoingBody(Object step) {
+    return '步骤 $step • 倒计时';
   }
 
   @override
-  String shareCookedText(String title, String link) {
-    return '我刚刚做了\"$title\"！来试试这个应用：$link';
+  String shareCookedText(Object link, Object title) {
+    return '我刚做了「$title」！来试试这个应用：$link';
   }
 
   @override
-  String get shoppingMenu => '购物清单';
-
-  @override
-  String get shoppingTitle => '购物清单';
-
-  @override
-  String get shoppingAddPlaceholder => '添加项目';
-
-  @override
-  String get shoppingAddTooltip => '添加';
-
-  @override
-  String get shoppingRemoveTooltip => '删除';
-
-  @override
-  String get shoppingEmpty => '你的购物清单为空';
+  String shoppingAddedItem(String item) {
+    return '已将 $item 添加到购物清单！';
+  }
 }

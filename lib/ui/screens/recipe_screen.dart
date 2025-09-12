@@ -9,6 +9,8 @@ import '../../core/providers.dart';
 import '../../core/services/ad_gate.dart';
 import '../../core/services/ad_service.dart';
 import '../../core/services/storage_service.dart';
+import '../../core/services/shopping_list_service.dart';
+import '../../models/shopping_item.dart';
 import 'loading_screen.dart';
 import 'cooking_screen.dart';
 
@@ -34,12 +36,21 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
   final bool _loading = false;
   Locale? _locale;
 
+  // Ingredientes visibles y eliminados (para reescritura)
+  late List<String> _visibleIngredients;
+  final List<String> _removedIngredients = <String>[];
+
   // Header image (solo aparece si realmente carga)
   String? _headerImageUrl;
   bool _showHeaderImage = false;
 
   // Guardado
   bool _isSaved = false;
+
+  // Shopping list (para añadir ingredientes en tiempo real)
+  final _shoppingService = ShoppingListService();
+  final List<ShoppingItem> _shoppingItems = <ShoppingItem>[];
+  final Set<String> _shoppingItemsLC = <String>{};
 
   // AppBar tint con scroll
   final _scrollCtrl = ScrollController();
@@ -49,9 +60,24 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
   void initState() {
     super.initState();
     _checked = List.generate(widget.recipe.ingredients.length, (_) => true);
+    _visibleIngredients = List<String>.from(widget.recipe.ingredients);
     _loadPreferences();
     _checkIfAlreadySaved();
     _prepareHeaderImage();
+
+    // Cargar lista de la compra para reflejar estado en iconos
+    () async {
+      final loaded = await _shoppingService.load();
+      if (!mounted) return;
+      setState(() {
+        _shoppingItems
+          ..clear()
+          ..addAll(loaded);
+        _shoppingItemsLC
+          ..clear()
+          ..addAll(loaded.map((e) => e.text.trim().toLowerCase()));
+      });
+    }();
 
     _scrollCtrl.addListener(() {
       const maxTint = 0.08;
@@ -70,6 +96,97 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
     if (oldWidget.recipe.image != widget.recipe.image) {
       _prepareHeaderImage();
     }
+  }
+
+  // Normaliza un texto de ingrediente a su nombre base (p.ej. "300 g de ajo" -> "Ajo")
+  String _normalizeIngredient(String raw) {
+    var s = raw.trim();
+    if (s.isEmpty) return s;
+
+    // Quitar comentarios entre paréntesis
+    s = s.replaceAll(RegExp(r"\([^\)]*\)"), '');
+
+    // Convertir múltiples espacios a 1
+    s = s.replaceAll(RegExp(r"\s+"), ' ');
+
+    // Quitar prefijos de cantidad/unidad comunes (multi-idioma básico)
+    final qtyUnit = RegExp(
+      r"^(?:(?:\d+[\./,]?\d*|[¼½¾⅓⅔⅛⅜⅝⅞]|una|un|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s*)?" // cantidad
+      r"(?:(?:g|gr|gramos?|kg|mg|ml|l|litros?)\b\s*)?" // unidades métricas
+      r"(?:(?:cucharaditas?|cucharadas?|cdta|cda|tsp|tbsp|cups?|tazas?|pizcas?|pinch(?:es)?|rodajas?|slices?)\b\s*)?",
+      caseSensitive: false,
+    );
+    s = s.replaceFirst(qtyUnit, '');
+
+    // Si queda una estructura "de/di/of" toma lo que sigue (ej: "cucharada de aceite de oliva")
+    final ofMatch = RegExp(r"\b(de|del|de la|de los|de las|di|della|dello|of|do|da|dos|das)\b\s+",
+            caseSensitive: false)
+        .firstMatch(s);
+    if (ofMatch != null) {
+      final idx = ofMatch.end;
+      s = s.substring(idx);
+    }
+
+    // Eliminar modificadores comunes al final (p.ej. "picado", "al gusto", "en polvo")
+    s = s.replaceAll(RegExp(
+      r"\b(al\s+gusto|a\s+gusto|to\s+taste|en\s+polvo|molido(?:a)?|picad[oa]s?|finamente\s+picad[oa]s?|fresco[s]?|seca?|trocead[oa]s?)\b",
+      caseSensitive: false,
+    ), '').trim();
+
+    // Limpiar puntuación residual
+    s = s.replaceAll(RegExp(r"^[\s,.-]+|[\s,.-]+$"), '');
+
+    // Normalizar espacios
+    s = s.replaceAll(RegExp(r"\s+"), ' ').trim();
+
+    if (s.isEmpty) s = raw.trim();
+
+    // Capitalizar primera letra
+    if (s.isNotEmpty) {
+      s = s[0].toUpperCase() + s.substring(1);
+    }
+    return s;
+  }
+
+  Future<void> _addToShoppingList(String text) async {
+    final key = text.trim().toLowerCase();
+    if (_shoppingItemsLC.contains(key)) return;
+    setState(() {
+      _shoppingItems.add(ShoppingItem(text: text));
+      _shoppingItemsLC.add(key);
+    });
+    await _shoppingService.save(_shoppingItems);
+  }
+
+  Future<void> _removeFromShoppingList(String text) async {
+    final key = text.trim().toLowerCase();
+    if (!_shoppingItemsLC.contains(key)) return;
+    setState(() {
+      final idx = _shoppingItems.indexWhere(
+          (e) => e.text.trim().toLowerCase() == key);
+      if (idx >= 0) _shoppingItems.removeAt(idx);
+      _shoppingItemsLC.remove(key);
+    });
+    await _shoppingService.save(_shoppingItems);
+  }
+
+  void _showAddedSnack(String text) {
+    final s = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.green),
+            const SizedBox(width: 8),
+            Expanded(child: Text(s.shoppingAddedItem(text))),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -181,10 +298,8 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
   }
 
   Future<void> _rewriteRecipe() async {
-    final excluded = <String>[];
-    for (var i = 0; i < _checked.length; i++) {
-      if (!_checked[i]) excluded.add(widget.recipe.ingredients[i]);
-    }
+    // Excluir los ingredientes que el usuario ha eliminado
+    final excluded = List<String>.from(_removedIngredients);
 
     try {
       final openai = ref.read(openAIServiceProvider);
@@ -329,7 +444,7 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
   Widget build(BuildContext context) {
     final s = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final ingredients = widget.recipe.ingredients;
+    final ingredients = _visibleIngredients;
     final steps = widget.recipe.steps;
 
     return AppScaffold(
@@ -405,30 +520,104 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
                         Responsive.tabletBreakpoint;
                     final ingredientsWidget = FrostedContainer(
                       borderRadius: const BorderRadius.all(Radius.circular(14)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
+                      child: Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          initiallyExpanded: true,
+                          tilePadding:
+                              const EdgeInsets.symmetric(horizontal: 8),
+                          childrenPadding:
+                              const EdgeInsets.fromLTRB(8, 0, 8, 12),
+                          title: Text(
                             s.ingredientsTitle,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          ...List.generate(
-                            ingredients.length,
-                            (i) => CheckboxListTile(
-                              value: _checked[i],
-                              onChanged:
-                                  (val) =>
-                                      setState(() => _checked[i] = val ?? true),
-                              title: Text(ingredients[i]),
-                              contentPadding: EdgeInsets.zero,
-                              dense: true,
-                              controlAffinity: ListTileControlAffinity.leading,
+                          children: [
+                            ...List.generate(
+                              ingredients.length,
+                              (i) => Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    dense: true,
+                                    title: Text(
+                                      ingredients[i],
+                                      style: theme.textTheme.bodyLarge,
+                                    ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Builder(builder: (context) {
+                                        final norm = _normalizeIngredient(
+                                          ingredients[i],
+                                        );
+                                        final isAdded = _shoppingItemsLC
+                                            .contains(norm.toLowerCase());
+                                        return IconButton(
+                                          tooltip: s.shoppingAddTooltip,
+                                          onPressed: () async {
+                                            if (isAdded) {
+                                              await _removeFromShoppingList(
+                                                  norm);
+                                            } else {
+                                              await _addToShoppingList(norm);
+                                              if (mounted) _showAddedSnack(norm);
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.add_shopping_cart,
+                                            color: isAdded
+                                                ? Colors.green
+                                                : Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
+                                            size: 18,
+                                          ),
+                                        );
+                                      }),
+                                      IconButton(
+                                        tooltip: s.shoppingRemoveTooltip,
+                                        onPressed: () {
+                                          final text = ingredients[i];
+                                          setState(() {
+                                            _visibleIngredients.removeAt(i);
+                                            final l =
+                                                text.toLowerCase().trim();
+                                            final exists =
+                                                _removedIngredients.any(
+                                              (e) =>
+                                                  e.toLowerCase().trim() == l,
+                                            );
+                                            if (!exists)
+                                              _removedIngredients.add(text);
+                                          });
+                                        },
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: Colors.redAccent,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  ),
+                                  if (i < ingredients.length - 1)
+                                    Divider(
+                                      height: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outlineVariant
+                                          .withOpacity(0.25),
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
 
@@ -460,18 +649,37 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           ingredientsWidget,
+                          const SizedBox(height: 8),
+                          AppPrimaryButton(
+                            loading: _loading,
+                            backgroundColor: Colors.orange,
+                            onPressed: _rewriteRecipe,
+                            child: Text(s.rewriteButton),
+                          ),
                           const SizedBox(height: 16),
                           stepsWidget,
                         ],
                       );
                     }
 
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(child: ingredientsWidget),
-                        const SizedBox(width: 16),
-                        Expanded(child: stepsWidget),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(child: ingredientsWidget),
+                            const SizedBox(width: 16),
+                            Expanded(child: stepsWidget),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        AppPrimaryButton(
+                          loading: _loading,
+                          backgroundColor: Colors.orange,
+                          onPressed: _rewriteRecipe,
+                          child: Text(s.rewriteButton),
+                        ),
                       ],
                     );
                   },
@@ -562,7 +770,6 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
@@ -571,11 +778,6 @@ class _RecipeScreenState extends ConsumerState<RecipeScreen> {
                 ),
                 const SizedBox(height: 10),
 
-                AppPrimaryButton(
-                  loading: _loading,
-                  onPressed: _rewriteRecipe,
-                  child: Text(s.rewriteButton),
-                ),
                 const SizedBox(height: 10),
 
                 if (!_isSaved)

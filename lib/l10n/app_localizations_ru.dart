@@ -12,6 +12,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appTitle => 'Mestura';
 
   @override
+  String get shoppingMenu => 'Список покупок';
+
+  @override
+  String get shoppingTitle => 'Список покупок';
+
+  @override
+  String get shoppingAddPlaceholder => 'Добавить элемент';
+
+  @override
+  String get shoppingAddTooltip => 'Добавить';
+
+  @override
+  String get shoppingRemoveTooltip => 'Удалить';
+
+  @override
+  String get shoppingEmpty => 'Список покупок пуст';
+
+  @override
   String get homePrompt => 'Что бы вы хотели?';
 
   @override
@@ -21,22 +39,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get numberOfGuests => 'Количество гостей';
 
   @override
-  String get maxCalories => 'Макс. калорий';
+  String get maxCalories => 'Максимум калорий';
 
   @override
   String get perServing => '(на порцию)';
 
   @override
-  String get includeMacros => 'Добавить макросы (оценочно)';
+  String get includeMacros => 'Включить макроэлементы (примерно)';
 
   @override
-  String get includeMacrosSubtitle => 'Добавляет калории и макросы на порцию.';
-
-  @override
-  String get useShoppingList => 'Генерировать из списка покупок';
-
-  @override
-  String get useShoppingListSubtitle => 'Использовать в основном съедобные позиции из списка покупок.';
+  String get includeMacrosSubtitle => 'Добавляет калории и макроэлементы на порцию.';
 
   @override
   String get reset => 'Сбросить';
@@ -87,13 +99,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get stepsTitle => 'Шаги';
 
   @override
-  String get rewriteButton => 'Переписать без выбранных ингредиентов';
+  String get rewriteButton => 'Переписать без удалённых ингредиентов';
 
   @override
-  String get savedTitle => 'Сохраненные рецепты';
+  String get savedTitle => 'Сохранённые рецепты';
 
   @override
-  String get noSavedRecipes => 'Вы еще не сохранили ни одного рецепта';
+  String get noSavedRecipes => 'У вас ещё нет сохранённых рецептов';
 
   @override
   String get filterTips => 'Советы';
@@ -108,7 +120,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get saveButton => 'Сохранить';
 
   @override
-  String get savedConfirmation => 'Рецепт сохранен!';
+  String get savedConfirmation => 'Рецепт сохранён!';
 
   @override
   String get shareButton => 'Поделиться';
@@ -138,7 +150,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get themeLight => 'Светлая';
 
   @override
-  String get themeDark => 'Темная';
+  String get themeDark => 'Тёмная';
 
   @override
   String get inappropriateInput => 'Ваш запрос не подходит для рецепта. Попробуйте другую идею.';
@@ -147,19 +159,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadingMessage => 'Готовим рецепт...';
 
   @override
-  String get loadingTip1 => 'Совет: попробуйте копченые специи для более яркого вкуса.';
+  String get loadingTip1 => 'Совет: используйте копчёные специи для более глубокого вкуса.';
 
   @override
-  String get loadingTip2 => 'Совет: прогрейте специи 30 сек., чтобы раскрыть аромат.';
+  String get loadingTip2 => 'Совет: поджарьте специи 30 секунд, чтобы раскрыть аромат.';
 
   @override
   String get loadingTip3 => 'Совет: сохраняйте воду после варки, чтобы регулировать текстуру.';
 
   @override
-  String get loadingTip4 => 'Совет: немного кислоты (лимон/уксус) оживит блюдо.';
+  String get loadingTip4 => 'Совет: капля кислоты (лимон/уксус) оживит любое блюдо.';
 
   @override
-  String get loadingTip5 => 'Совет: солите поэтапно, а не в конце.';
+  String get loadingTip5 => 'Совет: солите слоями, а не всё в конце.';
 
   @override
   String get loadingStagePreparing => 'Подготовка';
@@ -171,7 +183,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadingStageSeasoning => 'Приправление';
 
   @override
-  String get loadingStageCooking => 'Готовка';
+  String get loadingStageCooking => 'Приготовление';
 
   @override
   String get loadingStagePlating => 'Подача';
@@ -198,7 +210,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nutritionFiber => 'Клетчатка';
 
   @override
-  String get nutritionSugar => 'Сахара';
+  String get nutritionSugar => 'Сахар';
 
   @override
   String get nutritionSodium => 'Натрий';
@@ -210,10 +222,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dialogErrorTitle => 'Упс…';
 
   @override
-  String get dialogOk => 'ОК';
+  String get dialogOk => 'Понятно';
 
   @override
-  String get shoppingNoEdibleItems => 'В списке покупок не найдено съедобных позиций.';
+  String get useShoppingList => 'Сгенерировать из списка покупок';
+
+  @override
+  String get useShoppingListSubtitle => 'Использовать главным образом съедобные элементы из вашего списка покупок.';
+
+  @override
+  String get shoppingNoEdibleItems => 'В вашем списке покупок не найдено съедобных элементов.';
 
   @override
   String get preferencesMenu => 'Пищевые предпочтения';
@@ -231,16 +249,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get preferencesSectionMedical => 'Медицинские';
 
   @override
-  String get preferencesSectionAllergens => 'Аллергены (избегать)';
+  String get preferencesSectionAllergens => 'Аллергены для исключения';
 
   @override
   String get preferencesSectionIntolerances => 'Непереносимости';
 
   @override
-  String get preferencesSectionReligion => 'Религиозные / культурные';
+  String get preferencesSectionReligion => 'Религия / Культура';
 
   @override
-  String get preferencesDisliked => 'Нежелательные ингредиенты';
+  String get preferencesDisliked => 'Нежелаемые ингредиенты';
 
   @override
   String get preferencesAddIngredientPlaceholder => 'Добавьте ингредиент и нажмите Enter';
@@ -267,7 +285,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get prefVegetarianLacto => 'Вегетарианская (лакто)';
 
   @override
-  String get prefVegetarianStrict => 'Вегетарианская (без яиц/молока)';
+  String get prefVegetarianStrict => 'Вегетарианская (без яиц/молочного)';
 
   @override
   String get prefPescetarian => 'Пескетарианская';
@@ -279,10 +297,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get prefMediterranean => 'Средиземноморская';
 
   @override
-  String get prefLowCarbKeto => 'Низкоуглеводная / кето';
+  String get prefLowCarbKeto => 'Низкоуглев. / Кето';
 
   @override
-  String get prefLowFat => 'Низкожировая';
+  String get prefLowFat => 'С пониженным жиром';
 
   @override
   String get prefHighProtein => 'Высокобелковая';
@@ -294,7 +312,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get prefWholeFoods => 'Натуральные продукты';
 
   @override
-  String get prefNoUltraProcessed => 'Без ультрапереработанных продуктов';
+  String get prefNoUltraProcessed => 'Без ультрапереработанных';
 
   @override
   String get prefNoAlcohol => 'Без алкоголя';
@@ -309,7 +327,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get prefSpicyHigh => 'Очень острое';
 
   @override
-  String get prefOrganic => 'Органическая';
+  String get prefOrganic => 'Органическое';
 
   @override
   String get prefGlutenFree => 'Без глютена';
@@ -318,19 +336,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get prefLowFodmap => 'Низкий FODMAP';
 
   @override
-  String get prefLowSodium => 'Низкий натрий';
+  String get prefLowSodium => 'Мало натрия';
 
   @override
-  String get prefLowSugar => 'Низкий сахар / для диабетиков';
+  String get prefLowSugar => 'Мало сахара / для диабетиков';
 
   @override
   String get prefLowCholesterol => 'Низкий холестерин';
 
   @override
-  String get prefLowPurine => 'Низкие пурины';
+  String get prefLowPurine => 'Низкопуриновая';
 
   @override
-  String get prefLowOxalatePotassium => 'Низкие оксалаты / калий';
+  String get prefLowOxalatePotassium => 'Низкий оксалат / калий';
 
   @override
   String get prefLactoseFree => 'Без лактозы';
@@ -381,19 +399,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get prefHalal => 'Халяль';
 
   @override
-  String get prefKosher => 'Кошерная';
+  String get prefKosher => 'Кошер';
 
   @override
-  String get prefHindu => 'Индуизм (часто без говядины)';
+  String get prefHindu => 'Индуистская (часто без говядины)';
 
   @override
-  String get prefJain => 'Джайнизм (без корнеплодов; строгий вегетарианец)';
+  String get prefJain => 'Джайнизм (без корнеплодов; строгий вегет.)';
 
   @override
-  String get prefBuddhist => 'Буддизм (зависит от региона)';
+  String get prefBuddhist => 'Буддийская (зависит от региона)';
 
   @override
-  String get prefLentFasting => 'Пост / воздержание (в некоторые дни без мяса)';
+  String get prefLentFasting => 'Пост (без мяса в некоторые дни)';
 
   @override
   String get startCookingButton => 'Начать готовить';
@@ -432,38 +450,25 @@ class AppLocalizationsRu extends AppLocalizations {
   String get timerDoneTitle => 'Время вышло!';
 
   @override
-  String get timerDoneBody => 'Шаг приготовления завершён.';
+  String get timerDoneBody => 'Шаг рецепта завершён.';
 
   @override
-  String cookingNotificationTitle(String title) {
+  String cookingNotificationTitle(Object title) {
     return 'Готовим: $title';
   }
 
   @override
-  String cookingOngoingBody(String step) {
+  String cookingOngoingBody(Object step) {
     return 'Шаг $step • обратный отсчёт';
   }
 
   @override
-  String shareCookedText(String title, String link) {
-    return 'Я только что приготовил(а) \"$title\"! Попробуй приложение: $link';
+  String shareCookedText(Object link, Object title) {
+    return 'Я только что приготовил(а) «$title»! Попробуйте приложение: $link';
   }
 
   @override
-  String get shoppingMenu => 'Список покупок';
-
-  @override
-  String get shoppingTitle => 'Список покупок';
-
-  @override
-  String get shoppingAddPlaceholder => 'Добавить элемент';
-
-  @override
-  String get shoppingAddTooltip => 'Добавить';
-
-  @override
-  String get shoppingRemoveTooltip => 'Удалить';
-
-  @override
-  String get shoppingEmpty => 'Ваш список покупок пуст';
+  String shoppingAddedItem(String item) {
+    return '$item добавлено в список покупок!';
+  }
 }

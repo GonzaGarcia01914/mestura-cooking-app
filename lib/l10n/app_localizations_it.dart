@@ -12,7 +12,25 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTitle => 'Mestura';
 
   @override
-  String get homePrompt => 'Cosa ti piacerebbe?';
+  String get shoppingMenu => 'Lista della spesa';
+
+  @override
+  String get shoppingTitle => 'Lista della spesa';
+
+  @override
+  String get shoppingAddPlaceholder => 'Aggiungi articolo';
+
+  @override
+  String get shoppingAddTooltip => 'Aggiungi';
+
+  @override
+  String get shoppingRemoveTooltip => 'Rimuovi';
+
+  @override
+  String get shoppingEmpty => 'Lista della spesa vuota';
+
+  @override
+  String get homePrompt => 'Di cosa hai voglia?';
 
   @override
   String get advancedOptions => 'Opzioni avanzate';
@@ -30,13 +48,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get includeMacros => 'Includi macro (stimate)';
 
   @override
-  String get includeMacrosSubtitle => 'Aggiunge calorie e macro per porzione.';
-
-  @override
-  String get useShoppingList => 'Genera dalla lista della spesa';
-
-  @override
-  String get useShoppingListSubtitle => 'Usa principalmente gli elementi commestibili dalla tua lista della spesa.';
+  String get includeMacrosSubtitle => 'Aggiunge calorie e macronutrienti per porzione.';
 
   @override
   String get reset => 'Reimposta';
@@ -87,13 +99,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get stepsTitle => 'Passaggi';
 
   @override
-  String get rewriteButton => 'Riscrivi senza gli ingredienti selezionati';
+  String get rewriteButton => 'Riscrivi senza gli ingredienti rimossi';
 
   @override
   String get savedTitle => 'Ricette salvate';
 
   @override
-  String get noSavedRecipes => 'Non hai ancora salvato nessuna ricetta';
+  String get noSavedRecipes => 'Non hai ancora ricette salvate';
 
   @override
   String get filterTips => 'Consigli';
@@ -126,7 +138,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get language => 'Lingua';
 
   @override
-  String get languageSettingLabel => 'Lingua dell\'app';
+  String get languageSettingLabel => 'Lingua dell’app';
 
   @override
   String get subscription => 'Account / Abbonamento';
@@ -141,19 +153,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get themeDark => 'Scuro';
 
   @override
-  String get inappropriateInput => 'Il tuo input non è adatto a una ricetta. Prova con un\'altra idea.';
+  String get inappropriateInput => 'La tua richiesta non è adatta a una ricetta. Prova un’altra idea.';
 
   @override
-  String get loadingMessage => 'Preparando la ricetta...';
+  String get loadingMessage => 'Sto cucinando la ricetta...';
 
   @override
   String get loadingTip1 => 'Consiglio: prova spezie affumicate per un sapore più intenso.';
 
   @override
-  String get loadingTip2 => 'Consiglio: tosta le spezie per 30 s per sprigionare gli aromi.';
+  String get loadingTip2 => 'Consiglio: tosta le spezie per 30 s per sprigionare gli aromi.';
 
   @override
-  String get loadingTip3 => 'Consiglio: conserva l\'acqua di cottura per regolare la consistenza.';
+  String get loadingTip3 => 'Consiglio: conserva l’acqua di cottura per regolare la consistenza.';
 
   @override
   String get loadingTip4 => 'Consiglio: un tocco di acido (limone/aceto) ravviva qualsiasi piatto.';
@@ -165,10 +177,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loadingStagePreparing => 'Preparazione';
 
   @override
-  String get loadingStageMixing => 'Mischiando';
+  String get loadingStageMixing => 'Mix';
 
   @override
-  String get loadingStageSeasoning => 'Condendo';
+  String get loadingStageSeasoning => 'Condimento';
 
   @override
   String get loadingStageCooking => 'Cottura';
@@ -210,7 +222,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dialogErrorTitle => 'Ops…';
 
   @override
-  String get dialogOk => 'OK';
+  String get dialogOk => 'Capito';
+
+  @override
+  String get useShoppingList => 'Genera dalla lista della spesa';
+
+  @override
+  String get useShoppingListSubtitle => 'Usa principalmente elementi commestibili della tua lista della spesa.';
 
   @override
   String get shoppingNoEdibleItems => 'Nessun elemento commestibile trovato nella tua lista della spesa.';
@@ -237,64 +255,64 @@ class AppLocalizationsIt extends AppLocalizations {
   String get preferencesSectionIntolerances => 'Intolleranze';
 
   @override
-  String get preferencesSectionReligion => 'Religiose / Culturali';
+  String get preferencesSectionReligion => 'Religione / Cultura';
 
   @override
   String get preferencesDisliked => 'Ingredienti sgraditi';
 
   @override
-  String get preferencesAddIngredientPlaceholder => 'Aggiungi un ingrediente e premi Invio';
+  String get preferencesAddIngredientPlaceholder => 'Aggiungi ingrediente e premi Invio';
 
   @override
   String get preferencesSave => 'Salva preferenze';
 
   @override
-  String get preferencesClear => 'Cancella tutto';
+  String get preferencesClear => 'Pulisci tutto';
 
   @override
   String get preferencesSaved => 'Preferenze salvate!';
 
   @override
-  String get prefVegan => 'Vegano';
+  String get prefVegan => 'Vegana';
 
   @override
-  String get prefVegetarian => 'Vegetariano';
+  String get prefVegetarian => 'Vegetariana';
 
   @override
-  String get prefVegetarianOvo => 'Vegetariano (ovo)';
+  String get prefVegetarianOvo => 'Vegetariana (ovo)';
 
   @override
-  String get prefVegetarianLacto => 'Vegetariano (latto)';
+  String get prefVegetarianLacto => 'Vegetariana (latto)';
 
   @override
-  String get prefVegetarianStrict => 'Vegetariano (senza uova/latticini)';
+  String get prefVegetarianStrict => 'Vegetariana (senza uova/latticini)';
 
   @override
-  String get prefPescetarian => 'Pescetariano';
+  String get prefPescetarian => 'Pescetariana';
 
   @override
-  String get prefFlexitarian => 'Flexitariano';
+  String get prefFlexitarian => 'Flexitariana';
 
   @override
   String get prefMediterranean => 'Mediterranea';
 
   @override
-  String get prefLowCarbKeto => 'Basso carbo / Keto';
+  String get prefLowCarbKeto => 'Low-carb / Keto';
 
   @override
-  String get prefLowFat => 'Povero di grassi';
+  String get prefLowFat => 'A basso contenuto di grassi';
 
   @override
-  String get prefHighProtein => 'Ricco di proteine';
+  String get prefHighProtein => 'Ricca di proteine';
 
   @override
   String get prefPaleo => 'Paleo';
 
   @override
-  String get prefWholeFoods => 'Alimenti integrali';
+  String get prefWholeFoods => 'Cibo integrale';
 
   @override
-  String get prefNoUltraProcessed => 'Senza ultra-processati';
+  String get prefNoUltraProcessed => 'Senza ultraprocessati';
 
   @override
   String get prefNoAlcohol => 'Senza alcol';
@@ -318,19 +336,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get prefLowFodmap => 'Low FODMAP';
 
   @override
-  String get prefLowSodium => 'Povero di sodio';
+  String get prefLowSodium => 'A basso contenuto di sodio';
 
   @override
-  String get prefLowSugar => 'Povero di zuccheri / adatto ai diabetici';
+  String get prefLowSugar => 'A basso contenuto di zuccheri / diabetica';
 
   @override
-  String get prefLowCholesterol => 'Povero di colesterolo';
+  String get prefLowCholesterol => 'A basso colesterolo';
 
   @override
-  String get prefLowPurine => 'Povero di purine';
+  String get prefLowPurine => 'A basso contenuto di purine';
 
   @override
-  String get prefLowOxalatePotassium => 'Povero di ossalati / potassio';
+  String get prefLowOxalatePotassium => 'Basso ossalato / potassio';
 
   @override
   String get prefLactoseFree => 'Senza lattosio';
@@ -369,7 +387,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get allergenSesame => 'Sesamo';
 
   @override
-  String get allergenSulphites => 'Anidride solforosa e solfiti';
+  String get allergenSulphites => 'Solfiti';
 
   @override
   String get allergenLupin => 'Lupini';
@@ -387,19 +405,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get prefHindu => 'Indù (spesso evita manzo)';
 
   @override
-  String get prefJain => 'Jain (senza radici; vegetariano stretto)';
+  String get prefJain => 'Jain (niente radici; vegetariana stretta)';
 
   @override
   String get prefBuddhist => 'Buddista (varia per regione)';
 
   @override
-  String get prefLentFasting => 'Quaresima / digiuno (niente carne certi giorni)';
+  String get prefLentFasting => 'Quaresima / digiuno (senza carne in certi giorni)';
 
   @override
   String get startCookingButton => 'Inizia a cucinare';
 
   @override
-  String get finalizeButton => 'Fine';
+  String get finalizeButton => 'Finisci';
 
   @override
   String get cookingSheetTitle => 'Ricetta completata!';
@@ -432,38 +450,25 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timerDoneTitle => 'Tempo scaduto!';
 
   @override
-  String get timerDoneBody => 'Il passaggio di cottura è terminato.';
+  String get timerDoneBody => 'Il passaggio della ricetta è terminato.';
 
   @override
-  String cookingNotificationTitle(String title) {
+  String cookingNotificationTitle(Object title) {
     return 'In cottura: $title';
   }
 
   @override
-  String cookingOngoingBody(String step) {
-    return 'Passo $step • conto alla rovescia';
+  String cookingOngoingBody(Object step) {
+    return 'Passaggio $step • conto alla rovescia';
   }
 
   @override
-  String shareCookedText(String title, String link) {
+  String shareCookedText(Object link, Object title) {
     return 'Ho appena cucinato \"$title\"! Prova l\'app: $link';
   }
 
   @override
-  String get shoppingMenu => 'Lista della spesa';
-
-  @override
-  String get shoppingTitle => 'Lista della spesa';
-
-  @override
-  String get shoppingAddPlaceholder => 'Aggiungi elemento';
-
-  @override
-  String get shoppingAddTooltip => 'Aggiungi';
-
-  @override
-  String get shoppingRemoveTooltip => 'Rimuovi';
-
-  @override
-  String get shoppingEmpty => 'La tua lista della spesa è vuota';
+  String shoppingAddedItem(String item) {
+    return '$item aggiunto alla lista della spesa!';
+  }
 }

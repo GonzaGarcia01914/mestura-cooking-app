@@ -26,12 +26,11 @@
   "skillStandard": "Estándar",
   "skillElevated": "Elevado",
   "skillAny": "Cualquiera",
-  
   "searchButton": "Generar receta",
   "surpriseButton": "Sorpréndeme",
   "ingredientsTitle": "Ingredientes",
   "stepsTitle": "Pasos",
-  "rewriteButton": "Reescribir sin ingredientes seleccionados",
+  "rewriteButton": "Reescribir sin ingredientes eliminados",
   "savedTitle": "Recetas Guardadas",
   "noSavedRecipes": "No tienes recetas guardadas aún",
   "filterTips": "Tips",
@@ -89,7 +88,6 @@
   "preferencesSave": "Guardar preferencias",
   "preferencesClear": "Limpiar todo",
   "preferencesSaved": "¡Preferencias guardadas!",
-
   "prefVegan": "Vegana",
   "prefVegetarian": "Vegetariana",
   "prefVegetarianOvo": "Vegetariana (ovo)",
@@ -109,7 +107,6 @@
   "prefSpicyMedium": "Picante medio",
   "prefSpicyHigh": "Muy picante",
   "prefOrganic": "Orgánico",
-
   "prefGlutenFree": "Sin gluten",
   "prefLowFodmap": "Baja en FODMAP",
   "prefLowSodium": "Baja en sodio",
@@ -118,7 +115,6 @@
   "prefLowPurine": "Baja en purinas",
   "prefLowOxalatePotassium": "Baja en oxalatos / potasio",
   "prefLactoseFree": "Sin lactosa",
-
   "allergenGluten": "Gluten",
   "allergenCrustaceans": "Crustáceos",
   "allergenEggs": "Huevos",
@@ -133,14 +129,12 @@
   "allergenSulphites": "Sulfitos",
   "allergenLupin": "Altramuz",
   "allergenMolluscs": "Moluscos",
-
   "prefHalal": "Halal",
   "prefKosher": "Kosher",
   "prefHindu": "Hindú (suele evitar ternera)",
   "prefJain": "Jain (sin raíces; vegetariana estricta)",
   "prefBuddhist": "Budista (varía por región)",
   "prefLentFasting": "Cuaresma / ayuno (sin carne ciertos días)",
-
   "startCookingButton": "Empezar a cocinar",
   "finalizeButton": "Finalizar",
   "cookingSheetTitle": "¡Receta completada!",
@@ -148,17 +142,14 @@
   "cookingSheetShareNoPhoto": "Compartir sin foto",
   "cookingSheetSaveRecipe": "Guardar receta",
   "cookingSheetGoHome": "Cerrar e ir a inicio",
-
   "timerStartTooltip": "Iniciar",
   "timerPauseTooltip": "Pausar",
   "timerResumeTooltip": "Reanudar",
   "timerDiscardTooltip": "Descartar",
-
   "timerDoneTitle": "¡Tiempo cumplido!",
   "timerDoneBody": "El paso de la receta ha terminado.",
-
   "cookingNotificationTitle": "Cocinando: {title}",
-  "cookingOngoingBody": "Paso {step} • cuenta atrás"
-  ,
-  "shareCookedText": "¡Acabo de cocinar \"{title}\"! Prueba la app: {link}"
+  "cookingOngoingBody": "Paso {step} • cuenta atrás",
+  "shareCookedText": "¡Acabo de cocinar \"{title}\"! Prueba la app: {link}",
+  "shoppingAddedItem": "{item} agregado a la lista de la compra!"
 }

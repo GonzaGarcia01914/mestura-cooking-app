@@ -12,10 +12,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Mestura';
 
   @override
-  String get homePrompt => 'What would you like?';
+  String get shoppingMenu => 'Shopping list';
 
   @override
-  String get advancedOptions => 'Advanced options';
+  String get shoppingTitle => 'Shopping list';
+
+  @override
+  String get shoppingAddPlaceholder => 'Add item';
+
+  @override
+  String get shoppingAddTooltip => 'Add';
+
+  @override
+  String get shoppingRemoveTooltip => 'Remove';
+
+  @override
+  String get shoppingEmpty => 'Shopping list is empty';
+
+  @override
+  String get homePrompt => 'What are you in the mood for?';
+
+  @override
+  String get advancedOptions => 'Advanced Options';
 
   @override
   String get numberOfGuests => 'Number of Guests';
@@ -30,13 +48,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get includeMacros => 'Include macros (estimated)';
 
   @override
-  String get includeMacrosSubtitle => 'Adds calories & macros per serving.';
-
-  @override
-  String get useShoppingList => 'Generate from shopping list';
-
-  @override
-  String get useShoppingListSubtitle => 'Use mostly edible items from your shopping list.';
+  String get includeMacrosSubtitle => 'Adds calories and macronutrients per serving.';
 
   @override
   String get reset => 'Reset';
@@ -69,7 +81,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skillStandard => 'Standard';
 
   @override
-  String get skillElevated => 'Elevated';
+  String get skillElevated => 'Advanced';
 
   @override
   String get skillAny => 'Any';
@@ -87,13 +99,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stepsTitle => 'Steps';
 
   @override
-  String get rewriteButton => 'Rewrite without selected ingredients';
+  String get rewriteButton => 'Rewrite without removed ingredients';
 
   @override
   String get savedTitle => 'Saved Recipes';
 
   @override
-  String get noSavedRecipes => 'You haven\'t saved any recipes yet';
+  String get noSavedRecipes => 'You don\'t have any saved recipes yet';
 
   @override
   String get filterTips => 'Tips';
@@ -141,7 +153,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeDark => 'Dark';
 
   @override
-  String get inappropriateInput => 'Your input is not appropriate for a recipe. Please try a different idea.';
+  String get inappropriateInput => 'Your request is not appropriate for a recipe. Try another idea.';
 
   @override
   String get loadingMessage => 'Cooking the recipe...';
@@ -198,7 +210,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nutritionFiber => 'Fiber';
 
   @override
-  String get nutritionSugar => 'Sugars';
+  String get nutritionSugar => 'Sugar';
 
   @override
   String get nutritionSodium => 'Sodium';
@@ -210,10 +222,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dialogErrorTitle => 'Oops…';
 
   @override
-  String get dialogOk => 'OK';
+  String get dialogOk => 'Got it';
 
   @override
-  String get shoppingNoEdibleItems => 'No edible items found in your shopping list.';
+  String get useShoppingList => 'Generate from shopping list';
+
+  @override
+  String get useShoppingListSubtitle => 'Use primarily edible items from your shopping list.';
+
+  @override
+  String get shoppingNoEdibleItems => 'No edible items were found in your shopping list.';
 
   @override
   String get preferencesMenu => 'Dietary preferences';
@@ -237,7 +255,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get preferencesSectionIntolerances => 'Intolerances';
 
   @override
-  String get preferencesSectionReligion => 'Religious / Cultural';
+  String get preferencesSectionReligion => 'Religion / Culture';
 
   @override
   String get preferencesDisliked => 'Disliked ingredients';
@@ -282,10 +300,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get prefLowCarbKeto => 'Low-carb / Keto';
 
   @override
-  String get prefLowFat => 'Low-fat';
+  String get prefLowFat => 'Low fat';
 
   @override
-  String get prefHighProtein => 'High-protein';
+  String get prefHighProtein => 'High protein';
 
   @override
   String get prefPaleo => 'Paleo';
@@ -300,13 +318,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get prefNoAlcohol => 'No alcohol';
 
   @override
-  String get prefSpicyLow => 'Low spicy';
+  String get prefSpicyLow => 'Low spice';
 
   @override
-  String get prefSpicyMedium => 'Medium spicy';
+  String get prefSpicyMedium => 'Medium spice';
 
   @override
-  String get prefSpicyHigh => 'High spicy';
+  String get prefSpicyHigh => 'High spice';
 
   @override
   String get prefOrganic => 'Organic';
@@ -321,16 +339,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get prefLowSodium => 'Low sodium';
 
   @override
-  String get prefLowSugar => 'Low sugar / Diabetic-friendly';
+  String get prefLowSugar => 'Low sugar / diabetic';
 
   @override
   String get prefLowCholesterol => 'Low cholesterol';
 
   @override
-  String get prefLowPurine => 'Low purines';
+  String get prefLowPurine => 'Low purine';
 
   @override
-  String get prefLowOxalatePotassium => 'Low oxalates / potassium';
+  String get prefLowOxalatePotassium => 'Low oxalate / potassium';
 
   @override
   String get prefLactoseFree => 'Lactose-free';
@@ -393,7 +411,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get prefBuddhist => 'Buddhist (varies by region)';
 
   @override
-  String get prefLentFasting => 'Lent / fasting (no meat certain days)';
+  String get prefLentFasting => 'Lent / fasting (no meat on some days)';
 
   @override
   String get startCookingButton => 'Start cooking';
@@ -414,7 +432,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cookingSheetSaveRecipe => 'Save recipe';
 
   @override
-  String get cookingSheetGoHome => 'Close and go to Home';
+  String get cookingSheetGoHome => 'Close and go home';
 
   @override
   String get timerStartTooltip => 'Start';
@@ -429,41 +447,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerDiscardTooltip => 'Discard';
 
   @override
-  String get timerDoneTitle => 'Time\'s up!';
+  String get timerDoneTitle => 'Time’s up!';
 
   @override
-  String get timerDoneBody => 'The cooking step has finished.';
+  String get timerDoneBody => 'The recipe step has finished.';
 
   @override
-  String cookingNotificationTitle(String title) {
+  String cookingNotificationTitle(Object title) {
     return 'Cooking: $title';
   }
 
   @override
-  String cookingOngoingBody(String step) {
+  String cookingOngoingBody(Object step) {
     return 'Step $step • countdown';
   }
 
   @override
-  String shareCookedText(String title, String link) {
+  String shareCookedText(Object link, Object title) {
     return 'I just cooked \"$title\"! Try the app: $link';
   }
 
   @override
-  String get shoppingMenu => 'Shopping list';
-
-  @override
-  String get shoppingTitle => 'Shopping List';
-
-  @override
-  String get shoppingAddPlaceholder => 'Add item';
-
-  @override
-  String get shoppingAddTooltip => 'Add';
-
-  @override
-  String get shoppingRemoveTooltip => 'Remove';
-
-  @override
-  String get shoppingEmpty => 'Your shopping list is empty';
+  String shoppingAddedItem(String item) {
+    return '$item added to the shopping list!';
+  }
 }

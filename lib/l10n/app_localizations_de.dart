@@ -12,7 +12,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appTitle => 'Mestura';
 
   @override
-  String get homePrompt => 'Was möchtest du?';
+  String get shoppingMenu => 'Einkaufsliste';
+
+  @override
+  String get shoppingTitle => 'Einkaufsliste';
+
+  @override
+  String get shoppingAddPlaceholder => 'Artikel hinzufügen';
+
+  @override
+  String get shoppingAddTooltip => 'Hinzufügen';
+
+  @override
+  String get shoppingRemoveTooltip => 'Entfernen';
+
+  @override
+  String get shoppingEmpty => 'Einkaufsliste ist leer';
+
+  @override
+  String get homePrompt => 'Worauf hast du Lust?';
 
   @override
   String get advancedOptions => 'Erweiterte Optionen';
@@ -21,22 +39,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get numberOfGuests => 'Anzahl der Gäste';
 
   @override
-  String get maxCalories => 'Kalorien max.';
+  String get maxCalories => 'Max. Kalorien';
 
   @override
   String get perServing => '(pro Portion)';
 
   @override
-  String get includeMacros => 'Makros einschließen (geschätzt)';
+  String get includeMacros => 'Makros einbeziehen (geschätzt)';
 
   @override
-  String get includeMacrosSubtitle => 'Fügt Kalorien und Makros pro Portion hinzu.';
-
-  @override
-  String get useShoppingList => 'Aus Einkaufsliste erzeugen';
-
-  @override
-  String get useShoppingListSubtitle => 'Verwende hauptsächlich essbare Artikel aus deiner Einkaufsliste.';
+  String get includeMacrosSubtitle => 'Fügt Kalorien und Makronährstoffe pro Portion hinzu.';
 
   @override
   String get reset => 'Zurücksetzen';
@@ -57,10 +69,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get time120 => '2 Std';
 
   @override
-  String get timeNoLimit => 'Ohne Begrenzung';
+  String get timeNoLimit => 'Kein Limit';
 
   @override
-  String get skillLevel => 'Fähigkeitsniveau';
+  String get skillLevel => 'Könnensstufe';
 
   @override
   String get skillBasic => 'Einfach';
@@ -78,7 +90,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get searchButton => 'Rezept generieren';
 
   @override
-  String get surpriseButton => 'Überrasch mich';
+  String get surpriseButton => 'Überrasche mich';
 
   @override
   String get ingredientsTitle => 'Zutaten';
@@ -87,7 +99,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get stepsTitle => 'Schritte';
 
   @override
-  String get rewriteButton => 'Ohne ausgewählte Zutaten neu schreiben';
+  String get rewriteButton => 'Ohne entfernte Zutaten neu schreiben';
 
   @override
   String get savedTitle => 'Gespeicherte Rezepte';
@@ -132,7 +144,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscription => 'Konto / Abonnement';
 
   @override
-  String get theme => 'Thema';
+  String get theme => 'Theme';
 
   @override
   String get themeLight => 'Hell';
@@ -141,7 +153,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get themeDark => 'Dunkel';
 
   @override
-  String get inappropriateInput => 'Deine Eingabe ist für ein Rezept nicht geeignet. Bitte versuche eine andere Idee.';
+  String get inappropriateInput => 'Deine Anfrage ist nicht für ein Rezept geeignet. Versuche eine andere Idee.';
 
   @override
   String get loadingMessage => 'Rezept wird gekocht...';
@@ -150,10 +162,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loadingTip1 => 'Tipp: Geräucherte Gewürze sorgen für mehr Tiefe.';
 
   @override
-  String get loadingTip2 => 'Tipp: Röste Gewürze 30 s an, um Aromen freizusetzen.';
+  String get loadingTip2 => 'Tipp: Röste Gewürze 30 s an, um Aromen zu entfalten.';
 
   @override
-  String get loadingTip3 => 'Tipp: Hebe das Kochwasser auf, um die Textur anzupassen.';
+  String get loadingTip3 => 'Tipp: Hebe Kochwasser auf, um die Textur anzupassen.';
 
   @override
   String get loadingTip4 => 'Tipp: Ein Spritzer Säure (Zitrone/Essig) belebt jedes Gericht.';
@@ -177,7 +189,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loadingStagePlating => 'Anrichten';
 
   @override
-  String get nutritionFactsTitle => 'Nährwertangaben (ca.)';
+  String get nutritionFactsTitle => 'Nährwerte (ca.)';
 
   @override
   String get nutritionPerServing => 'Pro Portion';
@@ -186,7 +198,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get nutritionCalories => 'Kalorien';
 
   @override
-  String get nutritionProtein => 'Protein';
+  String get nutritionProtein => 'Eiweiß';
 
   @override
   String get nutritionCarbs => 'Kohlenhydrate';
@@ -210,10 +222,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dialogErrorTitle => 'Ups…';
 
   @override
-  String get dialogOk => 'OK';
+  String get dialogOk => 'Verstanden';
 
   @override
-  String get shoppingNoEdibleItems => 'Keine essbaren Artikel in deiner Einkaufsliste gefunden.';
+  String get useShoppingList => 'Aus der Einkaufsliste generieren';
+
+  @override
+  String get useShoppingListSubtitle => 'Verwende hauptsächlich essbare Artikel aus deiner Einkaufsliste.';
+
+  @override
+  String get shoppingNoEdibleItems => 'In deiner Einkaufsliste wurden keine essbaren Artikel gefunden.';
 
   @override
   String get preferencesMenu => 'Ernährungspräferenzen';
@@ -222,22 +240,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get preferencesTitle => 'Ernährungspräferenzen';
 
   @override
-  String get preferencesSubtitle => 'Zur Personalisierung von Rezepten verwendet';
+  String get preferencesSubtitle => 'Zur Personalisierung von Rezepten';
 
   @override
-  String get preferencesSectionDiet => 'Ernährung';
+  String get preferencesSectionDiet => 'Diät';
 
   @override
   String get preferencesSectionMedical => 'Medizinisch';
 
   @override
-  String get preferencesSectionAllergens => 'Zu vermeidende Allergene';
+  String get preferencesSectionAllergens => 'Zu meidende Allergene';
 
   @override
-  String get preferencesSectionIntolerances => 'Unverträglichkeiten';
+  String get preferencesSectionIntolerances => 'Intoleranzen';
 
   @override
-  String get preferencesSectionReligion => 'Religiös / Kulturell';
+  String get preferencesSectionReligion => 'Religion / Kultur';
 
   @override
   String get preferencesDisliked => 'Unerwünschte Zutaten';
@@ -252,7 +270,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get preferencesClear => 'Alles löschen';
 
   @override
-  String get preferencesSaved => 'Einstellungen gespeichert!';
+  String get preferencesSaved => 'Präferenzen gespeichert!';
 
   @override
   String get prefVegan => 'Vegan';
@@ -261,10 +279,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get prefVegetarian => 'Vegetarisch';
 
   @override
-  String get prefVegetarianOvo => 'Vegetarisch (Ovo)';
+  String get prefVegetarianOvo => 'Vegetarisch (ovo)';
 
   @override
-  String get prefVegetarianLacto => 'Vegetarisch (Lacto)';
+  String get prefVegetarianLacto => 'Vegetarisch (lacto)';
 
   @override
   String get prefVegetarianStrict => 'Vegetarisch (ohne Ei/Milch)';
@@ -279,28 +297,28 @@ class AppLocalizationsDe extends AppLocalizations {
   String get prefMediterranean => 'Mittelmeer';
 
   @override
-  String get prefLowCarbKeto => 'Kohlenhydratarm / Keto';
+  String get prefLowCarbKeto => 'Low-Carb / Keto';
 
   @override
   String get prefLowFat => 'Fettarm';
 
   @override
-  String get prefHighProtein => 'Eiweißreich';
+  String get prefHighProtein => 'Proteinreich';
 
   @override
   String get prefPaleo => 'Paleo';
 
   @override
-  String get prefWholeFoods => 'Vollwertkost';
+  String get prefWholeFoods => 'Naturbelassen';
 
   @override
-  String get prefNoUltraProcessed => 'Ohne hochverarbeitete Lebensmittel';
+  String get prefNoUltraProcessed => 'Ohne Ultraverarbeitetes';
 
   @override
   String get prefNoAlcohol => 'Ohne Alkohol';
 
   @override
-  String get prefSpicyLow => 'Mild scharf';
+  String get prefSpicyLow => 'Mild';
 
   @override
   String get prefSpicyMedium => 'Mittel scharf';
@@ -321,16 +339,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get prefLowSodium => 'Natriumarm';
 
   @override
-  String get prefLowSugar => 'Zuckerarm / für Diabetiker geeignet';
+  String get prefLowSugar => 'Zuckerarm / diabetisch';
 
   @override
   String get prefLowCholesterol => 'Cholesterinarm';
 
   @override
-  String get prefLowPurine => 'Purinearm';
+  String get prefLowPurine => 'Purinfrei/arm';
 
   @override
-  String get prefLowOxalatePotassium => 'Oxalat-/Kaliumarm';
+  String get prefLowOxalatePotassium => 'Oxalat/Kaliumarm';
 
   @override
   String get prefLactoseFree => 'Laktosefrei';
@@ -369,7 +387,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get allergenSesame => 'Sesam';
 
   @override
-  String get allergenSulphites => 'Schwefeldioxid und Sulfite';
+  String get allergenSulphites => 'Sulfite';
 
   @override
   String get allergenLupin => 'Lupinen';
@@ -384,22 +402,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get prefKosher => 'Koscher';
 
   @override
-  String get prefHindu => 'Hindu (vermeidet oft Rindfleisch)';
+  String get prefHindu => 'Hindu (verzichtet oft auf Rindfleisch)';
 
   @override
-  String get prefJain => 'Jain (ohne Wurzeln; streng vegetarisch)';
+  String get prefJain => 'Jain (keine Wurzeln; striktes Vegetarisch)';
 
   @override
   String get prefBuddhist => 'Buddhistisch (je nach Region)';
 
   @override
-  String get prefLentFasting => 'Fasten / Fastenzeit (an bestimmten Tagen kein Fleisch)';
+  String get prefLentFasting => 'Fastenzeit (an manchen Tagen ohne Fleisch)';
 
   @override
-  String get startCookingButton => 'Mit dem Kochen beginnen';
+  String get startCookingButton => 'Kochen starten';
 
   @override
-  String get finalizeButton => 'Fertig';
+  String get finalizeButton => 'Fertigstellen';
 
   @override
   String get cookingSheetTitle => 'Rezept abgeschlossen!';
@@ -414,7 +432,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get cookingSheetSaveRecipe => 'Rezept speichern';
 
   @override
-  String get cookingSheetGoHome => 'Schließen und zur Startseite';
+  String get cookingSheetGoHome => 'Schließen und Startseite';
 
   @override
   String get timerStartTooltip => 'Start';
@@ -432,38 +450,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get timerDoneTitle => 'Zeit abgelaufen!';
 
   @override
-  String get timerDoneBody => 'Der Kochschritt ist beendet.';
+  String get timerDoneBody => 'Der Rezeptschritt ist beendet.';
 
   @override
-  String cookingNotificationTitle(String title) {
+  String cookingNotificationTitle(Object title) {
     return 'Kochen: $title';
   }
 
   @override
-  String cookingOngoingBody(String step) {
+  String cookingOngoingBody(Object step) {
     return 'Schritt $step • Countdown';
   }
 
   @override
-  String shareCookedText(String title, String link) {
-    return 'Ich habe gerade \"$title\" gekocht! Probier die App aus: $link';
+  String shareCookedText(Object link, Object title) {
+    return 'Ich habe gerade „$title“ gekocht! Probier die App aus: $link';
   }
 
   @override
-  String get shoppingMenu => 'Einkaufsliste';
-
-  @override
-  String get shoppingTitle => 'Einkaufsliste';
-
-  @override
-  String get shoppingAddPlaceholder => 'Artikel hinzufügen';
-
-  @override
-  String get shoppingAddTooltip => 'Hinzufügen';
-
-  @override
-  String get shoppingRemoveTooltip => 'Entfernen';
-
-  @override
-  String get shoppingEmpty => 'Deine Einkaufsliste ist leer';
+  String shoppingAddedItem(String item) {
+    return '$item zur Einkaufsliste hinzugefügt!';
+  }
 }

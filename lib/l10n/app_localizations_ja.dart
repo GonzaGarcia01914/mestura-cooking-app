@@ -12,7 +12,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'Mestura';
 
   @override
-  String get homePrompt => '何を作りたいですか？';
+  String get shoppingMenu => '買い物リスト';
+
+  @override
+  String get shoppingTitle => '買い物リスト';
+
+  @override
+  String get shoppingAddPlaceholder => '項目を追加';
+
+  @override
+  String get shoppingAddTooltip => '追加';
+
+  @override
+  String get shoppingRemoveTooltip => '削除';
+
+  @override
+  String get shoppingEmpty => '買い物リストは空です';
+
+  @override
+  String get homePrompt => '何が食べたいですか？';
 
   @override
   String get advancedOptions => '詳細オプション';
@@ -24,43 +42,37 @@ class AppLocalizationsJa extends AppLocalizations {
   String get maxCalories => '最大カロリー';
 
   @override
-  String get perServing => '（1人分）';
+  String get perServing => '（1人前あたり）';
 
   @override
-  String get includeMacros => 'マクロを含める（推定）';
+  String get includeMacros => 'マクロ栄養素を含める（推定）';
 
   @override
-  String get includeMacrosSubtitle => '1人分のカロリーとマクロを追加します。';
-
-  @override
-  String get useShoppingList => '買い物リストから生成';
-
-  @override
-  String get useShoppingListSubtitle => '買い物リストの食べられる項目を主に使用します。';
+  String get includeMacrosSubtitle => '1人前あたりのカロリーとマクロを追加します。';
 
   @override
   String get reset => 'リセット';
 
   @override
-  String get timeAvailable => '利用可能な時間';
+  String get timeAvailable => '所要時間';
 
   @override
-  String get timeUnder15 => '< 15 分';
+  String get timeUnder15 => '15分未満';
 
   @override
-  String get time30 => '30 分';
+  String get time30 => '30分';
 
   @override
-  String get time60 => '1 時間';
+  String get time60 => '1時間';
 
   @override
-  String get time120 => '2 時間';
+  String get time120 => '2時間';
 
   @override
   String get timeNoLimit => '制限なし';
 
   @override
-  String get skillLevel => 'スキルレベル';
+  String get skillLevel => '調理レベル';
 
   @override
   String get skillBasic => '初級';
@@ -87,16 +99,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get stepsTitle => '手順';
 
   @override
-  String get rewriteButton => '選択した材料を除いて書き直す';
+  String get rewriteButton => '削除した材料を除いて書き直す';
 
   @override
   String get savedTitle => '保存したレシピ';
 
   @override
-  String get noSavedRecipes => 'まだレシピを保存していません';
+  String get noSavedRecipes => 'まだ保存されたレシピはありません';
 
   @override
-  String get filterTips => 'ヒント';
+  String get filterTips => 'コツ';
 
   @override
   String get filterIngredients => '材料';
@@ -141,46 +153,46 @@ class AppLocalizationsJa extends AppLocalizations {
   String get themeDark => 'ダーク';
 
   @override
-  String get inappropriateInput => 'その入力はレシピに適していません。別のアイデアを試してください。';
+  String get inappropriateInput => 'このリクエストはレシピに適していません。別のアイデアを試してください。';
 
   @override
-  String get loadingMessage => 'レシピを調理中...';
+  String get loadingMessage => 'レシピを調理中…';
 
   @override
-  String get loadingTip1 => 'ヒント: スモークスパイスでより深い風味に。';
+  String get loadingTip1 => 'ヒント：燻製風味のスパイスでより深い味わいに。';
 
   @override
-  String get loadingTip2 => 'ヒント: スパイスを30秒ほど炒って香りを引き出そう。';
+  String get loadingTip2 => 'ヒント：スパイスを30秒ほど乾煎りすると香りが立ちます。';
 
   @override
-  String get loadingTip3 => 'ヒント: 茹で汁をとっておくと食感の調整に役立ちます。';
+  String get loadingTip3 => 'ヒント：ゆで汁を残しておくと食感調整に便利です。';
 
   @override
-  String get loadingTip4 => 'ヒント: 少量の酸味（レモン/酢）が料理を引き立てます。';
+  String get loadingTip4 => 'ヒント：レモン／酢などの酸味がどんな料理も引き立てます。';
 
   @override
-  String get loadingTip5 => 'ヒント: 一度に入れず、少しずつ塩を加えましょう。';
+  String get loadingTip5 => 'ヒント：塩は段階的に、最後に一気にではなく。';
 
   @override
-  String get loadingStagePreparing => '準備中';
+  String get loadingStagePreparing => '下ごしらえ';
 
   @override
-  String get loadingStageMixing => '混合';
+  String get loadingStageMixing => '混ぜる';
 
   @override
   String get loadingStageSeasoning => '味付け';
 
   @override
-  String get loadingStageCooking => '調理';
+  String get loadingStageCooking => '加熱';
 
   @override
   String get loadingStagePlating => '盛り付け';
 
   @override
-  String get nutritionFactsTitle => '栄養成分 (概算)';
+  String get nutritionFactsTitle => '栄養情報（概算）';
 
   @override
-  String get nutritionPerServing => '1人分あたり';
+  String get nutritionPerServing => '1人前あたり';
 
   @override
   String get nutritionCalories => 'カロリー';
@@ -204,55 +216,61 @@ class AppLocalizationsJa extends AppLocalizations {
   String get nutritionSodium => 'ナトリウム';
 
   @override
-  String get dialogDoneTitle => '完了!';
+  String get dialogDoneTitle => '完了！';
 
   @override
   String get dialogErrorTitle => 'おっと…';
 
   @override
-  String get dialogOk => 'OK';
+  String get dialogOk => '了解';
 
   @override
-  String get shoppingNoEdibleItems => '買い物リストに食べられる項目が見つかりません。';
+  String get useShoppingList => '買い物リストから生成';
 
   @override
-  String get preferencesMenu => '食事の好み';
+  String get useShoppingListSubtitle => '買い物リストの食用可能な項目を優先的に使います。';
 
   @override
-  String get preferencesTitle => '食事の好み';
+  String get shoppingNoEdibleItems => '買い物リストに食用可能な項目が見つかりませんでした。';
+
+  @override
+  String get preferencesMenu => '食の好み';
+
+  @override
+  String get preferencesTitle => '食の好み';
 
   @override
   String get preferencesSubtitle => 'レシピのパーソナライズに使用します';
 
   @override
-  String get preferencesSectionDiet => '食事';
+  String get preferencesSectionDiet => '食事法';
 
   @override
-  String get preferencesSectionMedical => '医療';
+  String get preferencesSectionMedical => '医療関連';
 
   @override
   String get preferencesSectionAllergens => '避けたいアレルゲン';
 
   @override
-  String get preferencesSectionIntolerances => '不耐性';
+  String get preferencesSectionIntolerances => '不耐症';
 
   @override
   String get preferencesSectionReligion => '宗教 / 文化';
 
   @override
-  String get preferencesDisliked => '苦手な食材';
+  String get preferencesDisliked => '苦手な材料';
 
   @override
-  String get preferencesAddIngredientPlaceholder => '食材を追加してEnterキーを押してください';
+  String get preferencesAddIngredientPlaceholder => '材料を追加して Enter を押す';
 
   @override
-  String get preferencesSave => '設定を保存';
+  String get preferencesSave => '好みを保存';
 
   @override
   String get preferencesClear => 'すべてクリア';
 
   @override
-  String get preferencesSaved => '設定を保存しました';
+  String get preferencesSaved => '好みを保存しました！';
 
   @override
   String get prefVegan => 'ヴィーガン';
@@ -261,13 +279,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get prefVegetarian => 'ベジタリアン';
 
   @override
-  String get prefVegetarianOvo => 'ベジタリアン（オボ）';
+  String get prefVegetarianOvo => 'ベジタリアン（卵）';
 
   @override
-  String get prefVegetarianLacto => 'ベジタリアン（ラクト）';
+  String get prefVegetarianLacto => 'ベジタリアン（乳）';
 
   @override
-  String get prefVegetarianStrict => 'ベジタリアン（卵・乳製品なし）';
+  String get prefVegetarianStrict => 'ベジタリアン（卵/乳なし）';
 
   @override
   String get prefPescetarian => 'ペスカタリアン';
@@ -279,10 +297,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get prefMediterranean => '地中海食';
 
   @override
-  String get prefLowCarbKeto => '低炭水化物 / ケト';
+  String get prefLowCarbKeto => '低糖質 / ケト';
 
   @override
-  String get prefLowFat => '低脂肪';
+  String get prefLowFat => '低脂質';
 
   @override
   String get prefHighProtein => '高たんぱく';
@@ -297,7 +315,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get prefNoUltraProcessed => '超加工食品なし';
 
   @override
-  String get prefNoAlcohol => 'アルコールなし';
+  String get prefNoAlcohol => 'ノンアルコール';
 
   @override
   String get prefSpicyLow => '辛さ控えめ';
@@ -306,7 +324,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get prefSpicyMedium => '中辛';
 
   @override
-  String get prefSpicyHigh => '辛口';
+  String get prefSpicyHigh => '激辛';
 
   @override
   String get prefOrganic => 'オーガニック';
@@ -321,7 +339,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get prefLowSodium => '低ナトリウム';
 
   @override
-  String get prefLowSugar => '低糖（糖尿病向け）';
+  String get prefLowSugar => '低糖 / 糖尿病向け';
 
   @override
   String get prefLowCholesterol => '低コレステロール';
@@ -330,10 +348,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get prefLowPurine => '低プリン体';
 
   @override
-  String get prefLowOxalatePotassium => '低シュウ酸/カリウム';
+  String get prefLowOxalatePotassium => '低シュウ酸 / カリウム';
 
   @override
-  String get prefLactoseFree => '乳糖不耐';
+  String get prefLactoseFree => '乳糖不使用';
 
   @override
   String get allergenGluten => 'グルテン';
@@ -357,7 +375,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get allergenMilk => '乳';
 
   @override
-  String get allergenTreeNuts => '木の実（ナッツ類）';
+  String get allergenTreeNuts => '木の実類';
 
   @override
   String get allergenCelery => 'セロリ';
@@ -381,28 +399,28 @@ class AppLocalizationsJa extends AppLocalizations {
   String get prefHalal => 'ハラール';
 
   @override
-  String get prefKosher => 'コーシャ';
+  String get prefKosher => 'コーシャー';
 
   @override
   String get prefHindu => 'ヒンドゥー（牛肉を避けることが多い）';
 
   @override
-  String get prefJain => 'ジャイナ（根菜なし・厳格な菜食）';
+  String get prefJain => 'ジャイナ教（根菜不可・厳格菜食）';
 
   @override
   String get prefBuddhist => '仏教（地域により異なる）';
 
   @override
-  String get prefLentFasting => '四旬節/断食（一部の日は肉なし）';
+  String get prefLentFasting => '四旬節／断食（特定日は肉なし）';
 
   @override
-  String get startCookingButton => '料理を開始';
+  String get startCookingButton => '調理開始';
 
   @override
-  String get finalizeButton => '完了';
+  String get finalizeButton => '終了';
 
   @override
-  String get cookingSheetTitle => 'レシピ完了！';
+  String get cookingSheetTitle => 'レシピ完成！';
 
   @override
   String get cookingSheetTakePhotoShare => '写真を撮って共有';
@@ -432,38 +450,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get timerDoneTitle => '時間です！';
 
   @override
-  String get timerDoneBody => '調理のステップが終了しました。';
+  String get timerDoneBody => 'この工程が完了しました。';
 
   @override
-  String cookingNotificationTitle(String title) {
-    return '調理中: $title';
+  String cookingNotificationTitle(Object title) {
+    return '調理中：$title';
   }
 
   @override
-  String cookingOngoingBody(String step) {
-    return 'ステップ $step • カウントダウン';
+  String cookingOngoingBody(Object step) {
+    return '手順 $step • カウントダウン';
   }
 
   @override
-  String shareCookedText(String title, String link) {
-    return '\"$title\"を作りました！ アプリを試してね: $link';
+  String shareCookedText(Object link, Object title) {
+    return '「$title」を作ったよ！ アプリを試してね: $link';
   }
 
   @override
-  String get shoppingMenu => '買い物リスト';
-
-  @override
-  String get shoppingTitle => '買い物リスト';
-
-  @override
-  String get shoppingAddPlaceholder => '項目を追加';
-
-  @override
-  String get shoppingAddTooltip => '追加';
-
-  @override
-  String get shoppingRemoveTooltip => '削除';
-
-  @override
-  String get shoppingEmpty => '買い物リストは空です';
+  String shoppingAddedItem(String item) {
+    return '「$item」を買い物リストに追加しました！';
+  }
 }

@@ -12,6 +12,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appTitle => 'Mestura';
 
   @override
+  String get shoppingMenu => 'Lista de compras';
+
+  @override
+  String get shoppingTitle => 'Lista de compras';
+
+  @override
+  String get shoppingAddPlaceholder => 'Añadir artículo';
+
+  @override
+  String get shoppingAddTooltip => 'Añadir';
+
+  @override
+  String get shoppingRemoveTooltip => 'Eliminar';
+
+  @override
+  String get shoppingEmpty => 'Lista de la compra vacía';
+
+  @override
   String get homePrompt => '¿Qué te apetece?';
 
   @override
@@ -31,12 +49,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get includeMacrosSubtitle => 'Añade calorías y macronutrientes por ración.';
-
-  @override
-  String get useShoppingList => 'Generar desde lista de la compra';
-
-  @override
-  String get useShoppingListSubtitle => 'Usa principalmente elementos comestibles de tu lista de la compra.';
 
   @override
   String get reset => 'Restablecer';
@@ -87,7 +99,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stepsTitle => 'Pasos';
 
   @override
-  String get rewriteButton => 'Reescribir sin ingredientes seleccionados';
+  String get rewriteButton => 'Reescribir sin ingredientes eliminados';
 
   @override
   String get savedTitle => 'Recetas Guardadas';
@@ -211,6 +223,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dialogOk => 'Entendido';
+
+  @override
+  String get useShoppingList => 'Generar desde lista de la compra';
+
+  @override
+  String get useShoppingListSubtitle => 'Usa principalmente elementos comestibles de tu lista de la compra.';
 
   @override
   String get shoppingNoEdibleItems => 'No se han encontrado elementos comestibles en tu lista de la compra.';
@@ -435,35 +453,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get timerDoneBody => 'El paso de la receta ha terminado.';
 
   @override
-  String cookingNotificationTitle(String title) {
+  String cookingNotificationTitle(Object title) {
     return 'Cocinando: $title';
   }
 
   @override
-  String cookingOngoingBody(String step) {
+  String cookingOngoingBody(Object step) {
     return 'Paso $step • cuenta atrás';
   }
 
   @override
-  String shareCookedText(String title, String link) {
+  String shareCookedText(Object link, Object title) {
     return '¡Acabo de cocinar \"$title\"! Prueba la app: $link';
   }
 
   @override
-  String get shoppingMenu => 'Lista de compras';
-
-  @override
-  String get shoppingTitle => 'Lista de compras';
-
-  @override
-  String get shoppingAddPlaceholder => 'Añadir artículo';
-
-  @override
-  String get shoppingAddTooltip => 'Añadir';
-
-  @override
-  String get shoppingRemoveTooltip => 'Eliminar';
-
-  @override
-  String get shoppingEmpty => 'Lista de la compra vacía';
+  String shoppingAddedItem(String item) {
+    return '$item agregado a la lista de la compra!';
+  }
 }

@@ -9,7 +9,6 @@ import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
-import 'app_localizations_gn.dart';
 import 'app_localizations_it.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
@@ -105,7 +104,6 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('fr'),
-    Locale('gn'),
     Locale('it'),
     Locale('ja'),
     Locale('ko'),
@@ -121,16 +119,52 @@ abstract class AppLocalizations {
   /// **'Mestura'**
   String get appTitle;
 
+  /// No description provided for @shoppingMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list'**
+  String get shoppingMenu;
+
+  /// No description provided for @shoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list'**
+  String get shoppingTitle;
+
+  /// No description provided for @shoppingAddPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add item'**
+  String get shoppingAddPlaceholder;
+
+  /// No description provided for @shoppingAddTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get shoppingAddTooltip;
+
+  /// No description provided for @shoppingRemoveTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get shoppingRemoveTooltip;
+
+  /// No description provided for @shoppingEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list is empty'**
+  String get shoppingEmpty;
+
   /// No description provided for @homePrompt.
   ///
   /// In en, this message translates to:
-  /// **'What would you like?'**
+  /// **'What are you in the mood for?'**
   String get homePrompt;
 
   /// No description provided for @advancedOptions.
   ///
   /// In en, this message translates to:
-  /// **'Advanced options'**
+  /// **'Advanced Options'**
   String get advancedOptions;
 
   /// No description provided for @numberOfGuests.
@@ -160,20 +194,8 @@ abstract class AppLocalizations {
   /// No description provided for @includeMacrosSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Adds calories & macros per serving.'**
+  /// **'Adds calories and macronutrients per serving.'**
   String get includeMacrosSubtitle;
-
-  /// No description provided for @useShoppingList.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate from shopping list'**
-  String get useShoppingList;
-
-  /// No description provided for @useShoppingListSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Use mostly edible items from your shopping list.'**
-  String get useShoppingListSubtitle;
 
   /// No description provided for @reset.
   ///
@@ -238,7 +260,7 @@ abstract class AppLocalizations {
   /// No description provided for @skillElevated.
   ///
   /// In en, this message translates to:
-  /// **'Elevated'**
+  /// **'Advanced'**
   String get skillElevated;
 
   /// No description provided for @skillAny.
@@ -274,7 +296,7 @@ abstract class AppLocalizations {
   /// No description provided for @rewriteButton.
   ///
   /// In en, this message translates to:
-  /// **'Rewrite without selected ingredients'**
+  /// **'Rewrite without removed ingredients'**
   String get rewriteButton;
 
   /// No description provided for @savedTitle.
@@ -286,7 +308,7 @@ abstract class AppLocalizations {
   /// No description provided for @noSavedRecipes.
   ///
   /// In en, this message translates to:
-  /// **'You haven\'t saved any recipes yet'**
+  /// **'You don\'t have any saved recipes yet'**
   String get noSavedRecipes;
 
   /// No description provided for @filterTips.
@@ -382,7 +404,7 @@ abstract class AppLocalizations {
   /// No description provided for @inappropriateInput.
   ///
   /// In en, this message translates to:
-  /// **'Your input is not appropriate for a recipe. Please try a different idea.'**
+  /// **'Your request is not appropriate for a recipe. Try another idea.'**
   String get inappropriateInput;
 
   /// No description provided for @loadingMessage.
@@ -496,7 +518,7 @@ abstract class AppLocalizations {
   /// No description provided for @nutritionSugar.
   ///
   /// In en, this message translates to:
-  /// **'Sugars'**
+  /// **'Sugar'**
   String get nutritionSugar;
 
   /// No description provided for @nutritionSodium.
@@ -520,13 +542,25 @@ abstract class AppLocalizations {
   /// No description provided for @dialogOk.
   ///
   /// In en, this message translates to:
-  /// **'OK'**
+  /// **'Got it'**
   String get dialogOk;
+
+  /// No description provided for @useShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate from shopping list'**
+  String get useShoppingList;
+
+  /// No description provided for @useShoppingListSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use primarily edible items from your shopping list.'**
+  String get useShoppingListSubtitle;
 
   /// No description provided for @shoppingNoEdibleItems.
   ///
   /// In en, this message translates to:
-  /// **'No edible items found in your shopping list.'**
+  /// **'No edible items were found in your shopping list.'**
   String get shoppingNoEdibleItems;
 
   /// No description provided for @preferencesMenu.
@@ -574,7 +608,7 @@ abstract class AppLocalizations {
   /// No description provided for @preferencesSectionReligion.
   ///
   /// In en, this message translates to:
-  /// **'Religious / Cultural'**
+  /// **'Religion / Culture'**
   String get preferencesSectionReligion;
 
   /// No description provided for @preferencesDisliked.
@@ -664,13 +698,13 @@ abstract class AppLocalizations {
   /// No description provided for @prefLowFat.
   ///
   /// In en, this message translates to:
-  /// **'Low-fat'**
+  /// **'Low fat'**
   String get prefLowFat;
 
   /// No description provided for @prefHighProtein.
   ///
   /// In en, this message translates to:
-  /// **'High-protein'**
+  /// **'High protein'**
   String get prefHighProtein;
 
   /// No description provided for @prefPaleo.
@@ -700,19 +734,19 @@ abstract class AppLocalizations {
   /// No description provided for @prefSpicyLow.
   ///
   /// In en, this message translates to:
-  /// **'Low spicy'**
+  /// **'Low spice'**
   String get prefSpicyLow;
 
   /// No description provided for @prefSpicyMedium.
   ///
   /// In en, this message translates to:
-  /// **'Medium spicy'**
+  /// **'Medium spice'**
   String get prefSpicyMedium;
 
   /// No description provided for @prefSpicyHigh.
   ///
   /// In en, this message translates to:
-  /// **'High spicy'**
+  /// **'High spice'**
   String get prefSpicyHigh;
 
   /// No description provided for @prefOrganic.
@@ -742,7 +776,7 @@ abstract class AppLocalizations {
   /// No description provided for @prefLowSugar.
   ///
   /// In en, this message translates to:
-  /// **'Low sugar / Diabetic-friendly'**
+  /// **'Low sugar / diabetic'**
   String get prefLowSugar;
 
   /// No description provided for @prefLowCholesterol.
@@ -754,13 +788,13 @@ abstract class AppLocalizations {
   /// No description provided for @prefLowPurine.
   ///
   /// In en, this message translates to:
-  /// **'Low purines'**
+  /// **'Low purine'**
   String get prefLowPurine;
 
   /// No description provided for @prefLowOxalatePotassium.
   ///
   /// In en, this message translates to:
-  /// **'Low oxalates / potassium'**
+  /// **'Low oxalate / potassium'**
   String get prefLowOxalatePotassium;
 
   /// No description provided for @prefLactoseFree.
@@ -886,7 +920,7 @@ abstract class AppLocalizations {
   /// No description provided for @prefLentFasting.
   ///
   /// In en, this message translates to:
-  /// **'Lent / fasting (no meat certain days)'**
+  /// **'Lent / fasting (no meat on some days)'**
   String get prefLentFasting;
 
   /// No description provided for @startCookingButton.
@@ -928,7 +962,7 @@ abstract class AppLocalizations {
   /// No description provided for @cookingSheetGoHome.
   ///
   /// In en, this message translates to:
-  /// **'Close and go to Home'**
+  /// **'Close and go home'**
   String get cookingSheetGoHome;
 
   /// No description provided for @timerStartTooltip.
@@ -958,68 +992,38 @@ abstract class AppLocalizations {
   /// No description provided for @timerDoneTitle.
   ///
   /// In en, this message translates to:
-  /// **'Time\'s up!'**
+  /// **'Time’s up!'**
   String get timerDoneTitle;
 
   /// No description provided for @timerDoneBody.
   ///
   /// In en, this message translates to:
-  /// **'The cooking step has finished.'**
+  /// **'The recipe step has finished.'**
   String get timerDoneBody;
 
   /// No description provided for @cookingNotificationTitle.
   ///
   /// In en, this message translates to:
   /// **'Cooking: {title}'**
-  String cookingNotificationTitle(String title);
+  String cookingNotificationTitle(Object title);
 
   /// No description provided for @cookingOngoingBody.
   ///
   /// In en, this message translates to:
   /// **'Step {step} • countdown'**
-  String cookingOngoingBody(String step);
+  String cookingOngoingBody(Object step);
 
   /// No description provided for @shareCookedText.
   ///
   /// In en, this message translates to:
   /// **'I just cooked \"{title}\"! Try the app: {link}'**
-  String shareCookedText(String title, String link);
+  String shareCookedText(Object link, Object title);
 
-  /// No description provided for @shoppingMenu.
+  /// No description provided for @shoppingAddedItem.
   ///
   /// In en, this message translates to:
-  /// **'Shopping list'**
-  String get shoppingMenu;
-
-  /// No description provided for @shoppingTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Shopping List'**
-  String get shoppingTitle;
-
-  /// No description provided for @shoppingAddPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Add item'**
-  String get shoppingAddPlaceholder;
-
-  /// No description provided for @shoppingAddTooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Add'**
-  String get shoppingAddTooltip;
-
-  /// No description provided for @shoppingRemoveTooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Remove'**
-  String get shoppingRemoveTooltip;
-
-  /// No description provided for @shoppingEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'Your shopping list is empty'**
-  String get shoppingEmpty;
+  /// **'{item} added to the shopping list!'**
+  String shoppingAddedItem(String item);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -1031,7 +1035,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'gn', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1046,7 +1050,6 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     case 'en': return AppLocalizationsEn();
     case 'es': return AppLocalizationsEs();
     case 'fr': return AppLocalizationsFr();
-    case 'gn': return AppLocalizationsGn();
     case 'it': return AppLocalizationsIt();
     case 'ja': return AppLocalizationsJa();
     case 'ko': return AppLocalizationsKo();
